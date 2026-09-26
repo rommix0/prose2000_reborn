@@ -164,10 +164,14 @@ int main(int argc, char **argv)
 		return 2;
 	char isr_name[1024];
 	snprintf(isr_name, sizeof isr_name, "%s.isr", argv[1]);
+	/* one line per interrupted call: the record index, then the RAM offsets in hex. Read whole lines, so that the
+	 * CRLF endings of a capture written on Windows parse the same on every system. */
 	FILE *isr = fopen(isr_name, "r");
+	static char isr_line[1 << 17];
+	char *isr_rest = NULL;
 	long isr_next = -1;
-	if (isr && fscanf(isr, "%ld", &isr_next) != 1)
-		isr_next = -1;
+	if (isr && fgets(isr_line, sizeof isr_line, isr))
+		isr_next = strtol(isr_line, &isr_rest, 10);
 	static uint8_t skip[0x3000];
 	v1_load_rom();
 	v1_fatal_hook = on_fatal;
@@ -183,13 +187,13 @@ int main(int argc, char **argv)
 		index++;
 		memset(skip, 0, sizeof skip);
 		if (isr_next == index - 1) { /* the interrupts' bytes: the rest of the line */
-			unsigned a;
-			int c;
-			while ((c = fgetc(isr)) != EOF && c != '\n')
-				if (c != ' ' && ungetc(c, isr) != EOF && fscanf(isr, "%x", &a) == 1 && a < 0x3000)
+			char *end;
+			for (unsigned long a = strtoul(isr_rest, &end, 16); end != isr_rest; a = strtoul(isr_rest, &end, 16)) {
+				if (a < 0x3000)
 					skip[a] = 1;
-			if (fscanf(isr, "%ld", &isr_next) != 1)
-				isr_next = -1;
+				isr_rest = end;
+			}
+			isr_next = fgets(isr_line, sizeof isr_line, isr) ? strtol(isr_line, &isr_rest, 10) : -1;
 		}
 		if (only && r.func != only)
 			continue;

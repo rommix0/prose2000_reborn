@@ -13,6 +13,7 @@
 #ifndef PG_H
 #define PG_H
 
+#include <stddef.h>
 #include <stdint.h>
 
 #include "prose_rom.h"
