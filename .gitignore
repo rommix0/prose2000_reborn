@@ -1,0 +1,13 @@
+# Local only: the ROM dumps, the emulator, the Ghidra project and the Python probes. The C in src/ needs none of them
+# (the ROM data it uses is generated into src/data/).
+/ghidra_prose/
+/native/
+/prose_v1/
+/prose_v3/
+/prose_v3_4001/
+/tools/
+
+# build output
+/build*/
+__pycache__/
+*.wav
