@@ -64,6 +64,44 @@ earlier is discarded.
 These feed the frame builder and the DSP directly, not the firmware's `ESC[l` / `ESC[g` hold (which is imprecise and
 waits behind queued speech). Parameters keep their values until changed; unset ones keep their defaults.
 
+### Parameter information
+
+For the `on_params` callback and for reading or writing parameter files. `p` is a parameter number (table below).
+
+| Function | Notes |
+|---|---|
+| `prose_param_count(h)` | 22 for v3.4.1, 18 for v1.1 |
+| `prose_param_name(h, p)` | column name: `"AV"`, `"AF"`, … `"F0"` (the constants without `PROSE_`) |
+| `prose_param_index(h, name)` | the reverse; −1 for an unknown name |
+| `prose_param_value(h, p, raw)` | a raw byte in physical units: Hz for frequencies and bandwidths, dB for amplitudes; raw for p18-p21 |
+| `prose_param_raw(h, p, value)` | the reverse, rounded and clamped to the parameter's range |
+
+The conversions follow the codings in the frame-parameter table, including v1.1's different FN coding, so a file in
+physical units reads the same for both versions.
+
+### Custom glottal pulse
+
+| Function | Notes |
+|---|---|
+| `prose_load_glottal_wave(h, filename, kind)` | loads one period of a glottal waveform from a WAV file |
+| `prose_use_custom_glottal(h, on)` | switches between the custom pulse and the Prose's own; off by default |
+
+- **The file:** 16-bit mono PCM at 10,000 Hz, up to 1 second long. The whole file is **one period**: it is
+  normalized and resampled to the DSP's table length, and the pitch still comes from F0. A longer file therefore
+  holds a more finely sampled period, not several periods.
+- **`kind`:** `PROSE_GLOTTAL_FLOW` for a glottal flow waveform (what the Prose's own table holds), or
+  `PROSE_GLOTTAL_DERIVATIVE` for its derivative, which the DLL integrates first.
+- **Returns** 0, or a negative error code: the file is missing or not 16-bit mono at 10 kHz, is longer than 1 s,
+  or is silent.
+- **The Prose's own table is never changed.** The custom period is kept in a separate array, and the switch picks
+  which one the DSP model reads. Loading a new file replaces only the custom period; the switch stays as it was.
+- In custom mode each pitch period plays the custom period stretched to the period's length, scaled by AV. The rest
+  of the model is unchanged: the excitation is still the first difference of the flow, and aspiration, the glottal
+  filter and the resonators work as before. The Prose's opening and closing shape (the source parameters p18 and
+  p19) has no effect while the custom period is on.
+- It works for both versions, since v1.1 also plays through the v3.12 DSP model, and for speech and raw synthesis
+  alike.
+
 ## Callbacks
 
 ```c
@@ -71,6 +109,7 @@ typedef struct {
 	void (*on_index)(prose_h h, int n, uint64_t position, void *user);           /* marker n reached */
 	void (*on_done)(prose_h h, int last_index, uint64_t total, void *user);      /* utterance finished */
 	void (*on_phoneme)(prose_h h, char ph, int ms, uint64_t position, void *user); /* phoneme and its length */
+	void (*on_params)(prose_h h, const uint8_t *p, uint64_t position, void *user); /* one frame's parameters */
 } prose_callbacks;
 
 typedef int (*prose_audio_cb)(prose_h h, const int16_t *pcm, size_t count, uint64_t position, void *user);
@@ -82,6 +121,12 @@ typedef int (*prose_frame_cb)(prose_h h, int frame, const int16_t *pcm, int coun
 - `prose_audio_cb` and `prose_frame_cb` return 0 to continue, nonzero to stop.
 - `prose_speak` callbacks run on the DLL's audio thread; data they share with other threads needs locking.
 - v1.1 has no phoneme echo in its firmware; the DLL takes its phonemes from its own playback instead.
+- `on_params` fires once per 10 ms frame with the frame's raw parameter bytes (`prose_param_count(h)` of them, in
+  the frame-parameter order), during speech in any mode and during `prose_render_frames`. It fires when the frame is
+  built, and `position` is where that frame's audio starts. The bytes are only valid during the call.
+- **For reference synthesizers** such as Klatt's klsyn: the tracks hold the Prose's variable parameters only. F5, B4,
+  the nasal pole (about 250 Hz) and the parallel-branch bandwidths are fixed per voice and need adding as constants.
+  The amplitudes use the Prose's dB coding; that it matches Klatt's scale is likely (MITalk lineage) but unverified.
 
 ### The user pointer
 
@@ -207,6 +252,117 @@ prose_save_wave("glide.wav", g.pcm, FRAMES * 100);
 ```
 
 A fricative such as "s" sets AV to 0 and uses AF with A4–A6; silence is AV, AF and AH all 0.
+
+### Extracting parameters to a CSV file
+
+One row per 10 ms frame, in physical units, with the parameter names as the header. No audio is needed, so the
+text goes through `prose_speak_to_buffer` with a callback that discards it.
+
+```c
+static void on_params(prose_h h, const uint8_t *p, uint64_t pos, void *user)
+{
+	FILE *f = user;
+	fprintf(f, "%llu", (unsigned long long)(pos / 10));      /* time in ms: 10 samples per ms */
+	for (int i = 0; i < prose_param_count(h); i++)
+		fprintf(f, ",%g", prose_param_value(h, i, p[i]));    /* Hz or dB */
+	fputc('\n', f);
+}
+
+static int discard_audio(prose_h h, const int16_t *pcm, size_t count, uint64_t pos, void *user)
+{
+	return 0;
+}
+
+FILE *f = fopen("hello.csv", "w");
+fprintf(f, "time_ms");
+for (int i = 0; i < prose_param_count(h); i++)
+	fprintf(f, ",%s", prose_param_name(h, i));               /* AV,AF,AH,A2,...,F1,F2,...,F0 */
+fputc('\n', f);
+prose_set_callbacks(h, &(prose_callbacks){ .on_params = on_params }, f);
+prose_speak_to_buffer(h, "Hello there.", NULL, 0, discard_audio, NULL);
+fclose(f);
+```
+
+The first row is the silent frame before speech (v3.4.1):
+
+```
+time_ms,AV,AF,AH,A2,A3,A4,A5,A6,AB,F1,F2,F3,F4,B1,B2,B3,FN,F0,SOURCE,SOURCE_GAIN,JITTER,SHIMMER
+0,0,0,0,60,60,60,60,60,0,400,1396,2400,3296,140,90,110,248,100,16,8,0,0
+```
+
+### Synthesizing from a CSV file
+
+The same file, read back one row per frame through the raw path. The header decides which column sets which
+parameter, so a file may hold any subset of the columns, in any order.
+
+```c
+typedef struct {
+	FILE *csv;
+	int col[32];                 /* parameter number of each column after time_ms, or -1 to skip it */
+	int n;                       /* number of those columns */
+	int16_t *pcm;                /* where the audio goes */
+} reader;
+
+/* load the next row into the frame parameters; 0 at the end of the file */
+static int next_row(prose_h h, reader *r)
+{
+	double v;
+	if (fscanf(r->csv, " %*lf") == EOF)                       /* skip time_ms */
+		return 0;
+	for (int i = 0; i < r->n; i++)
+		if (fscanf(r->csv, ",%lf", &v) == 1 && r->col[i] >= 0)
+			prose_set_frame_param(h, r->col[i], prose_param_raw(h, r->col[i], v));
+	return 1;
+}
+
+static int on_frame(prose_h h, int frame, const int16_t *pcm, int count, void *user)
+{
+	reader *r = user;
+	memcpy(r->pcm + (size_t)frame * 100, pcm, count * sizeof *pcm);
+	return !next_row(h, r);                                  /* nonzero stops at the end of the file */
+}
+
+reader r = { fopen("hello.csv", "r") };
+char line[1024], *name;
+fgets(line, sizeof line, r.csv);                             /* the header */
+strtok(line, ",\r\n");                                       /* time_ms */
+while ((name = strtok(NULL, ",\r\n")) && r.n < 32)
+	r.col[r.n++] = prose_param_index(h, name);
+
+r.pcm = malloc(max_frames * 100 * sizeof *r.pcm);
+if (next_row(h, &r))                                         /* row 0 is the first frame */
+	prose_render_frames(h, max_frames, on_frame, &r);
+```
+
+`max_frames` is an upper bound (the number of data lines in the file); rendering stops at the last row.
+
+### A custom glottal pulse
+
+`pulse.wav` holds one period of a glottal flow waveform (16-bit mono, 10 kHz, at most 1 s).
+
+```c
+if (prose_load_glottal_wave(h, "pulse.wav", PROSE_GLOTTAL_FLOW) == 0)
+	prose_use_custom_glottal(h, 1);
+
+prose_speak_to_wave(h, "custom.wav", "This voice uses a custom glottal pulse.");
+
+prose_use_custom_glottal(h, 0);                              /* back to the Prose's own pulse */
+prose_speak_to_wave(h, "original.wav", "This one uses the original.");
+```
+
+A period for testing can be made in code, for example a Rosenberg pulse: 40 % rising, 16 % falling, then closed.
+
+```c
+enum { N = 100 };                                            /* one 10 ms period at 10 kHz */
+int16_t period[N];
+for (int i = 0; i < N; i++) {
+	double t = (double)i / N, open = 0.40, close = 0.16;
+	double g = t < open ? 0.5 * (1 - cos(M_PI * t / open))
+	         : t < open + close ? cos(M_PI / 2 * (t - open) / close) : 0;
+	period[i] = (int16_t)(g * 32000);
+}
+prose_save_wave("pulse.wav", period, N);
+```
 
 ## Frame parameters
 
