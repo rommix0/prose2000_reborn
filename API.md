@@ -10,6 +10,8 @@ The planned DLL around the C decompilation in `src/`. Nothing here is implemente
 - A handle opens either firmware: `PROSE_V341` (v3.4.1) or `PROSE_V11` (v1.1). Every function is exported for both.
   A function v1.1 has no equivalent for does nothing and returns nothing (marked **v3.4.1 only** below).
 - Callbacks are functions the program writes and registers. They carry a `void *user` pointer (see below).
+- **Calling convention:** every export and every callback is `__cdecl` on Windows, so C, Python's `ctypes.CDLL` and
+  C# P/Invoke can all call it and pass callbacks in.
 
 ## Functions
 
@@ -19,7 +21,7 @@ The planned DLL around the C decompilation in `src/`. Nothing here is implemente
 |---|---|
 | `prose_open(prose_h *h, int version)` | `PROSE_V341` or `PROSE_V11` |
 | `prose_close(prose_h h)` | |
-| `prose_get_version()` | firmware version (v3.4.1's `ESC[E` answers 34) |
+| `prose_get_version(prose_h h)` | the firmware the handle runs: `PROSE_V341` (341) or `PROSE_V11` (11). v3.4.1's own `ESC[E` identity is 34 |
 | `prose_set_callbacks(prose_h h, const prose_callbacks *cb, void *user)` | the handle's event callbacks |
 
 ### Settings
