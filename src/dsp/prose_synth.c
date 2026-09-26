@@ -131,6 +131,9 @@ struct prose_synth {
 	void *user;
 	size_t produced;
 	int raw_start; /* start from zeroed output registers, as the emulator does (see prose_synth_run) */
+	/* not in the DSP: an optional glottal flow period that replaces the pulse table (prose_synth_set_custom_pulse) */
+	int16_t custom[PROSE_SYNTH_PULSE_LEN];
+	int custom_on, custom_period;
 };
 
 #define R(a) (s->ram[(a)])
@@ -228,6 +231,21 @@ static int pitch_clock(prose_synth *s)
 	return (int16_t)~((int16_t)period >> 1) < 0;
 }
 
+/* Not in the DSP: the custom period's flow for this sample, stretched over the pitch period and scaled by the
+   period's amplitude as the table's flow is. The period counts down from its length - 1 to 0; unvoiced, it is negative
+   and the flow 0. */
+static int16_t custom_flow(prose_synth *s)
+{
+	int16_t count = RS(PERIOD_COUNT);
+	int len = s->custom_period;
+	if (count < 0 || len <= 0)
+		return 0;
+	int i = len - 1 - count;
+	if (i < 0)
+		i = 0;
+	return mul(s->custom[(long)i * PROSE_SYNTH_PULSE_LEN / len], RS(GLOT_AMP));
+}
+
 /* One glottal sample (0x019-0x075): the flow value for this sample, differentiated and scaled x8. */
 static int16_t glottal_sample(prose_synth *s, int period_start)
 {
@@ -246,6 +264,12 @@ static int16_t glottal_sample(prose_synth *s, int period_start)
 		R(GLOT_ACC) = 0;
 		clear(&a);
 		flow = 0;
+		s->custom_period = RS(PERIOD_COUNT) + 1;
+		if (s->custom_on)
+			flow = custom_flow(s);
+	} else if (s->custom_on) {
+		clear(&a);
+		flow = custom_flow(s);
 	} else if (R(GLOT_PHASE_STATE) & 1) {
 		clear(&a);
 		flow = 0;
@@ -485,6 +509,15 @@ void prose_synth_destroy(prose_synth *s) { free(s); }
 
 void prose_synth_set_raw_start(prose_synth *s, int on) { s->raw_start = on; }
 
+void prose_synth_set_custom_pulse(prose_synth *s, const int16_t *period)
+{
+	s->custom_on = period != NULL;
+	if (period)
+		memcpy(s->custom, period, sizeof s->custom);
+}
+
+size_t prose_synth_produced(const prose_synth *s) { return s->produced; }
+
 void prose_synth_set_host(prose_synth *s, prose_synth_poll poll, prose_synth_timeout timeout, void *user)
 {
 	s->poll = poll;
@@ -500,7 +533,7 @@ static uint16_t rev16(uint16_t v)
 	return r;
 }
 
-size_t prose_synth_run(prose_synth *s, int16_t *out, size_t count)
+void prose_synth_reset(prose_synth *s)
 {
 	memset(s->ram, 0, sizeof s->ram);
 	s->produced = 0;
@@ -522,12 +555,16 @@ size_t prose_synth_run(prose_synth *s, int16_t *out, size_t count)
 		R(OUT_LATCH) = 0x1001;
 		R(12) = 0x1001;
 	}
+}
 
+size_t prose_synth_continue(prose_synth *s, int16_t *out, size_t count)
+{
 	/* The emulator runs the sample interrupt once per pass of the main loop: it outputs OUT_LATCH, then moves the
 	   oldest FIFO sample into it. With one sample written per pass the FIFO holds one sample, so the output is the
 	   sample computed two passes earlier. */
-	while (s->produced < count) {
-		out[s->produced++] = (int16_t)rev16(R(OUT_LATCH));
+	for (size_t i = 0; i < count; i++) {
+		out[i] = (int16_t)rev16(R(OUT_LATCH));
+		s->produced++;
 		unsigned rd = (unsigned)R(FIFO_READ);
 		if (rd != R(FIFO_WRITE)) {
 			rd = (rd - 1) & 0x7F;
@@ -549,5 +586,11 @@ size_t prose_synth_run(prose_synth *s, int16_t *out, size_t count)
 		if (left < 0)
 			fetch_frame(s);
 	}
-	return s->produced;
+	return count;
+}
+
+size_t prose_synth_run(prose_synth *s, int16_t *out, size_t count)
+{
+	prose_synth_reset(s);
+	return prose_synth_continue(s, out, count);
 }

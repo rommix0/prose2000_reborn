@@ -288,6 +288,10 @@ int v1_stage_paramgen_run(void);                                       /* F1659 
 extern unsigned v1_dsp_status; /* the DSP's status byte: 0x20 (USF0) = wants a frame, 0x80 = RQM */
 /* each frame sent to the DSP (37 words), after the words have gone through v1_dsp_write_hook */
 extern void (*v1_frame_hook)(const uint16_t *frame, int words);
+/* Not in the firmware (for the DLL): each frame's 18 track bytes (p0-p17) as the frame builder takes them, and the
+   phoneme of each timed segment the playback stage passes (when the builder has started it). NULL: nothing. */
+extern void (*v1_params_hook)(const uint8_t track[18]);
+extern void (*v1_segment_hook)(int ch);
 
 int v1_frame_handshake(int op); /* EE49E */
 void v1_frame_build(void);      /* EE564 */

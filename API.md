@@ -1,6 +1,9 @@
-# Prose DLL API (draft)
+# Prose speech library API
 
-The planned DLL around the C decompilation in `src/`. Nothing here is implemented yet.
+The speech library around the C decompilation in `src/`: `prose.dll` on Windows, `libprose.so` on Linux. The header is
+[`src/include/prose.h`](src/include/prose.h); `build.bat` (MinGW-w64) or `make` (Linux) builds the library,
+`prose_say` and the samples into `build/` (README). The examples below are runnable programs in `samples/`. How the
+library drives the firmware: [Implementation](#implementation).
 
 ## Conventions
 
@@ -46,18 +49,21 @@ Each setter queues the matching escape command ahead of the next text, so it tak
 
 | Function | Notes |
 |---|---|
-| `prose_speak(h, text)` | returns at once (0 or an error); plays through the sound card on the DLL's audio thread |
+| `prose_speak(h, text)` | returns at once (0 or an error); plays through the sound card on the DLL's audio thread. Calls queue up and play in order |
 | `prose_speak_to_wave(h, filename, text)` | blocks until done; writes a 10 kHz WAV file. Returns 0 or an error |
 | `prose_speak_to_buffer(h, text, buf, buf_samples, on_audio, user)` | blocks until done; audio through a callback (below). Returns the number of samples as an `int32_t` (enough for about 59 hours at 10 kHz), or an error |
 | `prose_text_to_phoneme(h, text, out, out_size)` | writes the phoneme string (e.g. `"HeLO1 ."`); returns its full length, as `snprintf` does, so call again with a bigger buffer if the result is ≥ `out_size`; or an error |
 | `prose_index(h, n)` | queues marker `n` (1–255); `on_index` fires when it is reached |
 | `prose_stop(h)` | drops everything queued (`ESC[S`); `on_done` still fires |
-| `prose_pause(h)` / `prose_resume(h)` | `ESC[H` / `ESC[C` |
+| `prose_pause(h)` / `prose_resume(h)` | hold the output at once: the sound device pauses and synthesis waits (a blocking call waits inside). `prose_stop` and `prose_reset` also resume |
 | `prose_reset(h)` | the only reset: settings to defaults, everything queued dropped |
 
 Text may also contain the Prose's own escape sequences (`ESC[n letter`), for example an index marker in mid-text.
-After an utterance, the DLL waits for the firmware's done reply before sending more, because text that arrives
-earlier is discarded.
+Each call is one utterance, spoken to its end even without final punctuation. The serial line is 7-bit, so bytes
+above 0x7F (UTF-8 and the like) and control characters other than ESC, CR, LF and TAB are sent as spaces. Avoid
+`ESC[x` in the text: while one is pending, the firmware ends the utterance at the next index marker (REFERENCE §8.2).
+If the text has one anyway, the DLL waits for its reply before sending the rest, since text that arrives earlier is
+discarded.
 
 ### Raw synthesis
 
@@ -68,7 +74,9 @@ earlier is discarded.
 | `prose_save_wave(filename, pcm, count)` | writes samples to a 10 kHz WAV file. Returns 0 or an error |
 
 These feed the frame builder and the DSP directly, not the firmware's `ESC[l` / `ESC[g` hold (which is imprecise and
-waits behind queued speech). Parameters keep their values until changed; unset ones keep their defaults.
+waits behind queued speech). Parameters keep their values until changed; unset ones keep their defaults. A v1.1
+handle's frames also go through v3.4.1's frame builder, with FN converted to its coding and voice 0's source
+settings for p18-p21, as v1.1's speech does.
 
 ### Parameter information
 
@@ -93,7 +101,7 @@ physical units reads the same for both versions.
 | `prose_use_custom_glottal(h, on)` | switches between the custom pulse and the Prose's own; off by default |
 
 - **The file:** 16-bit mono PCM at 10,000 Hz, up to 1 second long. The whole file is **one period**: it is
-  normalized and resampled to the DSP's table length, and the pitch still comes from F0. A longer file therefore
+  normalized and resampled to 256 samples (the length of the DSP's pulse table), and the pitch still comes from F0. A longer file therefore
   holds a more finely sampled period, not several periods.
 - **`kind`:** `PROSE_GLOTTAL_FLOW` for a glottal flow waveform (what the Prose's own table holds), or
   `PROSE_GLOTTAL_DERIVATIVE` for its derivative, which the DLL integrates first.
@@ -123,7 +131,7 @@ Grouped by range, so the kind of failure shows at a glance. `prose_error_string`
 | −4 | `PROSE_ERR_REENTRANT` | a blocking call made from inside one of the handle's own callbacks, which would deadlock |
 | −5 | `PROSE_ERR_MEMORY` | out of memory |
 | **Text** | | |
-| −10 | `PROSE_ERR_TEXT_TOO_LONG` | more text than the handle can queue at once |
+| −10 | `PROSE_ERR_TEXT_TOO_LONG` | more than 1,000,000 characters in one call |
 | **Files** | | |
 | −20 | `PROSE_ERR_FILE_OPEN` | cannot open or create the file |
 | −21 | `PROSE_ERR_FILE_IO` | a read or write failed, or the disk is full |
@@ -144,6 +152,7 @@ Grouped by range, so the kind of failure shows at a glance. `prose_error_string`
 - A `prose_speak_to_buffer` or `prose_render_frames` stopped by its callback or by `prose_stop` returns what it
   produced so far; `on_done` still fires.
 - `prose_text_to_phoneme` with a small buffer returns the full length, as `snprintf` does.
+- `prose_close` from inside one of the handle's own callbacks does nothing, since it cannot wait for itself.
 
 **Firmware fatal errors.** The firmware has its own fatal-error path, which restarts the board. The DLL does the same:
 it restarts the handle's firmware (settings back to defaults), drops the current job, fires `on_done`, and keeps the
@@ -167,10 +176,15 @@ typedef int (*prose_frame_cb)(prose_h h, int frame, const int16_t *pcm, int coun
 
 - `position` and `total` count samples from the start of the utterance, as a `uint32_t` (enough for about 119
   hours of audio). Events fire in order, just before the audio that contains them is delivered (buffer mode) or
-  played (`prose_speak`).
+  played (`prose_speak`). A frame's audio starts one frame after the firmware builds it, so the first frame of an
+  utterance is at position 100 (10 ms).
+- `on_done`'s `last_index` is the last index marker reached in the utterance, or 0.
 - `prose_audio_cb` and `prose_frame_cb` return 0 to continue, nonzero to stop.
 - `prose_speak` callbacks run on the DLL's audio thread; data they share with other threads needs locking.
-- v1.1 has no phoneme echo in its firmware; the DLL takes its phonemes from its own playback instead.
+- `on_phoneme` comes from the firmware's playback stage, for both versions: each phoneme as its segment starts, with
+  its length, the time until the next one starts. The DLL therefore holds the audio back by up to one phoneme.
+  `prose_text_to_phoneme` uses the firmware's phoneme echo on v3.4.1 (with stress marks and punctuation, as
+  `ESC[16N` sends it) and the played segments on v1.1, which has no echo (phonemes only).
 - `on_params` fires once per 10 ms frame with the frame's raw parameter bytes (`prose_param_count(h)` of them, in
   the frame-parameter order), during speech in any mode and during `prose_render_frames`. It fires when the frame is
   built, and `position` is where that frame's audio starts. The bytes are only valid during the call.
@@ -337,7 +351,7 @@ The first row is the silent frame before speech (v3.4.1):
 
 ```
 time_ms,AV,AF,AH,A2,A3,A4,A5,A6,AB,F1,F2,F3,F4,B1,B2,B3,FN,F0,SOURCE,SOURCE_GAIN,JITTER,SHIMMER
-0,0,0,0,60,60,60,60,60,0,400,1396,2400,3296,140,90,110,248,100,16,8,0,0
+10,0,0,0,60,60,60,60,60,0,400,1396,2400,3296,140,90,110,248,100,16,8,0,0
 ```
 
 ### Synthesizing from a CSV file
@@ -438,7 +452,8 @@ behind `ESC[l`.
 | 20 | `PROSE_JITTER` | jitter (low nibble), attenuation (high nibble) | raw | 0 / 15 | — |
 | 21 | `PROSE_SHIMMER` | shimmer (low nibble), voice (high nibble) | raw | 0 / 127 | — |
 
-v1.1 has only p0–p17, and its FN coding differs; the DLL could hide that by taking FN in Hz.
+v1.1 has only p0–p17, and its FN coding differs; `prose_param_value` and `prose_param_raw` convert it, so FN in Hz
+means the same for both.
 
 ## Phonemes
 
@@ -488,142 +503,37 @@ mode flags 10 and 15 (serial-protocol details), `L` and `b` (board reboot and ba
 on the Prose), `w` and `W` (covered by `prose_reset`), `E` and `Q` (covered by `prose_get_version` and the DLL's own
 copy of the settings).
 
-## Header (`prose.h`, draft)
+## Implementation
 
-```c
-/* prose.h: the Prose 2000 speech DLL (draft; see API.md). Audio is 16-bit signed mono at 10,000 Hz. */
-#ifndef PROSE_H
-#define PROSE_H
+The code is in `src/dll/`, apart from a few hooks in the decompiled files; it follows `src/tests/pipeline_play.c`
+and `v1_pipeline_play.c`, the programs that were checked against the emulator.
 
-#include <stddef.h>
-#include <stdint.h>
+| File | Role |
+|---|---|
+| `prose_api.c` | the exports: handles, settings, jobs, the audio thread, the sinks (sound device, WAV file, buffer), raw synthesis |
+| `prose_engine.c` | runs one handle's firmware and DSP model: text in, replies and events out |
+| `prose_eng3.c`, `prose_eng1.c` | the version drivers: the synthesis loop's scheduling and the firmware hooks |
+| `prose_params.c` | parameter tables and units, raw frames, WAV files, the glottal pulse loader |
+| `prose_sys.c` | threads and locks; the sound device (winmm; PulseAudio or ALSA through `dlopen`) |
 
-#ifdef _WIN32
-#ifdef PROSE_BUILD_DLL
-#define PROSE_API __declspec(dllexport)
-#else
-#define PROSE_API __declspec(dllimport)
-#endif
-#define PROSE_CALL __cdecl
-#else
-#define PROSE_API
-#define PROSE_CALL
-#endif
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#define PROSE_SAMPLE_RATE 10000
-
-typedef struct prose_handle *prose_h;
-
-/* firmware versions for prose_open */
-enum { PROSE_V341 = 341, PROSE_V11 = 11 };
-
-/* error codes: functions that can fail return 0 or more on success */
-enum {
-	PROSE_OK = 0,
-	PROSE_ERR_HANDLE = -1,        /* NULL, closed or unknown handle */
-	PROSE_ERR_ARG = -2,           /* NULL pointer, unknown parameter or version */
-	PROSE_ERR_BUSY = -3,          /* the handle is already running a job */
-	PROSE_ERR_REENTRANT = -4,     /* a blocking call from inside the handle's own callback */
-	PROSE_ERR_MEMORY = -5,
-	PROSE_ERR_TEXT_TOO_LONG = -10,
-	PROSE_ERR_FILE_OPEN = -20,
-	PROSE_ERR_FILE_IO = -21,
-	PROSE_ERR_WAV_FORMAT = -22,   /* not 16-bit mono PCM */
-	PROSE_ERR_WAV_RATE = -23,     /* not 10,000 Hz */
-	PROSE_ERR_WAV_LENGTH = -24,   /* empty or over 1 s */
-	PROSE_ERR_WAV_SILENT = -25,
-	PROSE_ERR_AUDIO_OPEN = -30,
-	PROSE_ERR_AUDIO_WRITE = -31,
-	PROSE_ERR_FIRMWARE = -40,     /* the firmware's own fatal error; see prose_last_firmware_error */
-};
-
-/* frame parameters: one byte each per 10 ms frame */
-enum {
-	PROSE_AV, PROSE_AF, PROSE_AH,
-	PROSE_A2, PROSE_A3, PROSE_A4, PROSE_A5, PROSE_A6, PROSE_AB,
-	PROSE_F1, PROSE_F2, PROSE_F3, PROSE_F4,
-	PROSE_B1, PROSE_B2, PROSE_B3,
-	PROSE_FN, PROSE_F0,
-	PROSE_SOURCE, PROSE_SOURCE_GAIN, PROSE_JITTER, PROSE_SHIMMER, /* v3.4.1 only */
-	PROSE_PARAM_MAX
-};
-
-/* kinds of glottal waveform for prose_load_glottal_wave */
-enum { PROSE_GLOTTAL_FLOW, PROSE_GLOTTAL_DERIVATIVE };
-
-/* ---- callbacks: `user` is the caller's own pointer, passed back unchanged ---- */
-
-typedef struct {
-	void (PROSE_CALL *on_index)(prose_h h, int n, uint32_t position, void *user);
-	void (PROSE_CALL *on_done)(prose_h h, int last_index, uint32_t total, void *user);
-	void (PROSE_CALL *on_phoneme)(prose_h h, char ph, int ms, uint32_t position, void *user);
-	void (PROSE_CALL *on_params)(prose_h h, const uint8_t *p, uint32_t position, void *user);
-} prose_callbacks;
-
-/* audio from prose_speak_to_buffer; return 0 to continue, nonzero to stop */
-typedef int (PROSE_CALL *prose_audio_cb)(prose_h h, const int16_t *pcm, size_t count, uint32_t position,
-                                         void *user);
-/* after each frame of prose_render_frames; return 0 to continue, nonzero to stop */
-typedef int (PROSE_CALL *prose_frame_cb)(prose_h h, int frame, const int16_t *pcm, int count, void *user);
-
-/* ---- handles and information ---- */
-
-PROSE_API int PROSE_CALL prose_open(prose_h *h, int version);
-PROSE_API void PROSE_CALL prose_close(prose_h h);
-PROSE_API int PROSE_CALL prose_get_version(prose_h h);
-PROSE_API void PROSE_CALL prose_set_callbacks(prose_h h, const prose_callbacks *cb, void *user);
-PROSE_API const char *PROSE_CALL prose_error_string(int code);
-PROSE_API int PROSE_CALL prose_last_firmware_error(prose_h h);
-
-/* ---- settings: take effect from the next text; out-of-range values are clamped ---- */
-
-PROSE_API void PROSE_CALL prose_set_voice(prose_h h, int n);             /* 0-2; v3.4.1 only */
-PROSE_API void PROSE_CALL prose_set_rate(prose_h h, int wpm);            /* 50-250 */
-PROSE_API void PROSE_CALL prose_set_pitch(prose_h h, int n);             /* 50-200, or 0 */
-PROSE_API void PROSE_CALL prose_set_volume(prose_h h, int n);            /* 0-15, larger = louder */
-PROSE_API void PROSE_CALL prose_set_word_mode(prose_h h, int on);
-PROSE_API void PROSE_CALL prose_set_fast_read(prose_h h, int n);         /* 0-9; v3.4.1 only */
-PROSE_API void PROSE_CALL prose_set_speak_punctuation(prose_h h, int on); /* v3.4.1 only */
-
-/* ---- speaking ---- */
-
-PROSE_API int PROSE_CALL prose_speak(prose_h h, const char *text);      /* returns at once */
-PROSE_API int PROSE_CALL prose_speak_to_wave(prose_h h, const char *filename, const char *text);
-PROSE_API int32_t PROSE_CALL prose_speak_to_buffer(prose_h h, const char *text, int16_t *buf, size_t buf_samples,
-                                                   prose_audio_cb on_audio, void *user); /* samples, or an error */
-PROSE_API int PROSE_CALL prose_text_to_phoneme(prose_h h, const char *text, char *out, size_t out_size);
-PROSE_API void PROSE_CALL prose_index(prose_h h, int n);                 /* 1-255 */
-PROSE_API void PROSE_CALL prose_stop(prose_h h);
-PROSE_API void PROSE_CALL prose_pause(prose_h h);
-PROSE_API void PROSE_CALL prose_resume(prose_h h);
-PROSE_API void PROSE_CALL prose_reset(prose_h h);
-
-/* ---- raw synthesis ---- */
-
-PROSE_API void PROSE_CALL prose_set_frame_param(prose_h h, int p, int value);
-PROSE_API int PROSE_CALL prose_render_frames(prose_h h, int count, prose_frame_cb on_frame, void *user);
-PROSE_API int PROSE_CALL prose_save_wave(const char *filename, const int16_t *pcm, size_t count);
-
-/* ---- parameter information ---- */
-
-PROSE_API int PROSE_CALL prose_param_count(prose_h h);                    /* 22 or 18 */
-PROSE_API const char *PROSE_CALL prose_param_name(prose_h h, int p);     /* "AV" ... "F0", or NULL */
-PROSE_API int PROSE_CALL prose_param_index(prose_h h, const char *name); /* -1 if unknown */
-PROSE_API double PROSE_CALL prose_param_value(prose_h h, int p, int raw); /* byte -> Hz or dB */
-PROSE_API int PROSE_CALL prose_param_raw(prose_h h, int p, double value); /* Hz or dB -> byte */
-
-/* ---- custom glottal pulse ---- */
-
-PROSE_API int PROSE_CALL prose_load_glottal_wave(prose_h h, const char *filename, int kind);
-PROSE_API void PROSE_CALL prose_use_custom_glottal(prose_h h, int on);
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif
-```
+- **Firmware state.** The decompiled firmware keeps its state in one data-segment image per version. Each handle
+  keeps its own copy of the RAM part (0x3000 bytes) and its own DSP model, and the engine swaps a handle's RAM in
+  under one global lock, 10 ms at a time. Several handles therefore speak at once, each exactly as a lone one does.
+- **Timing.** The DSP model pulls: every 100 samples it asks for a frame, and the engine runs the firmware's loop until
+  it would idle, then its frame interrupt. Synthesis runs as fast as the CPU allows (about 600 times real time for
+  v3.4.1 and 90 for v1.1 on a 2020s PC); `prose_speak` paces it to the sound device.
+- **Ending an utterance.** The text goes to the firmware's serial input, pausing while the firmware has sent XOFF,
+  and ends with a CR rather than `ESC[x` (see Speaking). When the text is in, the pipeline is idle and the DSP has had
+  no frame for 3 requests, the DLL sends `ESC[C` if the text does not end with `.` `?` or `!`: its phrase boundary
+  releases a last phrase the firmware holds back for more text. At the next such point it sends `ESC[x`, and the
+  utterance ends 3 frames after its reply. `prose_stop` sends `ESC[S` and runs the firmware until it is idle.
+- **Sound device.** Windows: winmm. Linux: PulseAudio's simple API, else ALSA, loaded at run time; `PROSE_AUDIO=pulse`
+  or `alsa` picks one. The device gets at most 150 ms ahead of what it has played, so stop and pause act at once.
+- **Hooks in the decompiled code** (not firmware behaviour): `prose_synth_reset` / `prose_synth_continue` (the DSP
+  model in pieces) and `prose_synth_set_custom_pulse`; `pg_segment_hook` and `v1_segment_hook` (a segment starts
+  playing); `v1_params_hook` (a v1.1 frame's parameter bytes). The replay tests give the same results with them.
+- **Checked** (2026-09-26): `prose_speak_to_wave` gives the same samples as `pipeline_play` / `v1_pipeline_play` for
+  the same text (up to the end, where the DLL stops sooner); two handles of each version in four threads give the
+  same audio as one handle alone; stop, pause, busy and re-entrant calls, settings, reset, parameter units and the WAV
+  errors behave as described here. The output is identical on 32-bit Windows (MinGW) and 64-bit Linux (gcc), and the
+  samples run on both, including speaker output through winmm, PulseAudio (WSLg) and ALSA.

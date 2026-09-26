@@ -27,4 +27,17 @@ void prose_synth_set_raw_start(prose_synth *s, int on);
 /* Runs from reset until `count` samples have been written to out; returns the number written. */
 size_t prose_synth_run(prose_synth *s, int16_t *out, size_t count);
 
+/* prose_synth_run in two steps, for output in pieces: the reset (it reads the setup words through poll), then any
+   number of calls that each write the next `count` samples to out[0..count). */
+void prose_synth_reset(prose_synth *s);
+size_t prose_synth_continue(prose_synth *s, int16_t *out, size_t count);
+size_t prose_synth_produced(const prose_synth *s); /* samples output since the reset */
+
+/* Not in the DSP (for the DLL's custom glottal pulse): `period` is one glottal flow period of PROSE_SYNTH_PULSE_LEN
+   samples, 0 (closed) to 0x7FFF (the peak). Each pitch period then plays it stretched to the period's length, scaled
+   by the voicing amplitude, in place of the pulse table; everything after the flow is unchanged. NULL goes back to
+   the table. The period is copied. */
+#define PROSE_SYNTH_PULSE_LEN 256
+void prose_synth_set_custom_pulse(prose_synth *s, const int16_t *period);
+
 #endif

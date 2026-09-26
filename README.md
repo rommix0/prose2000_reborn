@@ -14,16 +14,39 @@ Two firmware versions are covered:
 Every stage was checked against an emulator of the original board: byte-exact on captured calls, and frame- or
 sample-exact end to end.
 
-## Building
+## The speech library
+
+Both versions are also built into one library, `prose.dll` on Windows and `libprose.so` on Linux, with the API in
+[API.md](API.md) (header `src/include/prose.h`). Audio is 10 kHz, 16-bit mono.
+
+```
+build.bat                      (Windows, MinGW-w64 gcc)
+make                           (Linux, gcc or clang)
+```
+
+Either one puts the library, `prose_say` and the samples in `build/`:
+
+```
+build/prose_say "Hello, my friend."
+build/prose_say -w out.wav -r 180 "Saved to a file."
+build/prose_say -1 -t "Hello."          (v1.1; print the phonemes)
+```
+
+The samples (`samples/`) are the examples from API.md: events and markers, audio buffers, raw frame synthesis,
+parameter export and import as CSV, and a custom glottal pulse. On Linux the speaker output uses PulseAudio or ALSA,
+loaded at run time, so building needs no audio packages.
+
+## Building the tests
 
 ```
 cmake -S src -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
 cmake --build build
 ```
 
-Add `-DPROSE_VERSION=1` for v1.1. The ROM data the C needs is built in (`src/data/`).
+This also builds the library. Add `-DPROSE_VERSION=1` for the v1.1 tests. The ROM data the C needs is built in
+(`src/data/`).
 
-## Running
+## Running the tests
 
 ```
 build/pipeline_play -s "Hello, my friend. How are you today?"
@@ -38,9 +61,11 @@ playback (Windows). With `-DPROSE_VERSION=1` the program is `v1_pipeline_play`.
 | Path | What |
 |---|---|
 | `src/` | The decompilation, one directory per firmware stage; `src/v1/` is v1.1, `src/tests/` the players and replay tests |
+| `src/dll/`, `src/include/`, `src/cli/` | The speech library, its header and `prose_say` |
+| `samples/` | Programs using the library (the API.md examples) |
 | `src/data/` | Data extracted from the ROMs (lexicon, rule tables, targets, DSP tables) |
 | `REFERENCE.md` | Hardware, firmware and verification notes |
-| `API.md` | Draft API of the planned DLL |
+| `API.md` | The library's API |
 | `docs/` | The patents describing the Prose 2000 (text extracts and scans) |
 
 ## Notes

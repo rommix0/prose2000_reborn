@@ -33,6 +33,7 @@ enum { AF = 1, AH, A2, A3, A4, A5, A6, AB, F1, F2, F3, F4, B1, B2, B3, FN };
 #define T_SPACING2 0x20EB
 
 void (*v1_frame_hook)(const uint16_t *frame, int words);
+void (*v1_params_hook)(const uint8_t track[18]);
 unsigned v1_dsp_status = 0x80; /* the µPD7720 status: RQM; USF0 (0x20) = wants a frame */
 
 /* FB26D: the product >> 11 */
@@ -116,6 +117,12 @@ void v1_frame_build(void)
 	if (take_bit(MARKS, pos))
 		ww(PLAYED, rw(PLAYED) + 1);
 	int alt = take_bit(ALT, pos);
+	if (v1_params_hook) {
+		uint8_t t[18];
+		for (int i = 0; i < 18; i++)
+			t[i] = (uint8_t)rb(ruw(V1_TRACKS + 2 * i) + pos);
+		v1_params_hook(t);
+	}
 	for (int i = 1; i <= 16; i++)
 		ww(P(i), rb(ruw(V1_TRACKS + 2 * i) + pos));
 	ww(W(2), 0x1800 | rb(ruw(V1_TRACKS + 34) + pos) << 1);

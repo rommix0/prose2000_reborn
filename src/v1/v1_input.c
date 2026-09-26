@@ -2,6 +2,8 @@
  * of a sentence). Both work like v3.4.1's (REFERENCE §15.5). */
 #include "v1.h"
 
+void (*v1_segment_hook)(int ch);
+
 /* F53A0: move up to 10 input bytes into nodes: text as kind 1, and the escape parser's in-band commands (ESC, letter,
  * count, values) as kind 0 nodes. It stops after a run of spaces, so it hands on about a word at a time. The byte
  * that ends a run is kept in V1_INPUT_AHEAD. Returns 1 if it made any node. */
@@ -82,6 +84,8 @@ int v1_stage_playback_run(void)
 				break;
 			}
 			ww(V1_SEGMENTS_PLAYED, rw(V1_SEGMENTS_PLAYED) - 1);
+			if (v1_segment_hook)
+				v1_segment_hook(rsb(ruw(r + V1_REC_CURSOR) + V1_NODE_CH));
 		}
 	}
 	ww(r + V1_REC_AHEAD, rw(r + V1_REC_CURSOR));

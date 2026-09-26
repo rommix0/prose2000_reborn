@@ -160,6 +160,9 @@ extern void (*pg_fatal_hook)(int code);
 void fatal_error(int code);
 /* host_send (DE4C6), used by stage_run_command for index markers in the last stage. NULL counts as sent. */
 extern int (*pg_host_send_hook)(int kind, int ch, int count, const int *params);
+/* Not in the firmware (for the DLL): called with the phoneme of each timed segment the playback stage passes, which
+   is when the frame builder has started the segment. NULL: nothing. */
+extern void (*pg_segment_hook)(int ch);
 
 /* ---- helpers ---- */
 static inline int fx_mul_q15(int a, int b) { return (int16_t)(((int32_t)(int16_t)a * (int16_t)b) >> 15); } /* D3521 */

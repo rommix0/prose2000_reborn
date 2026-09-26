@@ -1,6 +1,8 @@
 /* The phoneme node list (doubly linked, with a free list) and the stage window it is walked through. */
 #include "pg.h"
 
+void (*pg_segment_hook)(int ch);
+
 /* D3C25: unlink n. */
 static int list_unlink(int n)
 {
@@ -258,6 +260,8 @@ int stage_playback_run(void)
 					return 0;
 				}
 				ww(SEGMENTS_PLAYED, rw(SEGMENTS_PLAYED) - 1);
+				if (pg_segment_hook)
+					pg_segment_hook(node_char(n));
 			}
 			ww(0xC292, node_next(rw(0xC292)));
 		}
