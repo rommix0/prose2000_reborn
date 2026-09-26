@@ -22,19 +22,12 @@ it in the ROMs before relying on it.
 | `..\tv-decomp-main\` (not in this repo) | **OpenTV**: a byte-exact C decompilation of TruVoice `CGRM_EN.DLL` 5.0.0.51 (SAPI 4, Oct 1997) | 2026 | third party | Its `docs/` and `src/engine/` describe the TruVoice back end, which turns out to be a port of the Prose one (§11.3, §12.6). `frame.c` = our `dsp_build_frame`; `generate.c` (`Synth_Generate`) is a C port of the filter that the Prose runs on the µPD7720. Its addresses are `CGRM_EN.DLL`, not `TV_ENG32.DLL`. Tagged **[tvd]**. |
 
 Notes on the files:
-- **`docs/*.txt` are the files to read.** They are text extracts of the HTML covering
-  metadata, abstract, description and claims, with the citation and legal-event lists
-  dropped. In `US4979216A.txt`, the Table 5 IPA symbols were restored by hand from
-  the PDF scan.
-- The HTML files are Google Patents pages saved with SingleFile. Their text is
-  clean, but **IPA symbols in Table 5 of [216] are missing** (see §6.4 for the
-  version recovered from the PDF). The PDFs are scans with an OCR layer, and
-  that OCR is also poor for IPA and tables.
-- Extracting text: strip `<script>`, `<style>` and `<svg>` with Python's
-  `html.parser`; the useful part lies between `Description` and `Claims (`.
-  For a PDF page image, run `magick -density 300 "docs/X.pdf[N]" out.png`
-  (N is 0-based; ImageMagick is installed, poppler's `pdftoppm` is not).
-  `pdftotext` exists at `/mingw64/bin`.
+- **`docs/*.txt` are the files to read.** They are text extracts of the Google Patents pages (metadata, abstract,
+  description and claims, without the citation and legal-event lists). The pages lacked the IPA symbols of Table 5
+  of [216]; in `US4979216A.txt` they were restored by hand from the PDF scan (§6.4).
+- The PDFs are scans with an OCR layer, which is poor for IPA and tables. For a page image, run
+  `magick -density 300 "docs/X.pdf[N]" out.png` (N is 0-based; ImageMagick is installed, poppler's `pdftoppm` is
+  not). `pdftotext` exists at `/mingw64/bin`.
 - In [216], PDF page 14 (index 13) holds Table 5, and page 13 holds Table 4.
 - Cited background: G. Groner et al., "A Real-Time Text-to-Speech Converter,"
   *Speech Technology* 1(2):73-76, Apr 1982 (the Prose design paper; not in
@@ -446,10 +439,6 @@ marks. On the Prose, the final punctuation decides this instead: `a` + `ESC[x` �
 `@1` too, while `a.` → `A1` with or without a trailing `ESC[5i`. With a trailing marker the done reply carries its
 number (`ESC[5x`).
 
-**Consequence for this project.** `README.md` says the firmware has one
-voice and only Rate, Pitch and Volume. That is out of date: voices 0-2,
-word mode, phoneme input and sync markers are all reachable over serial.
-
 ### 8.3 Phoneme echo: `ESC[16N` (decoded and verified 2026-09-24)
 Mode flag 16 (in-band copy `[C286]` bit 15 on the 2000, `[C288]` on the 4001) makes the firmware **send each
 phoneme to the host as it is spoken**.
@@ -554,15 +543,13 @@ Word-list globals: `[EE98]`/`[EE96]` = start/end of the current word, and `[EE9A
 These functions belong to the lexical stage; the whole stage is decompiled and described in §15.3.
 `FUN_d000_6400(code)` is the fatal-error routine. It is called with codes `0x1E`, `0x1F`, `0x20` and `0x2A`.
 
-### 9.5 Consequences / next steps
+### 9.5 Consequences
 - **TruVoice is a direct descendant of the Prose 2000 v3.x data set.** Names and structures found in one project transfer to the other. The TruVoice REFERENCE.md still calls `10074f90` "homograph stress"; it is the lexicon lookup.
 - The DLL's `100E4440` string `@|ObfUAEIyaeivowu3rg5k4c` sits next to the lexicon header and is
   **the vowel set** of the alphabet (§12.3a): Prose's 23 vowels plus TruVoice's new `5`, which sits among the
   r-coloured vowels `r g 5 k 4 c`.
-- Next steps:
-  - ~~Decode the lexicon entry format and write a dumper~~: done, §9.6 and `tools/lexicon_dump.py`.
-  - ~~Map the 1-char phoneme alphabet~~: done, §12.3a.
-  - ~~Follow `lex_lookup_with_affixes`'s caller into the LTS fallback~~: done, the lexical stage (§15.3).
+- The follow-ups of the match are done: the lexicon entry format and dumper (§9.6, `tools/lexicon_dump.py`), the
+  phoneme alphabet (§12.3a) and the letter-to-sound fallback (the lexical stage, §15.3).
 
 ---
 
@@ -649,6 +636,10 @@ data, so keep it local and uncommitted.
 Same firmware version as the Prose 2000 (v3.4.1; DSP v3.12, not dumped but reported identical). This is a
 rebuild for the **80186/188 instruction set** on different glue hardware.
 
+**Scope (user, 2026-09-26): the 4001 is not ported.** Its image serves only as an easier Ghidra target for reading
+the shared v3.4.1 code (186 `ENTER`/`LEAVE` prologues, far calls); the C follows the Prose 2000. Its board details
+below are kept as found, and the ones not traced are out of scope.
+
 ### 10.1 ROM layout [verified]
 The 80188 has an 8-bit bus, so the ROMs are **linear, not interleaved**: `u3` → `D0000`, `u2` → `E0000`,
 `u1` → `F0000` (`rom_order.txt`, MAME `prose4k1.cpp`), giving a 192 KB image `D0000-FFFFF`. The Prose 2000's
@@ -682,9 +673,9 @@ Match against the Prose 2000 image:
   |---|---|---|
   | DIP read (`D3109`) | `3400` | `3090` (PCS1) |
   | control/LED latch (the boot stub writes `FF`) | `3401` | `3180` (PCS3) |
-  | 8251 UART | `3000` | not yet traced; **not** PCS0, which is the DSP |
+  | 8251 UART | `3000` | not traced (out of scope); **not** PCS0, which is the DSP |
   | 7720 DSP data/status | `3600/3602` | **`3000/3002` (PCS0)** [verified: `dsp_write_frame` `D3293`, §11] |
-  | interrupt controller | 8259 at `3200` | not yet traced; probably the internal 80188 controller at PCB `04022-0403E` [I] |
+  | interrupt controller | 8259 at `3200` | not traced (out of scope); probably the internal 80188 controller at PCB `04022-0403E` [I] |
 
   Runtime accesses mostly go through pointer or segment variables, so trace them in Ghidra or an emulator.
 
@@ -736,7 +727,7 @@ the 2000 program for board I/O (8259, `0x36xx` DSP) until the 4001 PCS mapping i
 
 ### 11.1 Call chain [verified]
 ```
-IR0 (7720 P0) → dsp_irq_service D615F [4001: not yet found — 80188 interrupts differ]
+IR0 (7720 P0) → dsp_irq_service D615F [4001: not traced, out of scope — 80188 interrupts differ]
    - pulses bit 0x04 of the control latch via [DB84] (= 3401h)
    - reads DSP status via [DB78] (= 3602h): if USF0 (0x20) is set → dsp_frame_tick; else counts misses,
      and 20 in a row → fatal_error(0x23) = "DSP timeout"
@@ -850,16 +841,6 @@ F1 B1 F2 B2 F3 B3 F4, and it reads the voice from p21's high nibble. The only di
 - `w34` gets 8× the shimmer of `w35`.
 - Multiply helpers: `fx_mul_q15` `D3521` = (a·b) >> 15, `fx_mul_shr12` `D3501` = (a·b) >> 12 (and >> 13 through a
   pointer), `fx_mul_shr11` `D34DC` = (a·b) >> 11.
-
-### 11.5 Next
-- ~~Decompile the DSP program~~: done, §13.
-- Find the 4001's DSP interrupt path (80188 INT0-INT3 via the PCB at `04000h`) and its `dsp_irq_service` equivalent.
-- ~~The parameter generator~~: done, see §12.
-- When the DSP program is decompiled (see the §2 note: the 2000 dump is the reference, probably also valid for the 4001),
-  map w0-w39 to the DSP's input registers to confirm the roles above. **Use [tvd] `src/engine/generate.c`
-  (`Synth_Generate`) as the guide.** It consumes the same 40-word frame in 16-bit fixed point: a table-interpolated
-  glottal pulse, the cascade resonators, the parallel fricative branch, de-emphasis and output scaling. It is very
-  likely a C port of the µPD7720 program **[I]**.
 
 ## 12. Parameter generator (decompiled 2026-09-24; Prose 2000 program, 4001 addresses in brackets)
 
@@ -1078,7 +1059,7 @@ The `pg_finalize` helpers decide where every transition starts. The model is **K
 - **Trace check ("see."):** /s/ ends at F2 = 1852 Hz, and W(F2) after `s` = 0.2, so the predicted onset for /i/
   is 0.2·2220 + 0.8·1852 = 1926 Hz = byte 178. The first vowel frame reads **179**, followed by the ramp to 213.
 
-### 12.6 Next
+### 12.6 TruVoice match and open points
 - **TruVoice match [confirmed 2026-09-24]:** `TV_ENG32.DLL` contains this generator ported to 32-bit C.
   - Code: `100122E0` = `paramgen_load_targets`, `10012C70` = `paramgen_segment`, `1006F910` = `param_emit_segment`,
     `10011B60` = `paramgen_run`.
@@ -1100,8 +1081,6 @@ The `pg_finalize` helpers decide where every transition starts. The model is **K
     (`Stage3_GlideTab`). The Prose `pg_vowel` pulls toward one neutral target, so these look like TruVoice additions
     **[I]**.
   - Details: TruVoice REFERENCE §7.5 and §7.9.
-- ~~The four `pg_finalize` helpers~~: done, see §12.5a.
-- ~~Phoneme log reader~~: done, `ESC[16N` phoneme echo (§8.3).
 - Feature-bit names used by the rules, inferred from the phoneme membership of `DS:00A8` (TruVoice `0x100A2C50`):
   - plane +0: 01 syllabic, 02 sonorant, 04 voiced, 10 nasal, 20 stop/affricate, 40 fricative, 80 any phoneme
   - plane +80: 08 affricate, 10 reduced vowel (`@ | p`), 20 non-vowel segment
@@ -1220,8 +1199,9 @@ it at the loop top instead, so the loop and the output rate coincide. The C mode
 parallel branch and de-emphasis. The DSP now confirms the frame roles of §11.3.
 
 ## 14. C decompilation (`src/`, started 2026-09-24)
-Build: `cmake -S src -B <dir> -G Ninja [-DPROSE_ROM_DIR=<abs path to prose_v3>] && cmake --build <dir>`.
-`-DPROSE_VERSION=1` builds the v1.1 tree (`src/v1/`, §16) instead of v3.4.1 (default `3`).
+Build: `cmake -S src -B <dir> -G Ninja [-DCMAKE_C_COMPILER=gcc] [-DPROSE_ROM_DIR=<abs path to prose_v3>] &&
+cmake --build <dir>` (README). The libraries of both versions and the speech library (API.md) are always built;
+`-DPROSE_VERSION=1` builds the v1.1 tests (`src/v1/`, §16) instead of v3.4.1's (default `3`).
 **The ROM's data contents are built in** (2026-09-25): `tools/rom_extract.py ROMDIR` writes `src/data/prose_data.c`
 and `.h`, and the programs need no ROM files. The 8086 ROM holds code at `D3000-E582D`, the lexicon segment at
 `E9000-F268D` and the data segment at `F4100-FEFA9` (`DS:0000-AEA9`); the rest is FF fill, apart from the reset jump
@@ -1342,9 +1322,12 @@ are one line shorter than the emulator trace, which also logs the last `dsp_buil
 empty. Audio cannot be compared sample for sample from `-s`: the DSP's noise generator runs from its reset, and the
 emulator run speaks after a 3.75 s pre-roll (`chain_replay` covers the DSP).
 
-**Next:** a library API for the DLL (speak, settings, index markers, cancel/pause, callbacks for index, done,
-phoneme and audio), then split the extracted data into named tables as their structures are documented. Later: capture the lexical and prosody stages from text that
-reaches their untested paths (word types, `!p;d!` values).
+**Speech library** (2026-09-26): `prose.dll` / `libprose.so` in `src/dll/`, API and design in API.md. It drives
+both versions the way `pipeline_play` and `v1_pipeline_play` do and gives the same samples; the decompiled files
+only gained hooks (API.md, Implementation), and the replays above are unchanged with them.
+
+**Next:** split the extracted data into named tables as their structures are documented; capture the lexical and
+prosody stages from text that reaches their untested paths (word types, `!p;d!` values).
 
 ## 15. Synthesis loop and the pipeline stages (decompiled 2026-09-24/25; Prose 2000 program)
 
@@ -2178,6 +2161,6 @@ more.
 data, because nearly every routine differs in code and in data layout. Its front end would need its own
 decompilation, and its audio cannot be produced faithfully without its DSP ROM: the 37-word frame would have to be
 mapped onto the v3.12 DSP model, which is an approximation. **Decision (user, 2026-09-25):** decompile v1.1 as its
-own tree, `src/v1/`, built with `cmake -DPROSE_VERSION=1`. Its audio is approximated by mapping its frames onto
+own tree, `src/v1/` (its tests build with `cmake -DPROSE_VERSION=1`; the speech library holds both versions). Its audio is approximated by mapping its frames onto
 the v3.12 DSP model; the v3.12 DSP ROMs are the only Prose DSP ROMs known to survive. Its data comes from
 `tools/rom_extract.py --v1 prose_v1` (`src/data/prose_v1_data.c`, 35,232 bytes: `DS:0000-899F`, the data to `DS:8712`, then the FF padding and the reset jump, which a lexicon scan can reach).
