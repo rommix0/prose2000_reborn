@@ -345,7 +345,7 @@ of speech, peak RMS, and median F0 by autocorrelation. Baseline: speech from
 
 | Seq | [cgrm] meaning, range | Prose v3.4.1 result | Status |
 |---|---|---|---|
-| `nV` | voice | **3 voices.** 0: F0 about 132 Hz (default), 1: about 111 Hz, 2: about 167 Hz. Values 3 and 7 give output byte-identical to 2, so they are clamped. Voices also differ in level; whether formants differ is not yet measured. | **verified** |
+| `nV` | voice | **3 voices.** 0: F0 about 132 Hz (default), 1: about 111 Hz, 2: about 167 Hz. Values 3 and 7 give output byte-identical to 2, so they are clamped. The voices also differ in level and in their per-voice tables: the fixed 5th-formant resonator and the source and glottal-filter constants (§11.3), source type and gain (p18/p19, §11.4) and the F4 cap (§12.5a). | **verified** |
 | `na` | amplitude 0-16, **higher = quieter** | `1a` peak RMS 6605; `12a` peak RMS 1835 | **verified** |
 | `np` | pitch 50-400 | `150p` → F0 213 Hz; `60p` → 95 Hz | **verified** |
 | `nr` | rate 50-250 wpm | `250r` → 1.01 s of speech; `80r` → 3.18 s (baseline 1.81 s) | **verified** |
