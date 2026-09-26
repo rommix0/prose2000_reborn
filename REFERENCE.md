@@ -4,7 +4,7 @@ Detail store for [AGENTS.md](AGENTS.md). Read only the section you need
 (`grep -n '^## ' REFERENCE.md` gives the table of contents with line numbers).
 
 Sources are tagged: **[877]** = US4659877A, **[583]** = US4716583A,
-**[216]** = US4979216A, **[MAME]** = `prose_v3/tsispch.cpp`, **[cgrm]** = `cgrm.h`
+**[216]** = US4979216A, **[MAME]** = `prose_v3/tsispch.cpp`, **[cgrm]** = the TruVoice SDK header `cgrm.h` (removed from the repository; in its git history)
 (TruVoice SDK header). Everything from a patent is
 a *design description*, not a verified fact about the dumped firmware — confirm
 it in the ROMs before relying on it.
@@ -18,7 +18,7 @@ it in the ROMs before relying on it.
 | `docs/US4659877A.*` | Verbal computer terminal system | 1983-11-16 / 1987-04-21 | Dorsey, Williams, Vyas, Groner | TTS channel hardware (T/VIS board), CPU↔DSP 10 ms frame protocol, index markers. |
 | `docs/US4716583A.*` | Verbal computer terminal system (continuation of 877) | 1986-10-22 / 1987-12-29 | same | Text is nearly identical to 877: typo fixes, UART figure reference dropped, and "initiating calls" added to the abstract and summary. Skip it unless you are quoting claims. |
 | `docs/US4979216A.*` | TTS synthesis using context-dependent vowel allophones | 1989-02-17 / 1990-12-18 | Malsheen, Groner, L. Williams | Names the **Prose 2000** directly. Describes the TTS pipeline, formant parameters, vowel-allophone tables and codebooks. **Most relevant to firmware RE.** |
-| `cgrm.h` (repo root) | Centigram **TruVoice** SDK header (`TV_ENG32.DLL`), community-annotated (@rommix0) | c. 1996 | — | TruVoice is the successor to Prose. The header lists the `ESC [ n X` host command set, ranges, defaults and voice names. Its Prose-compatibility claims were tested in §8. Tagged **[cgrm]**. |
+| `cgrm.h` (removed; see git history) | Centigram **TruVoice** SDK header (`TV_ENG32.DLL`), community-annotated (@rommix0) | c. 1996 | — | TruVoice is the successor to Prose. The header lists the `ESC [ n X` host command set, ranges, defaults and voice names. Its Prose-compatibility claims were tested in §8. Tagged **[cgrm]**. |
 | `..\tv-decomp-main\` (not in this repo) | **OpenTV**: a byte-exact C decompilation of TruVoice `CGRM_EN.DLL` 5.0.0.51 (SAPI 4, Oct 1997) | 2026 | third party | Its `docs/` and `src/engine/` describe the TruVoice back end, which turns out to be a port of the Prose one (§11.3, §12.6). `frame.c` = our `dsp_build_frame`; `generate.c` (`Synth_Generate`) is a C port of the filter that the Prose runs on the µPD7720. Its addresses are `CGRM_EN.DLL`, not `TV_ENG32.DLL`. Tagged **[tvd]**. |
 
 Notes on the files:
