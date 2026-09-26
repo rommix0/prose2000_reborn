@@ -16,9 +16,12 @@ void prose_rom_builtin(prose_rom *rom);
 /* The firmware's data segment is F410, so DS:x is linear F4100 + x. Tables are read from the ROM image. */
 #define PROSE_DS 0xF4100u
 
+/* DS:BF00 and up wrap round to linear 00000, which is RAM, not ROM; the image has no RAM, so those read as 0. No
+   table read is known to go there; the guard keeps a bad index inside the array. */
 static inline uint8_t prose_ds_byte(const prose_rom *rom, uint16_t off)
 {
-	return rom->image[PROSE_DS + off - 0xC0000u];
+	uint32_t a = PROSE_DS + off - 0xC0000u;
+	return a < sizeof rom->image ? rom->image[a] : 0;
 }
 
 static inline int16_t prose_ds_word(const prose_rom *rom, uint16_t off)

@@ -328,13 +328,18 @@ int main(int argc, char **argv)
 	if (say) { /* the idle firmware; the text follows as the host sends it */
 		static char text[4096];
 		size_t n = 0;
-		for (const char *c = say; *c && n < sizeof text - 2; c++) /* \e = ESC */
+		const char *c = say;
+		for (; *c && n < sizeof text - 2; c++) /* \e = ESC */
 			if (c[0] == '\\' && c[1] == 'e') {
 				text[n++] = 0x1B;
 				c++;
 			} else {
 				text[n++] = *c;
 			}
+		if (*c) {
+			fprintf(stderr, "the text is too long (at most %u characters)\n", (unsigned)sizeof text - 2);
+			return 2;
+		}
 		text[n++] = '\r';
 		text[n] = 0;
 		host_text = text;

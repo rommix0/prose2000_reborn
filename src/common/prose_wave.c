@@ -75,10 +75,19 @@ int prose_wave_write(const int16_t *pcm, size_t count)
 	memcpy(b + 1, pcm, count * 2);
 	b->hdr.lpData = (LPSTR)(b + 1);
 	b->hdr.dwBufferLength = (DWORD)(count * 2);
-	waveOutPrepareHeader(out, &b->hdr, sizeof b->hdr);
+	if (waveOutPrepareHeader(out, &b->hdr, sizeof b->hdr) != MMSYSERR_NOERROR) {
+		free(b);
+		return -1;
+	}
+	/* a buffer the device did not take never gets WHDR_DONE, so it must not stay queued (close would wait on it) */
+	if (waveOutWrite(out, &b->hdr, sizeof b->hdr) != MMSYSERR_NOERROR) {
+		waveOutUnprepareHeader(out, &b->hdr, sizeof b->hdr);
+		free(b);
+		return -1;
+	}
 	*queued_tail = b;
 	queued_tail = &b->next;
-	return waveOutWrite(out, &b->hdr, sizeof b->hdr) == MMSYSERR_NOERROR ? 0 : -1;
+	return 0;
 }
 
 void prose_wave_close(void)
