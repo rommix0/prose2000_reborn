@@ -40,6 +40,7 @@ playback (Windows). With `-DPROSE_VERSION=1` the program is `v1_pipeline_play`.
 | `src/` | The decompilation, one directory per firmware stage; `src/v1/` is v1.1, `src/tests/` the players and replay tests |
 | `src/data/` | Data extracted from the ROMs (lexicon, rule tables, targets, DSP tables) |
 | `REFERENCE.md` | Hardware, firmware and verification notes |
+| `API.md` | Draft API of the planned DLL |
 | `docs/` | The patents describing the Prose 2000 (text extracts and scans) |
 | `cgrm.h` | Centigram TruVoice SDK header (Prose's successor), for the command set |
 

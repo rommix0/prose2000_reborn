@@ -18,6 +18,7 @@ section you need: `grep -n '^## ' REFERENCE.md`.
 | `prose_v3/tsispch.cpp` | MAME driver. **Authoritative memory map and ROM layout** |
 | `cgrm.h` | Centigram TruVoice (Prose successor) SDK header: `ESC[` command set, voices, ranges |
 | `prose_v3/upd7725.c/.h`, `prose_v3/dasm7725.c` | MAME µPD7725 core and disassembler (reference) |
+| `API.md` | **Draft API of the planned DLL** (`prose_*` exports, callbacks, raw frame synthesis, phonemes). Audio stays at 10 kHz |
 | `docs/` | Patents US4659877A, US4716583A and US4979216A. **Read or grep the `.txt` extracts**, which are about 50-80 KB. Use the PDF scans only for figures. |
 
 **Git:** the repository holds `src/`, `docs/`, the docs and `cgrm.h`. `prose_v1/`, `prose_v3/`, `prose_v3_4001/`,
