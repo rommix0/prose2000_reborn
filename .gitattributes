@@ -1,4 +1,2 @@
 * text=auto eol=lf
 *.pdf binary
-# cmd.exe mishandles goto labels in batch files with LF endings
-*.bat text eol=crlf

@@ -14,17 +14,26 @@ Two firmware versions are covered:
 Every stage was checked against an emulator of the original board: byte-exact on captured calls, and frame- or
 sample-exact end to end.
 
+## Building
+
+Everything is built with CMake (3.20 or later) and a C99 compiler: gcc or clang on Linux, MinGW-w64 gcc on Windows.
+The ROM data the C needs is built in (`src/data/`), and no audio packages are needed.
+
+```
+cmake -S src -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+```
+
+Any generator works (add `-G Ninja` for Ninja; on Windows with MinGW, Ninja or `-G "MinGW Makefiles"`). This builds
+the speech library, `prose_say`, the samples and the v3.4.1 tests into `build/`. Options:
+
+- `-DPROSE_VERSION=1` builds the v1.1 tests instead of v3.4.1's (the library always has both versions).
+- `-DPROSE_SAMPLES=OFF` leaves out the samples.
+
 ## The speech library
 
-Both versions are also built into one library, `prose.dll` on Windows and `libprose.so` on Linux, with the API in
+Both versions are built into one library, `prose.dll` on Windows and `libprose.so` on Linux, with the API in
 [API.md](API.md) (header `src/include/prose.h`). Audio is 10 kHz, 16-bit mono.
-
-```
-build.bat                      (Windows, MinGW-w64 gcc)
-make                           (Linux, gcc or clang)
-```
-
-Either one puts the library, `prose_say` and the samples in `build/`:
 
 ```
 build/prose_say "Hello, my friend."
@@ -34,17 +43,7 @@ build/prose_say -1 -t "Hello."          (v1.1; print the phonemes)
 
 The samples (`samples/`) are the examples from API.md: events and markers, audio buffers, raw frame synthesis,
 parameter export and import as CSV, and a custom glottal pulse. On Linux the speaker output uses PulseAudio or ALSA,
-loaded at run time, so building needs no audio packages.
-
-## Building the tests
-
-```
-cmake -S src -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
-cmake --build build
-```
-
-This also builds the library. Add `-DPROSE_VERSION=1` for the v1.1 tests. The ROM data the C needs is built in
-(`src/data/`).
+loaded at run time.
 
 ## Running the tests
 
@@ -54,7 +53,8 @@ build/pipeline_play -s "\e[150pHigher pitch." -w out.wav -q
 ```
 
 `-s` speaks the text, `\e` stands for ESC in the Prose's `ESC[` commands, `-w` saves a 10 kHz WAV file and `-q` skips
-playback (Windows). With `-DPROSE_VERSION=1` the program is `v1_pipeline_play`.
+playback (Windows). With `-DPROSE_VERSION=1` the program is `v1_pipeline_play`. The replay tests are described in
+REFERENCE.md §14.
 
 ## Layout
 

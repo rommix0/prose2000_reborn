@@ -1,8 +1,8 @@
 # Prose speech library API
 
 The speech library around the C decompilation in `src/`: `prose.dll` on Windows, `libprose.so` on Linux. The header is
-[`src/include/prose.h`](src/include/prose.h); `build.bat` (MinGW-w64) or `make` (Linux) builds the library,
-`prose_say` and the samples into `build/` (README). The examples below are runnable programs in `samples/`. How the
+[`src/include/prose.h`](src/include/prose.h); the CMake project in `src/` builds the library, `prose_say`
+and the samples (README). The examples below are runnable programs in `samples/`. How the
 library drives the firmware: [Implementation](#implementation).
 
 ## Conventions
