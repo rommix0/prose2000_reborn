@@ -19,13 +19,25 @@ sample-exact end to end.
 Everything is built with CMake (3.20 or later) and a C99 compiler: gcc or clang on Linux, MinGW-w64 gcc on Windows.
 The ROM data the C needs is built in (`src/data/`), and no audio packages are needed.
 
+Windows (MinGW-w64, e.g. winlibs, which includes Ninja):
+
+```
+cmake -S src -B build -G Ninja -DCMAKE_C_COMPILER=gcc -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+```
+
+`-G Ninja` and `-DCMAKE_C_COMPILER=gcc` matter when Visual Studio is installed too: without them CMake picks Visual
+Studio and MSVC, which the project is not built or tested with. With `mingw32-make` instead of Ninja, use
+`-G "MinGW Makefiles"`.
+
+Linux:
+
 ```
 cmake -S src -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build
 ```
 
-Any generator works (add `-G Ninja` for Ninja; on Windows with MinGW, Ninja or `-G "MinGW Makefiles"`). This builds
-the speech library, `prose_say`, the samples and the v3.4.1 tests into `build/`. Options:
+Either builds the speech library, `prose_say`, the samples and the v3.4.1 tests into `build/`. Options:
 
 - `-DPROSE_VERSION=1` builds the v1.1 tests instead of v3.4.1's (the library always has both versions).
 - `-DPROSE_SAMPLES=OFF` leaves out the samples.
