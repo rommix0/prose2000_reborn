@@ -155,18 +155,19 @@ been seen on real input so far; this is for robustness and bug reports.
 
 ```c
 typedef struct {
-	void (*on_index)(prose_h h, int n, uint64_t position, void *user);           /* marker n reached */
-	void (*on_done)(prose_h h, int last_index, uint64_t total, void *user);      /* utterance finished */
-	void (*on_phoneme)(prose_h h, char ph, int ms, uint64_t position, void *user); /* phoneme and its length */
-	void (*on_params)(prose_h h, const uint8_t *p, uint64_t position, void *user); /* one frame's parameters */
+	void (*on_index)(prose_h h, int n, uint32_t position, void *user);           /* marker n reached */
+	void (*on_done)(prose_h h, int last_index, uint32_t total, void *user);      /* utterance finished */
+	void (*on_phoneme)(prose_h h, char ph, int ms, uint32_t position, void *user); /* phoneme and its length */
+	void (*on_params)(prose_h h, const uint8_t *p, uint32_t position, void *user); /* one frame's parameters */
 } prose_callbacks;
 
-typedef int (*prose_audio_cb)(prose_h h, const int16_t *pcm, size_t count, uint64_t position, void *user);
+typedef int (*prose_audio_cb)(prose_h h, const int16_t *pcm, size_t count, uint32_t position, void *user);
 typedef int (*prose_frame_cb)(prose_h h, int frame, const int16_t *pcm, int count, void *user);
 ```
 
-- `position` and `total` count samples from the start of the utterance. Events fire in order, just before the audio
-  that contains them is delivered (buffer mode) or played (`prose_speak`).
+- `position` and `total` count samples from the start of the utterance, as a `uint32_t` (enough for about 119
+  hours of audio). Events fire in order, just before the audio that contains them is delivered (buffer mode) or
+  played (`prose_speak`).
 - `prose_audio_cb` and `prose_frame_cb` return 0 to continue, nonzero to stop.
 - `prose_speak` callbacks run on the DLL's audio thread; data they share with other threads needs locking.
 - v1.1 has no phoneme echo in its firmware; the DLL takes its phonemes from its own playback instead.
@@ -198,13 +199,13 @@ typedef struct {
 	int done;
 } app_state;
 
-static void my_index(prose_h h, int n, uint64_t pos, void *user)
+static void my_index(prose_h h, int n, uint32_t pos, void *user)
 {
 	app_state *s = user;
 	s->last_index = n;
 }
 
-static void my_done(prose_h h, int last_index, uint64_t total, void *user)
+static void my_done(prose_h h, int last_index, uint32_t total, void *user)
 {
 	app_state *s = user;
 	s->done = 1;
@@ -243,14 +244,14 @@ typedef struct {
 	volatile int cancelled;  /* set by another thread to abort */
 } job;
 
-static int on_audio(prose_h h, const int16_t *pcm, size_t count, uint64_t pos, void *user)
+static int on_audio(prose_h h, const int16_t *pcm, size_t count, uint32_t pos, void *user)
 {
 	job *j = user;
 	my_output_write(j->out, pcm, count);     /* copy it out: the buffer is reused for the next chunk */
 	return j->cancelled;                     /* nonzero stops synthesis */
 }
 
-static void on_index(prose_h h, int n, uint64_t pos, void *user)
+static void on_index(prose_h h, int n, uint32_t pos, void *user)
 {
 	job *j = user;
 	my_output_bookmark(j->out, n, pos * 2);  /* SAPI wants a byte offset: 2 bytes per sample */
@@ -308,16 +309,16 @@ One row per 10 ms frame, in physical units, with the parameter names as the head
 text goes through `prose_speak_to_buffer` with a callback that discards it.
 
 ```c
-static void on_params(prose_h h, const uint8_t *p, uint64_t pos, void *user)
+static void on_params(prose_h h, const uint8_t *p, uint32_t pos, void *user)
 {
 	FILE *f = user;
-	fprintf(f, "%llu", (unsigned long long)(pos / 10));      /* time in ms: 10 samples per ms */
+	fprintf(f, "%lu", (unsigned long)(pos / 10));            /* time in ms: 10 samples per ms */
 	for (int i = 0; i < prose_param_count(h); i++)
 		fprintf(f, ",%g", prose_param_value(h, i, p[i]));    /* Hz or dB */
 	fputc('\n', f);
 }
 
-static int discard_audio(prose_h h, const int16_t *pcm, size_t count, uint64_t pos, void *user)
+static int discard_audio(prose_h h, const int16_t *pcm, size_t count, uint32_t pos, void *user)
 {
 	return 0;
 }
@@ -557,14 +558,14 @@ enum { PROSE_GLOTTAL_FLOW, PROSE_GLOTTAL_DERIVATIVE };
 /* ---- callbacks: `user` is the caller's own pointer, passed back unchanged ---- */
 
 typedef struct {
-	void (PROSE_CALL *on_index)(prose_h h, int n, uint64_t position, void *user);
-	void (PROSE_CALL *on_done)(prose_h h, int last_index, uint64_t total, void *user);
-	void (PROSE_CALL *on_phoneme)(prose_h h, char ph, int ms, uint64_t position, void *user);
-	void (PROSE_CALL *on_params)(prose_h h, const uint8_t *p, uint64_t position, void *user);
+	void (PROSE_CALL *on_index)(prose_h h, int n, uint32_t position, void *user);
+	void (PROSE_CALL *on_done)(prose_h h, int last_index, uint32_t total, void *user);
+	void (PROSE_CALL *on_phoneme)(prose_h h, char ph, int ms, uint32_t position, void *user);
+	void (PROSE_CALL *on_params)(prose_h h, const uint8_t *p, uint32_t position, void *user);
 } prose_callbacks;
 
 /* audio from prose_speak_to_buffer; return 0 to continue, nonzero to stop */
-typedef int (PROSE_CALL *prose_audio_cb)(prose_h h, const int16_t *pcm, size_t count, uint64_t position,
+typedef int (PROSE_CALL *prose_audio_cb)(prose_h h, const int16_t *pcm, size_t count, uint32_t position,
                                          void *user);
 /* after each frame of prose_render_frames; return 0 to continue, nonzero to stop */
 typedef int (PROSE_CALL *prose_frame_cb)(prose_h h, int frame, const int16_t *pcm, int count, void *user);

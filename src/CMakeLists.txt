@@ -6,7 +6,7 @@
 # directory. That file embeds the DSP program ROM, so it is never written into the source tree.
 cmake_minimum_required(VERSION 3.20)
 project(prose_decomp LANGUAGES C)
-set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
 	add_compile_options(-Wall -Wextra)
