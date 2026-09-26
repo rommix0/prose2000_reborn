@@ -1298,7 +1298,7 @@ the C output through the sound card (Windows), e.g. `dsp_replay CAPTURE synth pl
   monotone, phoneme input with stress digits and `Q`, r-coloured vowels, the U glide, H after vowels.
   Text-rules inputs: numbers (ordinals, decimals, fractions, money, times, phone numbers, millions), abbreviations
   and titles, `Dr.`/`St.`/`ft.` both ways, states, compass points, symbols and punctuation, mode flags `N1-8`,
-  `F7/8/13`, `A2-4`, word mode, commands inside numbers and after abbreviations, phoneme input with `!d;p!` and
+  `F7/8/13`, `A2-4`, word mode, commands inside numbers and after abbreviations, phoneme input with `!p;d!` and
   `/d;p/`, and (harness forcing `ESC[1I` to store 2) every two-letter phoneme name and mark.
 - `boot_check IDLE.ram`: runs the C power-up (`power_up`: boot, self-test, hardware set-up, `loop_entry`, then
   the transmitter sends `ESC[0R` XON). It compares all of RAM except the stack with the emulator's RAM at the loop's
@@ -1329,7 +1329,7 @@ the C output through the sound card (Windows), e.g. `dsp_replay CAPTURE synth pl
   text rules set (`word_boundary`, the homograph skip), affix codes 2-7, the T-before-C stem repair, some allophone
   contexts.
   Not reached: test mode `t` in `paramgen_hold`, the unused rule ops, `fatal_error` paths, durations and F0 given with
-  phoneme input (`!d;p!`, §15.4, not yet captured at prosody), some contours and rare phoneme contexts. That code is decompiled but untested.
+  phoneme input (`!p;d!`, §15.4; since verified frame-exact from text), some contours and rare phoneme contexts. That code is decompiled but untested.
 
 **Power-up** (2026-09-25): `pipeline_play -s TEXT` needs no capture. From the C power-up, 13 texts are
 frame-exact against the emulator, including the first idle frame after boot, and their replies match byte for byte.
@@ -1344,7 +1344,7 @@ emulator run speaks after a 3.75 s pre-roll (`chain_replay` covers the DSP).
 
 **Next:** a library API for the DLL (speak, settings, index markers, cancel/pause, callbacks for index, done,
 phoneme and audio), then split the extracted data into named tables as their structures are documented. Later: capture the lexical and prosody stages from text that
-reaches their untested paths (word types, `!d;p!` values).
+reaches their untested paths (word types, `!p;d!` values).
 
 ## 15. Synthesis loop and the pipeline stages (decompiled 2026-09-24/25; Prose 2000 program)
 
@@ -1597,11 +1597,15 @@ context: `Dr.` (Doctor / Drive), `St.` (Saint / Street), `ft.` (Fort / feet). Mo
 select variants.
 
 **Phoneme input** (`ESC[1I`) [verified: code and captures]: letters, stress digits and the phoneme alphabet pass as
-symbols. A phoneme may be followed by `!d;p!` or `/d;p/` (read by ops 20/21 from the node two after the phoneme):
-- `!d;p!`: *d* ≤ 300 and *p* 40-160 or 0 set `+8 = (d − 100)/2` and the `+6` low byte to `p − 100` (relative);
-- `/d;p/`: *d* 50-200 (or ≤ 2) and *p* ≤ 60 set `+8 = d/2` and `+6` = *p* (absolute);
-- *d* missing counts as 0, *d* = 0 as 2; only phonemes with feature bit `0x80` take them. These are the durations and
-  F0 values that the prosody stage's `given_values` applies (§15.2) [inferred].
+symbols. A phoneme may be followed by `!p;d!` or `/p;d/`, **pitch first, then duration** (read by ops 20/21 from
+the node two after the phoneme) [verified 2026-09-25: emulator, and the C pipeline frame-exact against it]:
+- `/p;d/` **absolute**: *p* = F0 in Hz, 50-200 (stored as *p*/2 in the node's `+8`; `0` gives F0 0, unvoiced); *d* =
+  duration in 10 ms frames, 1-60 (`+6`). `Ha/180;40/1` gives the vowel 40 frames at F0 180.
+- `!p;d!` **relative** to the rule values: *p* 0-300 adds *p* − 100 Hz to F0 (result clamped to 50-200 Hz); *d* 40-160
+  adds *d* − 100 frames to the duration (result clamped to 2-60). `Ha!160;130!1` gives +60 Hz and +30 frames.
+- Either number may be left out (`/180/`, `/;40/`); a value out of range makes the whole mark do nothing. The mark
+  must come **straight after the phoneme, before its stress digit** (`a/180;40/1`; `a1/180;40/` has no effect).
+  Only phonemes (feature bit `0x80`) take it. The prosody stage's `given_values` applies it (§15.2).
 
 **`phoneme_spelling`** runs with input mode 2. The escape parser refuses `ESC[2I` (`I` > 1, `D6931`), but **the input
 stage produces it**: with `ESC[6A`, `[` becomes an `I` command with value 2 while A-flag 7 is on (the default), and
