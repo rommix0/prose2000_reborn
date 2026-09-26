@@ -1,4 +1,4 @@
-# Prose 2000 decompilation
+# Prose 2000 Reborn
 
 A C decompilation of the firmware of the Speech Plus / Telesensory Systems **Prose 2000** text-to-speech
 synthesizer (8086 host CPU plus an NEC µPD7720 formant-synthesis DSP). It turns text into speech entirely in C,
@@ -6,7 +6,7 @@ with no emulator and no ROM files.
 
 Two firmware versions are covered:
 
-- **v3.4.1** (the default build): the whole pipeline, from the serial input, escape commands, text rules, lexicon,
+- **v3.4.1** (1988, the default build): the whole pipeline, from the serial input, escape commands, text rules, lexicon,
   letter-to-sound rules and prosody to the parameter generator, the frame builder and the DSP program.
 - **v1.1** (1983, `-DPROSE_VERSION=1`): the same pipeline for the older firmware. Its DSP program was never dumped,
   so its frames are played through the v3.12 DSP model, which makes its audio an approximation.
@@ -70,15 +70,15 @@ REFERENCE.md §14.
 
 ## Layout
 
-| Path | What |
-|---|---|
-| `src/` | The decompilation, one directory per firmware stage; `src/v1/` is v1.1, `src/tests/` the players and replay tests |
-| `src/dll/`, `src/include/`, `src/cli/` | The speech library, its header and `prose_say` |
-| `samples/` | Programs using the library (the API.md examples) |
-| `src/data/` | Data extracted from the ROMs (lexicon, rule tables, targets, DSP tables) |
-| `REFERENCE.md` | Hardware, firmware and verification notes |
-| `API.md` | The library's API |
-| `docs/` | The patents describing the Prose 2000 (text extracts and scans) |
+| Path                                   | What                                                                                                              |
+| -------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `src/`                                 | The decompilation, one directory per firmware stage; `src/v1/` is v1.1, `src/tests/` the players and replay tests |
+| `src/dll/`, `src/include/`, `src/cli/` | The speech library, its header and `prose_say`                                                                    |
+| `samples/`                             | Programs using the library (the API.md examples)                                                                  |
+| `src/data/`                            | Data extracted from the ROMs (lexicon, rule tables, targets, DSP tables)                                          |
+| `REFERENCE.md`                         | Hardware, firmware and verification notes                                                                         |
+| `API.md`                               | The library's API                                                                                                 |
+| `docs/`                                | The patents describing the Prose 2000 (text extracts and scans)                                                   |
 
 ## Notes
 
