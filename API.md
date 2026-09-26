@@ -48,7 +48,7 @@ Each setter queues the matching escape command ahead of the next text, so it tak
 |---|---|
 | `prose_speak(h, text)` | returns at once (0 or an error); plays through the sound card on the DLL's audio thread |
 | `prose_speak_to_wave(h, filename, text)` | blocks until done; writes a 10 kHz WAV file. Returns 0 or an error |
-| `prose_speak_to_buffer(h, text, buf, buf_samples, on_audio, user)` | blocks until done; audio through a callback (below). Returns the number of samples, or an error |
+| `prose_speak_to_buffer(h, text, buf, buf_samples, on_audio, user)` | blocks until done; audio through a callback (below). Returns the number of samples as an `int32_t` (enough for about 59 hours at 10 kHz), or an error |
 | `prose_text_to_phoneme(h, text, out, out_size)` | writes the phoneme string (e.g. `"HeLO1 ."`); returns its full length, as `snprintf` does, so call again with a bigger buffer if the result is ≥ `out_size`; or an error |
 | `prose_index(h, n)` | queues marker `n` (1–255); `on_index` fires when it is reached |
 | `prose_stop(h)` | drops everything queued (`ESC[S`); `on_done` still fires |
@@ -259,7 +259,7 @@ static void on_index(prose_h h, int n, uint64_t pos, void *user)
 int16_t buf[1000];                           /* 100 ms chunks */
 job j = { out, 0 };
 prose_set_callbacks(h, &(prose_callbacks){ .on_index = on_index }, &j);
-long total = prose_speak_to_buffer(h, "Hello \x1B[1i world.", buf, 1000, on_audio, &j);
+int32_t total = prose_speak_to_buffer(h, "Hello \x1B[1i world.", buf, 1000, on_audio, &j);
 ```
 
 Stopping: return nonzero from `on_audio`, or call `prose_stop(h)` from another thread; the call returns early and
@@ -592,8 +592,8 @@ PROSE_API void PROSE_CALL prose_set_speak_punctuation(prose_h h, int on); /* v3.
 
 PROSE_API int PROSE_CALL prose_speak(prose_h h, const char *text);      /* returns at once */
 PROSE_API int PROSE_CALL prose_speak_to_wave(prose_h h, const char *filename, const char *text);
-PROSE_API long PROSE_CALL prose_speak_to_buffer(prose_h h, const char *text, int16_t *buf, size_t buf_samples,
-                                                prose_audio_cb on_audio, void *user); /* samples, or an error */
+PROSE_API int32_t PROSE_CALL prose_speak_to_buffer(prose_h h, const char *text, int16_t *buf, size_t buf_samples,
+                                                   prose_audio_cb on_audio, void *user); /* samples, or an error */
 PROSE_API int PROSE_CALL prose_text_to_phoneme(prose_h h, const char *text, char *out, size_t out_size);
 PROSE_API void PROSE_CALL prose_index(prose_h h, int n);                 /* 1-255 */
 PROSE_API void PROSE_CALL prose_stop(prose_h h);
