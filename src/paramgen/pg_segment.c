@@ -4,11 +4,12 @@
  */
 #include "pg.h"
 
-/* Context flags read by rule conditions of kind 0 (§12.5): word n at DS:EE1C + 2n. */
+/* Context flags read by rule conditions of kind 0 (§12.5): word n at DS:EE1C + 2n. Flags 6-9 give the class of the
+ * next sound when it is a vowel (DS:98C2): V0 high front, V1 other front, V2 back rounded, V3 central/low. */
 #define CTX(n) (0xEE1Cu + 2u * (unsigned)(n))
 enum {
 	CTX_VOICED, CTX_PREV_VOWEL, CTX_PREV_CLOSURE, CTX_PREV_VOICED, CTX_PREV_OTHER, CTX_RELEASED,
-	CTX_NEXT_VOWEL, CTX_NEXT_VOICED, CTX_NEXT_CLOSURE, CTX_NEXT_OTHER, CTX_NEXT_STRESSED
+	CTX_NEXT_V0, CTX_NEXT_V1, CTX_NEXT_V3, CTX_NEXT_V2, CTX_NEXT_STRESSED
 };
 
 #define NEXT_CLASS_TABLE 0x98C2 /* phoneme index -> class of a following phoneme (0-3, 8, 9) */
@@ -185,10 +186,10 @@ void paramgen_segment(void)
 		    ((feature(node_char(next), 0x100) & 1) || node_char(next) == ' ' || node_bit(cur, 6)))
 			ww(CTX(CTX_RELEASED), 1);
 		switch (rsb(NEXT_CLASS_TABLE + phoneme_index(node_char(next)))) {
-		case 0: ww(CTX(CTX_NEXT_VOWEL), 1); break;
-		case 1: ww(CTX(CTX_NEXT_VOICED), 1); break;
-		case 3: ww(CTX(CTX_NEXT_CLOSURE), 1); break;
-		case 2: ww(CTX(CTX_NEXT_OTHER), 1); break;
+		case 0: ww(CTX(CTX_NEXT_V0), 1); break;
+		case 1: ww(CTX(CTX_NEXT_V1), 1); break;
+		case 3: ww(CTX(CTX_NEXT_V3), 1); break;
+		case 2: ww(CTX(CTX_NEXT_V2), 1); break;
 		}
 	}
 	paramgen_apply_rules();
@@ -234,7 +235,7 @@ void paramgen_segment(void)
 	for (int p = 0; p < NPARAM; p++)
 		param_emit_segment(p);
 	if (node_bit(rw(NODE_CUR), 6)) {
-		/* released pre-pausally: F0 falls to 80 Hz (0x28 = F0/2) */
+		/* glottal onset (node bit 6): F0 dips to 40 Hz at the start of the segment */
 		ww(PARAM(P_F0, F_ONSET), 0x28);
 		ww(PARAM(P_F0, F_LOCB), 0x28);
 		ww(PARAM(P_F0, F_DURF), 3);

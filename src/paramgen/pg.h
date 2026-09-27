@@ -47,7 +47,7 @@ static inline int s16(int v) { return (int16_t)v; } /* wrap an intermediate to 1
 
 /* ---- the node list (REFERENCE §12.1) ---- */
 /* Node layout: +0 link to the next (later) node, +2 link to the previous node, +4 flags (bits 0-2 kind, 3-4 stress,
- * 5 phrase-final / word-initial, 6 pre-pausal release, 7 given values relative (input) / the phrase's accent
+ * 5 in a stressed syllable (the vowel and its onset), 6 glottal onset (lexical allophone rules), 7 given values relative (input) / the phrase's accent
  * (after prosody)), +6 low byte duration in frames (a command's value
  * before prosody), +8 F0/2, +9 phoneme char. */
 #define N_FLAGS 4
@@ -121,7 +121,9 @@ int stage_playback_run(void);                         /* D40F4 */
 
 static inline int phoneme_index(int ch) { return rsb(rw(PHONEME_MAP_PTR) + ch); }
 static inline unsigned feature(int ch, int plane) { return rb(FEATURES + (unsigned)(ch | plane)); }
-/* DS:98C2: phoneme index -> its class as a following sound: 0 vowel, 1 voiced, 2 other, 3 closure, 8/9 none. */
+/* DS:98C2: phoneme index -> its class as a following sound: vowels 0 high front (4 E U), 1 other front (A a e i k |),
+   2 back rounded (O b c g u w y), 3 central/low (I f r 3 @ o v); 4 glide/liquid, 5 p, 6 fricative, 7 d h H,
+   8 stop/nasal/t Q q, 9 pause. */
 static inline int next_class(int idx) { return rsb(0x98C2 + idx); }
 
 /* ---- per-parameter segment structs (§12.2) ---- */

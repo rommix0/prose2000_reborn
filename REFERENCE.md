@@ -895,8 +895,9 @@ Values are held in natural units (Hz, dB) and converted to track bytes only at e
   from tables at `DS:9905-9A6D` (→ `EBB4-EBCA`, and FN override `DS:9995`). The targets of the
   next phoneme (`EB2A-EB36`) are loaded for anticipation.
 - **Rule engine** `paramgen_apply_rules` DE96E:
-  - The rule group is `DS:9376[class(cur)][class(prev)]`, which indexes 88 groups: pointers at `DS:8CFE`, counts
-    at `DS:8DAE`.
+  - The rule group is `DS:9376[idx(cur)][idx(prev)]`, a matrix over **phoneme pairs** (a row pointer per cur, one
+    byte per prev), which indexes 88 groups: pointers at `DS:8CFE`, counts at `DS:8DAE`. The rows split prev by
+    vowel quality and a few single phonemes (corrected 2026-09-26; the groups are listed in VOICE_CONTEXTS.md).
   - A rule is **8 bytes**: `{cond ptr, action A, far-function list ptr, action B}`.
   - Conditions are byte codes, an AND of terms (encoding in §12.5).
   - A matching rule applies A and B through `paramgen_rule_action` DE81F, masked by `1 << voice`, then calls every
@@ -985,9 +986,11 @@ other words, the table mostly supplies the consonant spectra (parallel amplitude
 - **Kind 0** (`01 n`): context flag *n*, from `DS:EE1C + 2n`, which `paramgen_segment` sets:
   - 0: cur voiced
   - 1-4: previous phoneme's class (0 vowel, 3 closure, 1 voiced, 2 other)
-  - 5: cur is released pre-pausally
-  - 6-9: next phoneme's class
-  - 10: next is stressed
+  - 5: cur is a released stop: a stop before a closure or a pause, or with node bit 6
+  - 6-9: the class of the next sound **if it is a vowel**, from `DS:98C2`: 6 = V0 high front (`4 E U`), 7 = V1
+    other front (`A a e i k |`), 8 = V3 central/low (`I f r 3 @ o v`), 9 = V2 back rounded (`O b c g u w y`).
+    A consonant next sets none of them (corrected 2026-09-26: not vowel/voiced/closure/other)
+  - 10: next is in a stressed syllable (node bit 5)
 - **Kind 1** (`0A`/`0B` *f*): feature bit *f* of the node, using mask and plane from `DS:0048[f]` into the feature
   table `DS:00A8`.
 - **Kind 2** (`12`/`13` chars…): the node's phoneme char is in the list. For example `13 45 69 55` = "next ∈
@@ -1051,7 +1054,7 @@ The `pg_finalize` helpers decide where every transition starts. The model is **K
   `onset = locB = (L + target)/2`, but no more than *d* dB below either side. *d* is 9, or 15 going into silence,
   0 for AH, 10 after a voiceless sound (AH included), 20 for AV of a nasal after a pause, and always 0 for A2-AB
   (verified by the C port, §12.7). The routine then handles AV timing: at voicing changes
-  durB = prev len/4 and durF = cur len/4, or /2 before a pause or in a stressed syllable. It also handles the
+  durB = prev len/4 and durF = cur len/2, or /4 before a pause or in a stressed syllable. It also handles the
   **pre-pausal fall** (into silence after a voiced sound: AV locB 48, F0 locB 58 Hz over 2/3 of the previous
   segment) and fricative/stop special cases.
 - **Vowel reduction** (`pg_vowel`, §12.5): the neutral targets are F1/F2/F3 = 490/1450/2500 Hz. The pull toward
@@ -1086,9 +1089,11 @@ The `pg_finalize` helpers decide where every transition starts. The model is **K
   - plane +80: 08 affricate, 10 reduced vowel (`@ | p`), 20 non-vowel segment
   - plane +100: 01 closure (stops + nasals), 02 vowel, 04 alveolar, 08 rhotic (`3 R`), 10 labial, 20 front vowel,
     40 lateral (`j l L`), 80 velar
-  - plane +180: 01 glide/liquid, 04 palatal-ish, 10 full vowel, 20 back/rounded, 40 fronting offglide
-    (`A E I y`), 80 lax
-  - plane +200: 80 aspirated stop (`P T C`)
+  - plane +180: 01 glide/liquid, 02 laryngeal or pause (`d H Q` ␣), 04 palatal-ish (`Y J C z s`), 08 y-coloured
+    (`E U Y`), 10 full vowel, 20 back/rounded, 40 fronting offglide (`A E I y`), 80 lax
+  - plane +200: 01 high (`4 E U b c i u | W Y h`), 02 r-coloured vowel (`4 c g k r`), 04 w-offglide (`O U b f`),
+    08 boundary symbols (`, . ? \ ]`), 10 dental (`x X`), 20 h-like (`d h H`), 40 schwa-like (`3 @ | l m n`),
+    80 aspirated stop (`P T C`)
   **[I]**
 - 4001: only `paramgen_load_targets`, `paramgen_segment`, `param_emit_segment`, `param_ring_ctl` and `track_fill`
   are mapped so far. Its DS layout diverges from the 2000's in this region (not a flat −6 shift).
@@ -1405,7 +1410,7 @@ prosody_run D9274 → stage_window_update(C24A)
   Clamped to 50-240 Hz.
 - **Settings seen here** [verified: code]: mode flag 12 (`ESC[12N`) = monotone (F0 = pitch); flag 14 = fast start
   (5-phoneme phrases, short pauses); A-flag 5 (`ESC[5A`) = every phoneme at 85 % of its minimum duration, unstressed
-  halved; pitch 0 = F0 0. Above speed 19, a schwa `x` after `T`/`D` becomes the flap `D`.
+  halved; pitch 0 = F0 0. Above speed 19, `x` (ð) after `T`/`D` becomes `D` (d); the copy of this rule in `allophone_rules` is unreachable.
 - **Firmware quirks** [verified: code]: the second phrase-break rule compares a word's class with 37 (`'%'`) and can
   never fire; one duration rule compares the char with `0x5820` and never fires; `mark_break_neighbour` tests the
   *pitch* setting (`[C25E]`) where a flag seems meant.
@@ -1500,9 +1505,9 @@ They are skipped for word type 13. Many are speed-gated (from speed 7, 10, 14, 1
 - T P K after S become `D B G`.
 - T and D before R become `C` and `J`, and `C` and `J` get their release `s` and `z`.
 - H is dropped, or voiced (`d`) after a vowel; `h` (wh) becomes `W`.
-- A post-vocalic L becomes `j`, and N before a velar across a boundary becomes `~`.
-- Z devoices to S before a voiceless sound; so does the V of "of" and "have" (word classes 2, 3) across a word
-  boundary.
+- A post-vocalic L becomes `j`, and N before a velar across a letter-to-sound morph boundary `[` (not a word boundary) becomes `~`.
+- Z devoices to S before a voiceless sound in the same word; the V of "of" and "have" (word classes 2, 3) becomes F
+  across a word boundary, but only before a voiceless fricative (`F X S s`): "of course" keeps V.
 - A release vocoid `p` is inserted after some final consonants.
 - Word-initial vowels after a pause get a glottal attack.
 - Reduced vowel + L or N becomes syllabic `l` or `n`; vowel + R becomes an r-coloured vowel (`3 4 k r g c`).
