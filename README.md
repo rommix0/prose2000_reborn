@@ -54,7 +54,7 @@ build/prose_say -1 -t "Hello."          (v1.1; print the phonemes)
 ```
 
 The samples (`samples/`) are the examples from API.md: events and markers, audio buffers, raw frame synthesis,
-parameter export and import as CSV, and a custom glottal pulse. On Linux the speaker output uses PulseAudio or ALSA,
+parameter export and import as CSV, a custom glottal pulse, and lip sync (a mouth that follows the phonemes). On Linux the speaker output uses PulseAudio or ALSA,
 loaded at run time.
 
 `samples/python/` has the same samples in Python, through `ctypes` (no packages needed; `prose.py` declares the API):

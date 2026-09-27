@@ -432,6 +432,44 @@ for (int i = 0; i < N; i++) {
 prose_save_wave("pulse.wav", period, N);
 ```
 
+### Lip sync with `on_phoneme`
+
+`on_phoneme` in `prose_speak` fires as each phoneme starts to play, which is what an animated face needs. The sample
+(`samples/lip_sync.c`) maps the Prose phonemes (below) to the ten Preston Blair mouth shapes that lip-sync tools such
+as Papagayo use, and redraws a mouth in the terminal. Without a sound device it prints the timeline of shapes instead.
+
+```c
+enum { REST, MBP, FV, L, WQ, U, O, E, AI, ETC };
+
+static int viseme_of(char ph)
+{
+	switch (ph) {
+	case 'P': case 'B': case 'M': case 'm': return MBP;
+	case 'F': case 'V': return FV;
+	case 'L': case 'j': case 'l': return L;
+	case 'W': case 'h': return WQ;
+	case 'u': case 'b': case 'U': case 'c': return U;
+	case 'O': case 'w': case 'g': case 'y': case 'f': return O;
+	case 'E': case 'A': case 'e': case 'k': case '3': return E;
+	case 'a': case 'o': case 'v': case '@': case 'i': case '|': case 'I': case 'r': case '4': return AI;
+	case ' ': return REST;
+	default: return ETC; /* the other consonants */
+	}
+}
+
+/* on the DLL's audio thread: a GUI program posts the shape to its UI thread here */
+static void on_phoneme(prose_h h, char ph, int ms, uint32_t pos, void *user)
+{
+	show_mouth(user, viseme_of(ph));
+}
+
+prose_set_callbacks(h, &(prose_callbacks){ .on_phoneme = on_phoneme, .on_done = on_done }, &state);
+prose_speak(h, "Hello, my friend. How are you today?");
+```
+
+For an animation made offline, call `prose_speak_to_buffer` instead: the events then come at once, and `pos` (in
+samples) and `ms` give each shape's start and length.
+
 ### Python
 
 `samples/python/` has each example above in Python, byte-for-byte the same output as the C samples. `prose.py` there
