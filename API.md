@@ -181,8 +181,12 @@ typedef int (*prose_frame_cb)(prose_h h, int frame, const int16_t *pcm, int coun
 - `on_done`'s `last_index` is the last index marker reached in the utterance, or 0.
 - `prose_audio_cb` and `prose_frame_cb` return 0 to continue, nonzero to stop.
 - `prose_speak` callbacks run on the DLL's audio thread; data they share with other threads needs locking.
-- `on_phoneme` comes from the firmware's playback stage, for both versions: each phoneme as its segment starts, with
-  its length, the time until the next one starts. The DLL therefore holds the audio back by up to one phoneme.
+- `on_phoneme` comes from the firmware's playback stage, for both versions: each phoneme with `position` where its
+  segment starts and `ms` its length, so in `prose_speak` it fires as the phoneme starts to play (a lip-sync example
+  is below). Pauses come as `' '`. The firmware reports a segment only once it has been played to its end, so the DLL
+  dates the event back by the segment's length and holds the audio back by up to one phoneme until then (verified
+  against the voicing of the parameter frames, 2026-09-27; before that fix the event came at the segment's end with
+  the next phoneme's length).
   `prose_text_to_phoneme` uses the firmware's phoneme echo on v3.4.1 (with stress marks and punctuation, as
   `ESC[16N` sends it) and the played segments on v1.1, which has no echo (phonemes only).
 - `on_params` fires once per 10 ms frame with the frame's raw parameter bytes (`prose_param_count(h)` of them, in

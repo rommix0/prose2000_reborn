@@ -29,6 +29,9 @@ static void drain(void)
 
 static void on_tx(int c) { engine_tx(c); }
 
+/* a segment has been played: the playback stage's cursor (stage record C28E + 4) is its node */
+static void on_segment(int ch) { engine_segment(ch, node_dur(rw(0xC292))); }
+
 /* ^R and ESC[W restart the synthesis loop */
 static void on_restart(int code)
 {
@@ -67,7 +70,7 @@ static void init(const prose_rom *r)
 	lexical_load_rom(r);
 	pg_fatal_hook = engine_fatal;
 	pg_host_send_hook = host_send;
-	pg_segment_hook = engine_segment;
+	pg_segment_hook = on_segment;
 	input_restart_hook = on_restart;
 	input_int8_hook = on_int8;
 	host_tx_hook = on_tx;

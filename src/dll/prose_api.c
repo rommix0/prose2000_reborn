@@ -4,7 +4,8 @@
  * thread, which plays them on the sound device; the blocking calls run theirs on the caller's thread. Either way the
  * job runs the engine 10 ms at a time and hands the audio and the events, in order, to a sink: the sound device, a
  * WAV file, the program's buffer, or nothing (prose_text_to_phoneme). Each event is delivered just before the audio
- * that holds it; a phoneme waits until the next one starts, which gives its length. */
+ * that holds it. The firmware reports a phoneme when it has been played, so while phoneme events are wanted the
+ * audio after the last reported phoneme waits for the next report. */
 #include "prose_int.h"
 
 #include "prose_wave.h"
@@ -215,8 +216,9 @@ static int stage_add(staging *st, const int16_t *pcm, size_t n)
 	return 0;
 }
 
-/* Hand audio and events to the sink in order: each event just before the audio from its position on. A phoneme
- * whose length is still open holds everything after it back, unless this is the end. Returns 1 if the sink stopped. */
+/* Hand audio and events to the sink in order: each event just before the audio from its position on. With phoneme
+ * events, audio after the last reported phoneme waits, since the next report goes back to where its phoneme started,
+ * unless this is the end. Returns 1 if the sink stopped. */
 static int deliver(prose_h h, sink *sk, staging *st, int final)
 {
 	for (;;) {
@@ -224,6 +226,8 @@ static int deliver(prose_h h, sink *sk, staging *st, int final)
 		uint32_t limit = st->done + (uint32_t)st->len;
 		if (e && e->pos < limit)
 			limit = e->pos;
+		if (h->want_phoneme && !final && h->ph_end < limit)
+			limit = h->ph_end;
 		if (limit > st->done) {
 			size_t n = limit - st->done;
 			int stop = sk->audio && sk->audio(sk, h, st->buf, n, st->done); /* it has the audio even so */
@@ -237,22 +241,13 @@ static int deliver(prose_h h, sink *sk, staging *st, int final)
 			return 0;
 		if (e->pos > st->done && !final)
 			return 0;
-		if (e->type == EV_PHONEME && e->ms < 0) {
-			if (!final)
-				return 0;
-			uint32_t end = st->done + (uint32_t)st->len;
-			e->ms = end > e->pos ? (int)((end - e->pos) / 10) : 0;
-		}
 		sk->event(sk, h, e);
 		h->ev_head++;
 		if (h->ev_head == h->ev_len) {
 			h->ev_head = h->ev_len = 0;
-			h->ev_phoneme = -1;
 		} else if (h->ev_head >= 256) {
 			memmove(h->ev, h->ev + h->ev_head, (h->ev_len - h->ev_head) * sizeof *h->ev);
 			h->ev_len -= h->ev_head;
-			if (h->ev_phoneme >= 0)
-				h->ev_phoneme -= (int)h->ev_head;
 			h->ev_head = 0;
 		}
 	}

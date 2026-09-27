@@ -23,7 +23,7 @@ typedef struct {
 	int type;
 	uint32_t pos; /* samples from the start of the utterance */
 	int n;        /* EV_INDEX: the marker */
-	int ms;       /* EV_PHONEME: its length, -1 until the next phoneme starts */
+	int ms;       /* EV_PHONEME: its length */
 	char ph;      /* EV_PHONEME */
 	uint8_t p[PROSE_PARAM_MAX];
 } prose_event;
@@ -85,7 +85,7 @@ struct prose_handle {
 	size_t cap_len, cap_cap;
 	prose_event *ev; /* events not delivered yet, in order */
 	size_t ev_head, ev_len, ev_cap;
-	int ev_phoneme;  /* index of the last phoneme event, whose length is still open, or -1 */
+	uint32_t ph_end; /* where the last reported segment ends: later audio waits for the next phoneme event */
 	int ev_failed;   /* out of memory: events were lost */
 
 	/* ---- raw synthesis (only the thread running the job) ---- */
@@ -136,7 +136,7 @@ extern const engine_driver eng3_driver, eng1_driver;
 void engine_tx(int c);                           /* a byte the firmware sends the host */
 void engine_frame(const uint16_t frame[40]);     /* a frame for the DSP */
 void engine_params(const uint8_t *p, int count); /* the parameter bytes of a frame just built */
-void engine_segment(int ch);                     /* a segment starts playing */
+void engine_segment(int ch, int frames);         /* a segment of `frames` frames has been played */
 void engine_fatal(int code);                     /* the firmware's fatal error; does not return */
 void engine_feed(void);                          /* send the utterance's text while the firmware takes it */
 prose_h engine_current(void);                    /* the handle whose firmware is running */

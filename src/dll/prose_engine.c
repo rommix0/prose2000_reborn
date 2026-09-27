@@ -213,7 +213,6 @@ static prose_event *event_add(prose_h h, int type)
 	memset(e, 0, sizeof *e);
 	e->type = type;
 	e->pos = event_pos(h);
-	e->ms = -1;
 	return e;
 }
 
@@ -227,7 +226,10 @@ void engine_params(const uint8_t *p, int count)
 		memcpy(e->p, p, (size_t)count);
 }
 
-void engine_segment(int ch)
+/* The playback stage reports a segment once its last frame has been played, so the event goes back by the segment's
+ * length to where it started, and into the queue before the events of its frames. deliver() holds the audio after
+ * ph_end back until then. */
+void engine_segment(int ch, int frames)
 {
 	prose_h h = cur;
 	if (!h || !h->in_utt)
@@ -236,15 +238,25 @@ void engine_segment(int ch)
 		cap_add(h, ch);
 	if (!h->want_phoneme)
 		return;
-	uint32_t pos = event_pos(h);
-	if (h->ev_phoneme >= 0) {
-		prose_event *prev = &h->ev[h->ev_phoneme];
-		prev->ms = (int)((pos - prev->pos) / 10);
-	}
+	uint32_t end = event_pos(h), len = (uint32_t)frames * 100, start = end > len ? end - len : 0;
+	if (start < h->ph_end) /* the audio before ph_end may have gone */
+		start = h->ph_end;
+	if (end < start)
+		end = start;
 	prose_event *e = event_add(h, EV_PHONEME);
-	if (e) {
-		e->ph = (char)ch;
-		h->ev_phoneme = (int)(e - h->ev);
+	if (!e)
+		return;
+	e->ph = (char)ch;
+	e->pos = start;
+	e->ms = (int)((end - start) / 10);
+	h->ph_end = end;
+	size_t i = h->ev_len - 1;
+	while (i > h->ev_head && h->ev[i - 1].pos > start)
+		i--;
+	if (i != h->ev_len - 1) {
+		prose_event t = *e;
+		memmove(&h->ev[i + 1], &h->ev[i], (h->ev_len - 1 - i) * sizeof *h->ev);
+		h->ev[i] = t;
 	}
 }
 
@@ -346,7 +358,7 @@ int engine_open(prose_h h)
 		v1_map_init(m, rom);
 		h->map = m;
 	}
-	h->ev_phoneme = -1;
+	h->ph_end = 0;
 	activate(h);
 	int r = boot_guarded(h);
 	deactivate();
@@ -432,7 +444,7 @@ int engine_start(prose_h h, const char *text, int want_params, int want_phoneme,
 	h->x_sent = h->x_replies = h->last_index = 0;
 	h->tx_state = 0;
 	h->ev_head = h->ev_len = 0;
-	h->ev_phoneme = -1;
+	h->ph_end = 0;
 	h->ev_failed = 0;
 	h->cap_len = 0;
 	if (h->cap)
@@ -502,7 +514,7 @@ void engine_abort(prose_h h)
 		if (engine_run(h, scratch, 100))
 			break;
 	h->ev_head = h->ev_len = 0;
-	h->ev_phoneme = -1;
+	h->ph_end = 0;
 }
 
 void engine_end(prose_h h)
@@ -512,5 +524,5 @@ void engine_end(prose_h h)
 	free(h->text);
 	h->text = NULL;
 	h->ev_head = h->ev_len = 0;
-	h->ev_phoneme = -1;
+	h->ph_end = 0;
 }

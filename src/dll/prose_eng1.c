@@ -16,6 +16,9 @@ static void drain(void)
 
 static void on_tx(int c) { engine_tx(c); }
 
+/* a segment has been played: the playback stage's cursor is its node, with its length in frames in ARG0 */
+static void on_segment(int ch) { engine_segment(ch, rb(ruw(V1_REC_PLAYBACK + V1_REC_CURSOR) + V1_NODE_ARG0)); }
+
 /* ^R and ESC[nT: loop_restart, then synthesis_main starts again */
 static void on_restart(int code)
 {
@@ -44,7 +47,7 @@ static void init(const prose_rom *r)
 	v1_restart_hook = on_restart;
 	v1_frame_hook = on_frame;
 	v1_params_hook = on_params;
-	v1_segment_hook = engine_segment;
+	v1_segment_hook = on_segment;
 }
 
 static void power(prose_h h)
