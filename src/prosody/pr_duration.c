@@ -113,7 +113,8 @@ void accent_context(void)
 	if (rw(CUR_SYL) == 0)
 		return;
 	if (rw(ACCENT_NODE) == 0) {
-		/* the last primary-stressed vowel before the next punctuation, else the last secondary one */
+		/* the last vowel of stress level 2 or 3 before the next punctuation; once an emphatic one is chosen, only a
+		 * later emphatic one replaces it */
 		for (n = cur();; n = node_next(n)) {
 			if (node_kind(n) == NODE_SYMBOL) {
 				if (!(feature(node_char(n), 0) & 0x80)) {

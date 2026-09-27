@@ -39,7 +39,7 @@ Each setter queues the matching escape command ahead of the next text, so it tak
 |---|---|---|---|
 | `prose_set_voice(h, n)` | `nV` | 0–2, 0 | **v3.4.1 only** |
 | `prose_set_rate(h, wpm)` | `nr` | 50–250 wpm; 150 (v1.1: 160) | `ESC[v` is the same control, so it has no separate function |
-| `prose_set_pitch(h, n)` | `np` | 50–200; 85 (v1.1: 75) | 0 = F0 0: v1.1 whispers, v3.4.1 is unvoiced |
+| `prose_set_pitch(h, n)` | `np` | 50–200; 85 (v1.1: 75) | 0 = F0 0: whispered (AV moves to aspiration) in both versions |
 | `prose_set_volume(h, n)` | `na` | 0–15, larger = **louder** | inverted from `ESC[a`, where larger is quieter |
 | `prose_set_word_mode(h, on)` | `nP` | off | on = word/list reading |
 | `prose_set_fast_read(h, n)` | `nf` | 0–9, 0 | caps the speed. **v3.4.1 only** |

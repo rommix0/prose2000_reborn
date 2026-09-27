@@ -125,7 +125,7 @@ int prosody_scan_phrase(void)
 			ww(SCAN_LAST, n);
 			if (node_kind(n) == NODE_SYMBOL) {
 				if (is_word_boundary(ch) && rw(WORD_COUNT) < 50) {
-					switch (node_dur(n)) { /* the word's class */
+					switch (node_dur(n)) { /* the word's type (its class is in +8) */
 					case 6:
 						ww(POS_6, rw(PHRASE_LEN));
 						break;
@@ -207,7 +207,7 @@ int prosody_scan_phrase(void)
 		}
 	}
 
-	/* the contour, from where the words of classes 6, 7, 8 and 17 fall in the phrase */
+	/* the contour, from where the words of types 6, 7, 8 and 17 fall in the phrase */
 	int p6 = rw(POS_6), p7 = rw(POS_7), c;
 	if (p6 < 0 && p7 < 0)
 		c = rw(POS_8) >= 0 ? 8 : 0;
@@ -343,7 +343,8 @@ int next_symbol(int n)
 	return n;
 }
 
-/* stress class of a node for context_search: 1 primary, 2 secondary, 0 none */
+/* stress class of a node for context_search: 1 emphatic (level 3), 2 primary (level 2, only when |want| is 2),
+ * 0 otherwise */
 static int stress_match(int n, int want)
 {
 	if (node_stress(n) == 3)

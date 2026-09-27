@@ -84,6 +84,20 @@ endif()
 add_executable(prose_say cli/prose_say.c)
 target_link_libraries(prose_say PRIVATE prose)
 
+# The same library linked statically, for tools that also use the firmware's internal hooks: pitch_trace writes the
+# F0 targets and their parts (PITCH_SYSTEM.md; pitch_graphs/ plots them)
+add_library(prose_static STATIC dll/prose_api.c dll/prose_engine.c dll/prose_eng3.c dll/prose_eng1.c
+	dll/prose_params.c dll/prose_sys.c)
+target_include_directories(prose_static PUBLIC include PRIVATE dll)
+target_compile_definitions(prose_static PUBLIC PROSE_STATIC)
+target_link_libraries(prose_static PUBLIC prose_input prose_textrules prose_lexical prose_prosody prose_paramgen
+	prose_frame prose_synth prose_wave prose_v1 prose_v1_map)
+if(NOT WIN32)
+	target_link_libraries(prose_static PUBLIC ${CMAKE_DL_LIBS} pthread)
+endif()
+add_executable(pitch_trace cli/pitch_trace.c)
+target_link_libraries(pitch_trace PRIVATE prose_static)
+
 # The examples of API.md (../samples)
 option(PROSE_SAMPLES "Build the samples" ON)
 if(PROSE_SAMPLES)

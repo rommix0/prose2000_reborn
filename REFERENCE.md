@@ -398,7 +398,7 @@ Settings live at `DS:EE32-EE44`. `w` resets them all and copies them into five 3
 
 | Cmd | Params → effect | Range / default | Where | In-band? |
 |---|---|---|---|---|
-| `V` | voice | 0-2, clamped (3+ → 2) ✓ | `[EE44]` | yes |
+| `V` | voice | 0-2, clamped (3+ → 2) ✓. In band it also loads the voice's default pitch (`DS:5328`: 85, 75, 110) into the stage records, but not into `[EE3A]`, so after the utterance's loop reset the pitch is the `p` setting again (2026-09-26, PITCH_SYSTEM.md §2) | `[EE44]` | yes |
 | `a` | amplitude, higher = quieter | 0-15 ✓, def 0 | `[EE3C]` | yes |
 | `p` | pitch (baseline) | **50-200** (cgrm says 50-400), def **85** ✓; `0` allowed | `[EE3A]` | yes |
 | `v` | speed | 0-25, def **13** ✓; capped by the fast-read table `DS:03A4[f]` [`03BA`]. Sets rate = `v·8 + 50` wpm | `[EE36]`, `[EE38]` | yes |
@@ -1383,7 +1383,7 @@ frames (≤ 55), `+8` = F0/2, kind 4. On the way it splits sentences into phrase
 prosody_run D9274 → stage_window_update(C24A)
    prosody_scan_phrase D9492   scan ahead to '.', '?', a C command or the length limit (180 phonemes; 70 for the
                                first phrase, 5 with mode flag 14); count phonemes; note the word boundaries
-                               (DS:DCA2, ≤ 50) and where words of classes 6, 7, 8 and 17 fall → contour type [DC82]
+                               (DS:DCA2, ≤ 50) and where words of types 6, 7, 8 and 17 fall → contour type [DC82]
      └─ phrase_breaks DA101    split long runs of words (≥ 14 / ≥ 25) from the middle out at function-word
                                boundaries (',' or '\' symbols, insert_phrase_break DA770), open the phrase with a
                                P command node (+6 = 1 '.', 2 other, 3 ',', 4 '?'; +8 = 0 for a sentence's first
@@ -1402,11 +1402,17 @@ prosody_run D9274 → stage_window_update(C24A)
   Unstressed segments halve the minimum.
 - **Pauses:** punctuation `.`/`?` 39, `,` 10, `]` 12, `\` 4, other 8 units, scaled by `DS:6052[speed]/4`, split into
   ≤ 50-frame pause nodes (a short sentence pause becomes 1/3 + 2/3). Word mode and fast start use fixed short pauses.
-- **F0** (`f0_target`): a line from `pitch + fx` down to `pitch` across the phrase (`fx` = pitch/3 × a Q15 voice
-  factor `DS:5378[V]`), bent at the marked words by contour type (0 straight, 6/7/8/15/16 with rise-fall points).
+- **F0** (`f0_target`; full description in [PITCH_SYSTEM.md](PITCH_SYSTEM.md)): a line from `pitch + fx` down to
+  `pitch` across the scan (`fx` = pitch/3 × a Q15 voice factor `DS:5378[V]`), bent at the marked words by contour type
+  (0 straight, 6/7/8/15/16 with rise-fall points). The marks are word **types** (the boundary's `+6`), not lexicon
+  classes (`+8`). Ordinary text gives type 0; types come from marks before `]` in two-letter phoneme input
+  (`ESC[6A`, §15.4): `\` 6, `/` 7, `/\` 8, `{` 12 (F0 × 1.08), `_` 17 [verified: trace].
   Stressed syllables add accents; the accented syllable of the phrase gets flags bit 7 (on input the same bit marks
   durations/F0 given with a phoneme as relative).
-  The phrase end follows the P kind: 1 falls, 3 rises slightly, 4/5 (question) jumps to 2·pitch − pitch/8.
+  The phrase end follows the P kind: 1 falls, 3 rises slightly, 4/5 (question) jumps to 2·pitch − pitch/8, but only
+  while `[DD7C]` is 0. **Nothing initialises `[DD7C]`**, so after the power-up RAM test (0x55 fill) it is set, and
+  phrase endings (the question rise included) are skipped until a word boundary after an accent clears it
+  [verified: trace].
   Clamped to 50-240 Hz.
 - **Settings seen here** [verified: code]: mode flag 12 (`ESC[12N`) = monotone (F0 = pitch); flag 14 = fast start
   (5-phoneme phrases, short pauses); A-flag 5 (`ESC[5A`) = every phoneme at 85 % of its minimum duration, unstressed

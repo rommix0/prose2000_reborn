@@ -29,8 +29,8 @@
 #define PR_1E (PR_STAGE + 0x1E)
 
 /* ---- phrase scan (prosody_scan_phrase) ---- */
-#define POS_17 0xDC7A /* phoneme position of a class-17 word in the phrase (0 = none) */
-#define POS_8 0xDC7C  /* ... class 8, class 7, class 6 (-1 = none) */
+#define POS_17 0xDC7A /* phoneme position of a type-17 word in the phrase (0 = none); the type is the boundary's +6 */
+#define POS_8 0xDC7C  /* ... type 8, type 7, type 6 (-1 = none) */
 #define POS_7 0xDC7E
 #define POS_6 0xDC80
 #define CONTOUR 0xDC82     /* F0 contour type chosen from the positions above */
@@ -81,7 +81,7 @@
 #define CUR_NASAL 0xDD3A   /* +0 & 10 */
 #define CUR_FRIC 0xDD3C    /* +0 & 40 */
 #define CUR_AFFR 0xDD3E    /* +80 & 08 */
-#define LOWER_F0 0xDD40
+#define LOWER_F0 0xDD40 /* set by a type-12 word: F0 x 108/100 (it raises) */
 #define WORD_CLASS 0xDD42 /* 1 or 2 for a function word, else 0 */
 #define NEXT_PLACE 0xDD44
 #define ACCENT_NODE 0xDD46
@@ -97,7 +97,7 @@
 #define NEXT_SEG 0xDD5A
 #define PREV_SEG 0xDD5C
 #define PRCNT 0xDD5E /* the duration percentages, multiplied together; PRCNT(0) is the result */
-#define DECL_LOW 0xDD7C
+#define DECL_LOW 0xDD7C /* no phrase ending while set; never initialised, so set (0x5555) after power-up */
 #define BREAK_COUNT 0xDD7E
 
 #define PRCNT_AT(i) (PRCNT + 2u * (unsigned)(i))
@@ -127,6 +127,29 @@ static inline int percent(int a, int p)
 {
 	return mul_div_u(a, p, 100);
 }
+
+/* ---- trace hook: f0_target reports each contribution to a phoneme's F0 target (PITCH_SYSTEM.md, pitch_trace) ---- */
+enum {
+	PR_F0_LINE,         /* value: the phrase line (contour) value, Hz */
+	PR_F0_REGISTER,     /* the type-12 raise (x 1.08) */
+	PR_F0_ACCENT,       /* a stressed vowel's accent */
+	PR_F0_PRENUCLEUS,   /* the segment before the nucleus */
+	PR_F0_NUCLEUS,      /* the nucleus (0: it gets no accent) */
+	PR_F0_HAT,          /* the hat is up */
+	PR_F0_DIP,          /* voiced dip, -3 or -8 */
+	PR_F0_HIGH,         /* high segment, +3 */
+	PR_F0_END,          /* the phrase ending, by kind */
+	PR_F0_END_SKIPPED,  /* phrase-final, but DECL_LOW is set */
+	PR_F0_CLAMP,        /* clamped to 50-240 Hz */
+	PR_F0_ZERO,         /* pitch 0 */
+	PR_F0_MONOTONE,     /* mode flag 12; value: the target */
+	PR_F0_HOLD,         /* after the phrase's last vowel; value: the held target */
+	PR_F0_TYPE12,       /* at a word boundary: the type-12 raise starts */
+	PR_F0_TYPE17,       /* at a word boundary: DECL_LOW set */
+	PR_F0_DECL_CLEARED, /* at a word boundary: DECL_LOW cleared */
+	PR_F0_TARGET,       /* last: the stored target, Hz */
+};
+extern void (*pr_f0_hook)(int node, int event, int value);
 
 /* ---- functions ---- */
 int prosody_run(void);           /* D9274 */

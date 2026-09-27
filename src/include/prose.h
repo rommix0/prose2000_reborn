@@ -7,7 +7,15 @@
 #include <stddef.h>
 #include <stdint.h>
 
+/* PROSE_STATIC: linked statically (the prose_static library of the CMake project) */
+#if defined(PROSE_STATIC)
+#define PROSE_API
 #ifdef _WIN32
+#define PROSE_CALL __cdecl
+#else
+#define PROSE_CALL
+#endif
+#elif defined(_WIN32)
 #ifdef PROSE_BUILD_DLL
 #define PROSE_API __declspec(dllexport)
 #else
