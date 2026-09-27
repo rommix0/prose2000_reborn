@@ -1,0 +1,114 @@
+arpabet	prose	context	note
+sil	_		silence; also sp, spn and empty labels (see VOICE_CONTEXTS.md section 8)
+Y UW	Y b		cute; the lexicon also has U (ju) in a few words
+AY R	I 3	before=unstressed|nonvowel	fire
+AW R	f 3	before=unstressed|nonvowel	hour
+OY R	y 3	before=unstressed|nonvowel
+IH R	4 R	before=unstressed	spirit
+IY R	4 R	before=unstressed
+IX R	4 R	before=unstressed
+EH R	k R	before=unstressed	very
+AE R	k R	before=unstressed	carry
+EY R	k R	before=unstressed	Mary
+AA R	r R	before=unstressed	sorry
+AO R	g R	before=unstressed
+OW R	g R	before=unstressed
+UH R	c R	before=unstressed
+UW R	c R	before=unstressed
+AH R	3 R	before=unstressed	hurry
+AX R	3 R	before=unstressed
+IH R	4	before=nonvowel	fear
+IY R	4	before=nonvowel
+IX R	4	before=nonvowel
+EH R	k	before=nonvowel	fair
+AE R	k	before=nonvowel
+EY R	k	before=nonvowel
+AA R	r	before=nonvowel	car
+AO R	g	before=nonvowel	core
+OW R	g	before=nonvowel
+UH R	c	before=nonvowel	poor
+UW R	c	before=nonvowel	tour
+AH R	3	before=nonvowel
+AX R	3	before=nonvowel
+T R	C s R	after=!S	tree; after S it stays: strength = S D R
+D R	J z R	after=!S	dream
+T AH0 N	q n	after=vowel|sonorant	button: glottalized t + syllabic n
+T EN	q n	after=vowel|sonorant
+D AH0 N	t n	after=vowel|sonorant	sudden
+D EN	t n	after=vowel|sonorant
+AH0 N	n	after=obstruent before=obstruent|pause	seven
+AH0 L	l	before=unstressed|nonvowel	little, bottle
+AH0 M	m	after=obstruent before=nonvowel	rhythm (the Prose writes m only from its lexicon)
+T	D	after=S before=stressed-syl	unaspirated t: strength, mistake
+P	B	after=S before=stressed-syl	unaspirated p: spy
+K	G	after=S before=stressed-syl	unaspirated k: scare
+T	t	after=vowel before=unstressed	flap: water, city, at all
+D	t	after=vowel before=unstressed	flap: ladder
+T	T p	before=pause	release vocoid, at a punctuation pause only
+D	D p	before=pause	friend.
+P	P p	before=pause
+B	B p	before=pause
+K	K p	before=pause
+G	G p	before=pause
+M	M p	before=pause
+N	N p	before=pause
+NG	~ p	before=pause
+L	j	after=vowel before=!stressed	dark l: feel, silly; hello keeps L
+HH	d	after=voiced before=vowel	voiced h: ahead
+HH	-	before=nonvowel	deleted
+Z	S	before=voiceless	devoiced within a word: newspaper
+IY	E
+IH0	|		unstressed: roses; stressed IH is i
+IH	i
+IX	|
+EY	A
+EH	e
+AE	a
+AA	o
+AO	w
+OW	O
+UH	u
+UW	b
+UX	b
+AH0	@
+AX	@
+AX-H	@
+AH	v		stressed
+AY	I
+AW	f
+OY	y
+ER	3
+AXR	3
+EL	l
+EM	m
+EN	n
+ENG	~		no syllabic ng in the Prose
+B	B
+CH	C s		closure + release
+D	D
+DH	x
+DX	t
+F	F
+G	G
+HH	H
+HV	d
+JH	J z		closure + release
+K	K
+L	L
+M	M
+N	N
+NX	N		nasal flap (TIMIT); no Prose equivalent
+NG	~
+P	P
+Q	-		glottal stop: the Prose deletes it; a glottalized t is q
+R	R
+S	S
+SH	s
+T	T
+TH	X
+V	V
+W	W
+WH	W		the Prose's h (wh) exists only for phoneme input and becomes W after a voiced sound
+Y	Y
+Z	Z
+ZH	z

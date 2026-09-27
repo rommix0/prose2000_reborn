@@ -1,0 +1,44 @@
+class	members	description
+any	4 A E I O U a b c e f g i k r u w y 3 @ o v | j l L W Y R p d h H B P D T t J C G K Q q V F x X Z S z s M m N n ~ _	every code, the pause included
+phoneme	4 A E I O U a b c e f g i k r u w y 3 @ o v | j l L W Y R p d h H B P D T t J C G K Q q V F x X Z S z s M m N n ~	every code but the pause
+vowel	4 A E I O U a b c e f g i k r u w y 3 @ o v |	the 23 vowels
+consonant	j l L W Y R d h H B P D T t J C G K Q q V F x X Z S z s M m N n ~	the 33 consonants (not the release vocoid p)
+two-target-vowel	4 A E I O U a b c e f g i k r u w y	vowels with an onglide and an offglide target
+high-front-vowel	4 E U	next-vowel class V0
+nonhigh-front-vowel	A a e i k |	next-vowel class V1
+back-rounded-vowel	O b c g u w y	next-vowel class V2
+central-low-vowel	I f r 3 @ o v	next-vowel class V3
+front-vowel	4 A E U a e i k |	feature front vowel (100.20)
+r-colored-vowel	4 c g k r 3	r-coloured vowels
+y-offglide-vowel	A E I y	diphthongs ending in a front glide
+w-offglide-vowel	O U b f	diphthongs ending in a back glide
+reduced-vowel	@ |	schwa and barred i
+front-ending	A E I a e i y | Y	sounds ending front: front vowels, y-offglide diphthongs, Y (not 4 U k)
+tense-front-vowel	A E	ey and i
+other-front-ending	I a e i y |	front-ending but ey, i and Y
+central-back-vowel	u w @ o v	the unrounded or lax back and central vowels
+w-ending	O U b f W	w-offglide diphthongs and W
+rounded	O U b c g u w y W h	feature back/rounded (180.20): back rounded vowels and W h
+plosive	B P D T G K	plosives
+voiced-plosive	B D G	voiced plosives
+voiceless-plosive	P T K	voiceless plosives
+affricate	J C	affricate closures (their release is s or z)
+stop	B P D T J C G K q	feature stop (0.20): plosives, affricates and q
+closure	B P D T t J C G K Q q M m N n ~	feature closure (100.01): stops, t, Q, q and nasals
+nasal	M m N n ~	nasals, syllabic ones included
+fricative	V F x X Z S z s	fricatives
+voiced-fricative	V x Z z	voiced fricatives
+voiceless-fricative	F X S s	voiceless fricatives
+obstruent	B P D T t J C G K Q q V F x X Z S z s	stops, fricatives, t and Q
+liquid-glide	j l L W Y R	laterals, R, W and Y
+lateral	j l L	l sounds
+h-like	d h H	h, voiced h and wh
+syllabic	4 A E I O U a b c e f g i k r u w y 3 @ o v | l m n	feature syllabic (0.01): vowels and l m n
+sonorant	4 A E I O U a b c e f g i k r u w y 3 @ o v | j l L W Y R p d h H M m N n ~	feature sonorant (0.02): vowels, p, nasals, liquids, glides and h sounds
+sonorant-consonant	j l L W Y R d h H M m N n ~	nasals, liquids, glides and h sounds
+voiced	4 A E I O U a b c e f g i k r u w y 3 @ o v | j l L W Y R p d h B D t J G Q q V x Z z M m N n ~	feature voiced (0.04)
+voiceless	H P T C K F X S s	voiceless codes (not the pause)
+labial	W h B P V F M m	feature labial (100.10)
+alveolar	D T t q Z S N n	feature alveolar (100.04)
+velar	G K ~	feature velar (100.80)
+palatal	Y J C z s	feature palatal (180.04)

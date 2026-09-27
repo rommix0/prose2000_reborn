@@ -89,6 +89,8 @@ REFERENCE.md §14.
 | `src/data/`                            | Data extracted from the ROMs (lexicon, rule tables, targets, DSP tables)                                          |
 | `REFERENCE.md`                         | Hardware, firmware and verification notes                                                                         |
 | `API.md`                               | The library's API                                                                                                 |
+| `VOICE_CONTEXTS.md`                    | The phonetic contexts the parameter generator distinguishes: what a new voice's data must cover                   |
+| `voice/`                               | The contexts and phoneme classes as TSV, an ARPABET to Prose mapping, a corpus coverage checker (VOICE_CONTEXTS.md §8) |
 | `docs/`                                | The patents describing the Prose 2000 (text extracts and scans)                                                   |
 
 ## Notes

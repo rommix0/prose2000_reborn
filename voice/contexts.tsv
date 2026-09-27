@@ -1,0 +1,924 @@
+id	kind	prev2	prev	cur	next	next2	stress	sets	note
+R0.0	rule	any	K	high-front-vowel	any	any	*	A2 A3	rule 1 of 2: cur in {E U Y 4}
+R0.1	rule	any	K	vowel p !high-front-vowel	any	any	*	-	rule 2 of 2: otherwise
+R1.0	rule	any	closure !K	vowel p	any	any	*	-	rule 1 of 1: otherwise
+R2.0	rule	any	any !closure	vowel p	any	any	*	-	rule 1 of 1: otherwise
+R3.0	rule	any	K	R	any	any	*	A2 A3 AV AF AH VOT F2 F4 A5 A6 A4	rule 1 of 1: otherwise
+R4.0	rule	any	P	R	vowel p	any	next+	A2 VOT F1 F2 F3 F4	rule 1 of 2: next stressed and next vowel
+R4.1a	rule	any	P	R	vowel p	any	next-	-	rule 2 of 2: otherwise
+R4.1b	rule	any	P	R	consonant _	any	*	-	rule 2 of 2: otherwise
+R5.0	rule	any	closure !P !K	R	any	any	*	-	rule 1 of 1: otherwise
+R6.0	rule	any	any !closure	R	any	any	*	-	rule 1 of 1: otherwise
+R7.0	rule	any	closure	liquid-glide !R	any	any	*	-	rule 1 of 1: otherwise
+R8.0	rule	any	any !closure	liquid-glide !R	any	any	*	-	rule 1 of 1: otherwise
+R9.0	rule	any	front-ending	M m	any	any	*	W[F2] W[F3]	rule 1 of 2: cur in {M m}
+R9.1	rule	any	front-ending	~	any	any	*	-	rule 2 of 2: otherwise
+R10.0	rule	any	r-colored-vowel R	M m	any	any	*	F3 W[F2] W[F3]	rule 1 of 2: cur in {M m}
+R10.1	rule	any	r-colored-vowel R	~	any	any	*	-	rule 2 of 2: otherwise
+R11.0	rule	any	any !front-ending !r-colored-vowel !R	M m	any	any	*	W[F2] W[F3]	rule 1 of 2: cur in {M m}
+R11.1	rule	any	any !front-ending !r-colored-vowel !R	~	any	any	*	-	rule 2 of 2: otherwise
+R12.0	rule	any	any	N n	b c u	any	*	AV B3 F2	rule 1 of 4: next in {b c u}
+R12.1	rule	any	any	N n	E U i	any	*	F2 F3	rule 2 of 4: next in {E i U}
+R12.2	rule	any	vowel p	N n	any !E !U !b !c !i !u	any	*	F2 B2 B3	rule 3 of 4: prev vowel
+R12.3	rule	any	consonant _	N n	any !E !U !b !c !i !u	any	*	-	rule 4 of 4: otherwise
+R13.0	rule	any	front-ending	P	closure _	any	*	W[F2] W[F3]	rule 1 of 8: cur released
+R13.1	rule	any	front-ending	P	E U i	any	*	F2 W[F2] W[F3]	rule 2 of 8: next in {E i U}
+R13.2	rule	any	front-ending	P	nonhigh-front-vowel !i !|	any	*	F2 W[F2] W[F3]	rule 3 of 8: next front vowel and not next high
+R13.3	rule	any	front-ending	P	S	any	*	W[F2] W[F3] burstAF A2	rule 4 of 8: next in {S}
+R13.4	rule	any	front-ending	P	s	any	*	A2 A3 A4 A5	rule 5 of 8: next in {s}
+R13.5	rule	any	front-ending	P	R	any	*	A2 A5 AB F1 F2 F3 F4 burstAF burstAH A3 A4 A6	rule 6 of 8: next in {R}
+R13.6	rule	any	front-ending	P	L	any	*	A2 A4 AB burstAF A3 F1 F2 F3	rule 7 of 8: next in {L}
+R13.7	rule	any	front-ending	P	consonant back-rounded-vowel central-low-vowel 4 | p !closure !L !R !S !s	any	*	W[F2] W[F3]	rule 8 of 8: otherwise
+R14.0	rule	any	central-back-vowel p	P	closure _	any	*	W[F2] W[F3]	rule 1 of 9: cur released
+R14.1	rule	any	central-back-vowel p	P	E U i	any	*	F2 W[F2] W[F3]	rule 2 of 9: next in {E i U}
+R14.2	rule	any	central-back-vowel p	P	nonhigh-front-vowel !i !|	any	*	F2 W[F2] W[F3]	rule 3 of 9: next front vowel and not next high
+R14.3	rule	any	central-back-vowel p	P	p	any	*	W[F2] W[F3] burstAF burstAH	rule 4 of 9: next in {p}
+R14.4	rule	any	central-back-vowel p	P	S	any	*	W[F2] W[F3] burstAF A2	rule 5 of 9: next in {S}
+R14.5	rule	any	central-back-vowel p	P	s	any	*	A2 A3 A4 A5	rule 6 of 9: next in {s}
+R14.6	rule	any	central-back-vowel p	P	R	any	*	A2 A5 AB F1 F2 F3 F4 burstAF burstAH A3 A4 A6	rule 7 of 9: next in {R}
+R14.7	rule	any	central-back-vowel p	P	L	any	*	A2 A4 AB burstAF A3 F1 F2 F3	rule 8 of 9: next in {L}
+R14.8	rule	any	central-back-vowel p	P	consonant back-rounded-vowel central-low-vowel 4 | !closure !L !R !S !s	any	*	W[F2] W[F3]	rule 9 of 9: otherwise
+R15.0	rule	any	r-colored-vowel R	P	closure _	any	*	W[F2] W[F3] F3	rule 1 of 8: cur released
+R15.1	rule	any	r-colored-vowel R	P	E U i	any	*	F2 W[F2] W[F3] F3	rule 2 of 8: next in {E i U}
+R15.2	rule	any	r-colored-vowel R	P	nonhigh-front-vowel !i !|	any	*	F2 W[F2] W[F3] F3	rule 3 of 8: next front vowel and not next high
+R15.3	rule	any	r-colored-vowel R	P	S	any	*	W[F2] W[F3] F3 burstAF A2	rule 4 of 8: next in {S}
+R15.4	rule	any	r-colored-vowel R	P	s	any	*	A2 A3 A4 A5	rule 5 of 8: next in {s}
+R15.5	rule	any	r-colored-vowel R	P	R	any	*	A2 A5 AB F1 F2 F3 F4 burstAF burstAH A3 A4 A6	rule 6 of 8: next in {R}
+R15.6	rule	any	r-colored-vowel R	P	L	any	*	A2 A4 AB burstAF A3 F1 F2 F3	rule 7 of 8: next in {L}
+R15.7	rule	any	r-colored-vowel R	P	consonant back-rounded-vowel central-low-vowel 4 | p !closure !L !R !S !s	any	*	W[F2] W[F3] F3	rule 8 of 8: otherwise
+R16.0	rule	any	w-ending	P	closure _	any	*	W[F2] W[F3]	rule 1 of 9: cur released
+R16.1	rule	any	w-ending	P	E U i	any	*	F2 W[F2] W[F3]	rule 2 of 9: next in {E i U}
+R16.2	rule	any	w-ending	P	nonhigh-front-vowel !i !|	any	*	F2 W[F2] W[F3]	rule 3 of 9: next front vowel and not next high
+R16.3	rule	any	w-ending	P	p	any	*	W[F2] W[F3] burstAF burstAH	rule 4 of 9: next in {p}
+R16.4	rule	any	w-ending	P	S	any	*	W[F2] W[F3] burstAF A2	rule 5 of 9: next in {S}
+R16.5	rule	any	w-ending	P	s	any	*	A2 A3 A4 A5	rule 6 of 9: next in {s}
+R16.6	rule	any	w-ending	P	R	any	*	A2 A5 AB F1 F2 F3 F4 burstAF burstAH A3 A4 A6	rule 7 of 9: next in {R}
+R16.7	rule	any	w-ending	P	L	any	*	A2 A4 AB burstAF A3 F1 F2 F3	rule 8 of 9: next in {L}
+R16.8	rule	any	w-ending	P	consonant back-rounded-vowel central-low-vowel 4 | !closure !L !R !S !s	any	*	W[F2] W[F3]	rule 9 of 9: otherwise
+R17.0	rule	any	_	P	closure _	any	*	-	rule 1 of 9: cur released
+R17.1	rule	any	_	P	i	any	*	A2 A3 A5 A4 AB VOT F2 F3 W[F2] W[F3]	rule 2 of 9: next in {i}
+R17.2	rule	any	_	P	E U	any	*	F2	rule 3 of 9: next in {E i U}
+R17.3	rule	any	_	P	nonhigh-front-vowel !i !|	any	*	F2	rule 4 of 9: next front vowel and not next high
+R17.4	rule	any	_	P	S	any	*	burstAF A2	rule 5 of 9: next in {S}
+R17.5	rule	any	_	P	s	any	*	A2 A3 A4 A5	rule 6 of 9: next in {s}
+R17.6	rule	any	_	P	R	any	*	A2 A5 AB F1 F2 F3 F4 burstAF burstAH A3 A4 A6	rule 7 of 9: next in {R}
+R17.7	rule	any	_	P	L	any	*	A2 A4 AB burstAF A3 F1 F2 F3	rule 8 of 9: next in {L}
+R17.8	rule	any	_	P	consonant back-rounded-vowel central-low-vowel 4 | p !closure !L !R !S !s	any	*	-	rule 9 of 9: otherwise
+R18.0	rule	any	obstruent closure lateral h-like !S	P	closure _	any	*	-	rule 1 of 8: cur released
+R18.1	rule	any	obstruent closure lateral h-like !S	P	E U i	any	*	F2	rule 2 of 8: next in {E i U}
+R18.2	rule	any	obstruent closure lateral h-like !S	P	nonhigh-front-vowel !i !|	any	*	F2	rule 3 of 8: next front vowel and not next high
+R18.3	rule	any	obstruent closure lateral h-like !S	P	S	any	*	burstAF A2	rule 4 of 8: next in {S}
+R18.4	rule	any	obstruent closure lateral h-like !S	P	s	any	*	A2 A3 A4 A5	rule 5 of 8: next in {s}
+R18.5	rule	any	obstruent closure lateral h-like !S	P	R	any	*	A2 A5 AB F1 F2 F3 F4 burstAF burstAH A3 A4 A6	rule 6 of 8: next in {R}
+R18.6	rule	any	obstruent closure lateral h-like !S	P	L	any	*	A2 A4 AB burstAF A3 F1 F2 F3	rule 7 of 8: next in {L}
+R18.7	rule	any	obstruent closure lateral h-like !S	P	consonant back-rounded-vowel central-low-vowel 4 | p !closure !L !R !S !s	any	*	-	rule 8 of 8: otherwise
+R19.0	rule	any	S	P	closure _	any	*	-	rule 1 of 9: cur released
+R19.1	rule	any	S	P	i	any	*	A2 A3 A5 A4 AB VOT F2 F3 W[F2] W[F3]	rule 2 of 9: next in {i}
+R19.2	rule	any	S	P	E U	any	*	F2	rule 3 of 9: next in {E i U}
+R19.3	rule	any	S	P	nonhigh-front-vowel !i !|	any	*	F2	rule 4 of 9: next front vowel and not next high
+R19.4	rule	any	S	P	S	any	*	burstAF A2	rule 5 of 9: next in {S}
+R19.5	rule	any	S	P	s	any	*	A2 A3 A4 A5	rule 6 of 9: next in {s}
+R19.6	rule	any	S	P	R	any	*	A2 A5 AB F1 F2 F3 F4 burstAF burstAH A3 A4 A6	rule 7 of 9: next in {R}
+R19.7	rule	any	S	P	L	any	*	A2 A4 AB burstAF A3 F1 F2 F3	rule 8 of 9: next in {L}
+R19.8	rule	any	S	P	consonant back-rounded-vowel central-low-vowel 4 | p !closure !L !R !S !s	any	*	-	rule 9 of 9: otherwise
+R20.0	rule	any	front-ending	B	closure _	any	*	p18 p19 W[F2] W[F3]	rule 1 of 7: cur released
+R20.1	rule	any	front-ending	B	high-front-vowel	any	*	p18 p19 W[F2] W[F3] F1 F2 F3 F4 B2 A2 A3 A4 A5	rule 2 of 7: next V0
+R20.2	rule	any	front-ending	B	nonhigh-front-vowel	any	*	p18 p19 F2 A2 W[F2] W[F3]	rule 3 of 7: next V1
+R20.3	rule	any	front-ending	B	back-rounded-vowel	any	*	p18 p19 A2 AB B2 F2 F3 F4 F1	rule 4 of 7: next V2
+R20.4	rule	any	front-ending	B	central-low-vowel !3	any	*	p18 p19 F2 F3 F4 F1 A3 A4 A5 A2	rule 5 of 7: not next in {3} and next V3
+R20.5	rule	any	front-ending	B	Z	any	*	p18 p19 W[F2] W[F3] burstAF A2 AB	rule 6 of 7: next in {Z}
+R20.6	rule	any	front-ending	B	consonant 3 p !closure !Z	any	*	p18 p19 W[F2] W[F3]	rule 7 of 7: otherwise
+R21.0	rule	any	central-back-vowel p	B	closure _	any	*	p18 p19 W[F2] W[F3]	rule 1 of 7: cur released
+R21.1	rule	any	central-back-vowel p	B	high-front-vowel	any	*	p18 p19 W[F2] W[F3] F1 F2 F3 F4 B2 A2 A3 A4 A5	rule 2 of 7: next V0
+R21.2	rule	any	central-back-vowel p	B	nonhigh-front-vowel	any	*	p18 p19 F2 A2 W[F2] W[F3]	rule 3 of 7: next V1
+R21.3	rule	any	central-back-vowel p	B	back-rounded-vowel	any	*	p18 p19 A2 AB B2 F2 F3 F4 F1	rule 4 of 7: next V2
+R21.4	rule	any	central-back-vowel p	B	central-low-vowel !3	any	*	p18 p19 F2 F3 F4 F1 A3 A4 A5 A2	rule 5 of 7: not next in {3} and next V3
+R21.5	rule	any	central-back-vowel p	B	Z	any	*	p18 p19 W[F2] W[F3] burstAF A2 AB	rule 6 of 7: next in {Z}
+R21.6	rule	any	central-back-vowel p	B	consonant 3 p !closure !Z	any	*	p18 p19 W[F2] W[F3]	rule 7 of 7: otherwise
+R22.0	rule	any	r-colored-vowel R	B	closure _	any	*	p18 p19 W[F2] W[F3] F3	rule 1 of 7: cur released
+R22.1	rule	any	r-colored-vowel R	B	high-front-vowel	any	*	p18 p19 W[F2] W[F3] F1 F2 F3 F4 B2 A2 A3 A4 A5	rule 2 of 7: next V0
+R22.2	rule	any	r-colored-vowel R	B	nonhigh-front-vowel	any	*	p18 p19 F2 A2 W[F2] W[F3] F3	rule 3 of 7: next V1
+R22.3	rule	any	r-colored-vowel R	B	back-rounded-vowel	any	*	p18 p19 A2 AB B2 F2 F3 F4 F1	rule 4 of 7: next V2
+R22.4	rule	any	r-colored-vowel R	B	central-low-vowel !3	any	*	p18 p19 F2 F3 F4 F1 A3 A4 A5 A2	rule 5 of 7: not next in {3} and next V3
+R22.5	rule	any	r-colored-vowel R	B	Z	any	*	p18 p19 W[F2] W[F3] F3 burstAF A2 AB	rule 6 of 7: next in {Z}
+R22.6	rule	any	r-colored-vowel R	B	consonant 3 p !closure !Z	any	*	p18 p19 W[F2] W[F3] F3	rule 7 of 7: otherwise
+R23.0	rule	any	w-ending	B	closure _	any	*	p18 p19 W[F2] W[F3]	rule 1 of 7: cur released
+R23.1	rule	any	w-ending	B	high-front-vowel	any	*	p18 p19 W[F2] W[F3] F1 F2 F3 F4 B2 A2 A3 A4 A5	rule 2 of 7: next V0
+R23.2	rule	any	w-ending	B	nonhigh-front-vowel	any	*	p18 p19 F2 A2 W[F2] W[F3]	rule 3 of 7: next V1
+R23.3	rule	any	w-ending	B	back-rounded-vowel	any	*	p18 p19 A2 AB B2 F2 F3 F4 F1	rule 4 of 7: next V2
+R23.4	rule	any	w-ending	B	central-low-vowel !3	any	*	p18 p19 F2 F3 F4 F1 A3 A4 A5 A2	rule 5 of 7: not next in {3} and next V3
+R23.5	rule	any	w-ending	B	Z	any	*	p18 p19 W[F2] W[F3] burstAF A2 AB	rule 6 of 7: next in {Z}
+R23.6	rule	any	w-ending	B	consonant 3 p !closure !Z	any	*	p18 p19 W[F2] W[F3]	rule 7 of 7: otherwise
+R24.0	rule	any	obstruent closure lateral h-like _ !S	B	closure _	any	*	p18 p19	rule 1 of 7: cur released
+R24.1	rule	any	obstruent closure lateral h-like _ !S	B	high-front-vowel	any	*	p18 p19 W[F2] W[F3] F1 F2 F3 F4 B2 A2 A3 A4 A5	rule 2 of 7: next V0
+R24.2	rule	any	obstruent closure lateral h-like _ !S	B	nonhigh-front-vowel	any	*	p18 p19 F2 A2	rule 3 of 7: next V1
+R24.3	rule	any	obstruent closure lateral h-like _ !S	B	back-rounded-vowel	any	*	p18 p19 A2 AB B2 F2 F3 F4 F1	rule 4 of 7: next V2
+R24.4	rule	any	obstruent closure lateral h-like _ !S	B	central-low-vowel !3	any	*	p18 p19 F2 F3 F4 F1 A3 A4 A5 A2	rule 5 of 7: not next in {3} and next V3
+R24.5	rule	any	obstruent closure lateral h-like _ !S	B	Z	any	*	p18 p19 burstAF A2 AB	rule 6 of 7: next in {Z}
+R24.6	rule	any	obstruent closure lateral h-like _ !S	B	consonant 3 p !closure !Z	any	*	p18 p19	rule 7 of 7: otherwise
+R25.0	rule	any	S	B	closure _	any	*	p18 p19	rule 1 of 8: cur released
+R25.1	rule	any	S	B	high-front-vowel	any	*	p18 p19 W[F2] W[F3] F1 F2 F3 F4 B2 A2 A3 A4 A5	rule 2 of 8: next V0
+R25.2	rule	any	S	B	nonhigh-front-vowel	any	*	p18 p19 F2 A2	rule 3 of 8: next V1
+R25.3	rule	any	S	B	back-rounded-vowel	any	*	p18 p19 A2 AB B2 F2 F3 F4 F1	rule 4 of 8: next V2
+R25.4	rule	any	S	B	central-low-vowel !3	any	*	p18 p19 F2 F3 F4 F1 A3 A4 A5 A2	rule 5 of 8: not next in {3} and next V3
+R25.5	rule	any	S	B	Z	any	*	p18 p19 burstAF A2 AB	rule 6 of 8: next in {Z}
+R25.6	rule	any	S	B	L	any	*	p18 p19 burstAF A2	rule 7 of 8: next in {L}
+R25.7	rule	any	S	B	consonant 3 p !closure !L !Z	any	*	p18 p19	rule 8 of 8: otherwise
+R26.0	rule	any	Z S	T	p	any	*	burstAF A3 A4 A5 A6 burstLen F4	rule 1 of 13: next in {p}
+R26.1	rule	any	Z S	T	vowel	any	next-	burstLen burstAF burstAH A3 A5 A6 AB	rule 2 of 13: not next stressed and next vowel
+R26.2	rule	any	Z S	T	high-front-vowel	any	next+	burstLen A2 A3 A4 A5 A6 F2 F3 F4	rule 3 of 13: next V0
+R26.3	rule	any	Z S	T	a	any	next+	VOT A5 A6	rule 4 of 13: next in {a}
+R26.4	rule	any	Z S	T	nonhigh-front-vowel !a	any	next+	burstLen burstAH F2 F3 A2 A3 A4 A5 A6	rule 5 of 13: next V1
+R26.5	rule	any	Z S	T	3	any	next+	AB A2 A3 A5 A6 F1 F2 F3 F4 A4 burstLen burstAF	rule 6 of 13: next in {3}
+R26.6	rule	any	Z S	T	R	any	*	burstLen F3 A3 A6 A5	rule 7 of 13: next in {R}
+R26.7	rule	any	Z S	T	back-rounded-vowel	any	next+	A3 F1 F3 F4	rule 8 of 13: next V2
+R26.8	rule	any	Z S	T	central-low-vowel !3	any	next+	burstLen A2 A3 A5 A6 F1 F2 F3 F4	rule 9 of 13: next V3
+R26.9	rule	any	Z S	T	W	any	*	A4 A5 A6 AB	rule 10 of 13: next in {W}
+R26.10	rule	any	Z S	T	n	any	*	burstAF A3 A6 F4 A4 A5	rule 11 of 13: next in {n}
+R26.11	rule	any	Z S	T	closure _ !n	any	*	-	rule 12 of 13: cur released
+R26.12	rule	any	Z S	T	fricative lateral h-like Y	any	*	-	rule 13 of 13: otherwise
+R27.0	rule	any	_	T	p	any	*	burstAF A3 A4 A5 A6 burstLen F4	rule 1 of 13: next in {p}
+R27.1	rule	any	_	T	vowel	any	next-	burstLen burstAH burstAF VOT A2 A3 A4 A5 A6 F1 F2 F4	rule 2 of 13: not next stressed and next vowel
+R27.2	rule	any	_	T	high-front-vowel	any	next+	burstLen A2 A3 A4 A5 A6 F2 F3 F4	rule 3 of 13: next V0
+R27.3	rule	any	_	T	a	any	next+	VOT A5 A6	rule 4 of 13: next in {a}
+R27.4	rule	any	_	T	nonhigh-front-vowel !a	any	next+	burstLen burstAH F2 F3 A2 A3 A4 A5 A6	rule 5 of 13: next V1
+R27.5	rule	any	_	T	3	any	next+	AB A2 A3 A5 A6 F1 F2 F3 F4 A4 burstLen burstAF	rule 6 of 13: next in {3}
+R27.6	rule	any	_	T	R	any	*	burstLen F3 A3 A6 A5	rule 7 of 13: next in {R}
+R27.7	rule	any	_	T	back-rounded-vowel	any	next+	A3 F1 F3 F4	rule 8 of 13: next V2
+R27.8	rule	any	_	T	central-low-vowel !3	any	next+	burstLen A2 A3 A5 A6 F1 F2 F3 F4	rule 9 of 13: next V3
+R27.9	rule	any	_	T	W	any	*	A4 A5 A6 AB	rule 10 of 13: next in {W}
+R27.10	rule	any	_	T	n	any	*	burstAF A3 A6 F4 A4 A5	rule 11 of 13: next in {n}
+R27.11	rule	any	_	T	closure _ !n	any	*	-	rule 12 of 13: cur released
+R27.12	rule	any	_	T	fricative lateral h-like Y	any	*	-	rule 13 of 13: otherwise
+R28.0	rule	any	phoneme !Z !S	T	p	any	*	burstAF A3 A4 A5 A6 burstLen F4	rule 1 of 13: next in {p}
+R28.1	rule	any	sonorant	T	vowel	any	next-	burstLen burstAF burstAH A4 AB	rule 2 of 13: prev voiced and not next stressed and next vowel
+R28.2a	rule	any	sonorant	T	high-front-vowel	any	next+	burstLen A2 A3 A4 A5 A6 F2 F3 F4	rule 3 of 13: next V0
+R28.2b	rule	any	obstruent !Z !S	T	high-front-vowel	any	*	burstLen A2 A3 A4 A5 A6 F2 F3 F4	rule 3 of 13: next V0
+R28.3a	rule	any	sonorant	T	a	any	next+	VOT A5 A6	rule 4 of 13: next in {a}
+R28.3b	rule	any	obstruent !Z !S	T	a	any	*	VOT A5 A6	rule 4 of 13: next in {a}
+R28.4a	rule	any	sonorant	T	nonhigh-front-vowel !a	any	next+	burstLen burstAH F2 F3 A2 A3 A4 A5 A6	rule 5 of 13: next V1
+R28.4b	rule	any	obstruent !Z !S	T	nonhigh-front-vowel !a	any	*	burstLen burstAH F2 F3 A2 A3 A4 A5 A6	rule 5 of 13: next V1
+R28.5a	rule	any	sonorant	T	3	any	next+	AB A2 A3 A5 A6 F1 F2 F3 F4 A4 burstLen burstAF	rule 6 of 13: next in {3}
+R28.5b	rule	any	obstruent !Z !S	T	3	any	*	AB A2 A3 A5 A6 F1 F2 F3 F4 A4 burstLen burstAF	rule 6 of 13: next in {3}
+R28.6	rule	any	phoneme !Z !S	T	R	any	*	burstLen F3 A3 A6 A5	rule 7 of 13: next in {R}
+R28.7a	rule	any	sonorant	T	back-rounded-vowel	any	next+	A3 F1 F3 F4	rule 8 of 13: next V2
+R28.7b	rule	any	obstruent !Z !S	T	back-rounded-vowel	any	*	A3 F1 F3 F4	rule 8 of 13: next V2
+R28.8a	rule	any	sonorant	T	central-low-vowel !3	any	next+	burstLen A2 A3 A5 A6 F1 F2 F3 F4	rule 9 of 13: next V3
+R28.8b	rule	any	obstruent !Z !S	T	central-low-vowel !3	any	*	burstLen A2 A3 A5 A6 F1 F2 F3 F4	rule 9 of 13: next V3
+R28.9	rule	any	phoneme !Z !S	T	W	any	*	A4 A5 A6 AB	rule 10 of 13: next in {W}
+R28.10	rule	any	phoneme !Z !S	T	n	any	*	burstAF A3 A6 F4 A4 A5	rule 11 of 13: next in {n}
+R28.11	rule	any	phoneme !Z !S	T	closure _ !n	any	*	-	rule 12 of 13: cur released
+R28.12	rule	any	phoneme !Z !S	T	fricative lateral h-like Y	any	*	-	rule 13 of 13: otherwise
+R29.0	rule	any	S	D	p	any	*	A5 A6 A4 A2 A3 F1 F2 F3 F4 AV p18 p19	rule 1 of 10: next in {p}
+R29.1	rule	any	S	D	high-front-vowel	any	*	p18 p19 A2 A3 A4 A5 A6	rule 2 of 10: next V0
+R29.2	rule	any	S	D	nonhigh-front-vowel	any	*	p18 p19 AB	rule 3 of 10: next V1
+R29.3	rule	any	S	D	back-rounded-vowel	any	*	p18 p19 A5 A6	rule 4 of 10: next V2
+R29.4	rule	any	S	D	3	any	*	p18 p19 AB A3 A4 A6 A5	rule 5 of 10: next in {3}
+R29.5	rule	any	S	D	central-low-vowel !3	any	*	p18 p19 A2 A3 A4	rule 6 of 10: next V3
+R29.6	rule	any	S	D	R	any	*	p18 p19 A3 A6 A5	rule 7 of 10: next in {R}
+R29.7	rule	any	S	D	n	any	*	burstAV F2 F3 F4 p18 p19 A3 A5 A6	rule 8 of 10: next in {n}
+R29.8	rule	any	S	D	closure _ !n	any	*	p18 p19	rule 9 of 10: cur released
+R29.9	rule	any	S	D	consonant !closure !R	any	*	p18 p19	rule 10 of 10: otherwise
+R30.0	rule	any	_	D	p	any	*	A5 A6 A4 A2 A3 F1 F2 F3 F4 AV p18 p19	rule 1 of 11: next in {p}
+R30.1	rule	any	_	D	syllabic sonorant-consonant	any	next-	burstAV A3 A4 F2 AB burstAF	rule 2 of 11: not next stressed and next sonorant
+R30.2	rule	any	_	D	high-front-vowel	any	next+	p18 p19 F2 B3 A2 A3 A4 A5 A6	rule 3 of 11: next V0
+R30.3	rule	any	_	D	nonhigh-front-vowel	any	next+	p18 p19 A3 A4 A2 F2 F3	rule 4 of 11: next V1
+R30.4	rule	any	_	D	back-rounded-vowel	any	next+	p18 p19 A5 A6 F3	rule 5 of 11: next V2
+R30.5	rule	any	_	D	3	any	next+	p18 p19 AB A3 A4 A6 A5	rule 6 of 11: next in {3}
+R30.6	rule	any	_	D	central-low-vowel !3	any	next+	p18 p19 A2 A3 A4 F2 F3 F4	rule 7 of 11: next V3
+R30.7	rule	any	_	D	R	any	next+	p18 p19 A3 A6 A5	rule 8 of 11: next in {R}
+R30.8	rule	any	_	D	n	any	next+	burstAV F2 F3 F4 p18 p19 A3 A5 A6	rule 9 of 11: next in {n}
+R30.9a	rule	any	_	D	obstruent _ !fricative	any	*	p18 p19	rule 10 of 11: cur released
+R30.9b	rule	any	_	D	nasal !n	any	next+	p18 p19	rule 10 of 11: cur released
+R30.10a	rule	any	_	D	fricative	any	*	p18 p19	rule 11 of 11: otherwise
+R30.10b	rule	any	_	D	liquid-glide h-like !R	any	next+	p18 p19	rule 11 of 11: otherwise
+R31.0	rule	any	j	D	any	any	next-	F2 F3 F4 burstAF burstAV A2 A3 A5 A6 A4	rule 1 of 12: not next stressed
+R31.1	rule	any	j	D	p	any	next+	A5 A6 A4 A2 A3 F1 F2 F3 F4 AV p18 p19	rule 2 of 12: next in {p}
+R31.3	rule	any	j	D	high-front-vowel	any	next+	p18 p19 F2 B3 A2 A3 A4 A5 A6	rule 4 of 12: next V0
+R31.4	rule	any	j	D	nonhigh-front-vowel	any	next+	p18 p19 A3 A4 A2 F2 F3	rule 5 of 12: next V1
+R31.5	rule	any	j	D	back-rounded-vowel	any	next+	p18 p19 A5 A6 F3	rule 6 of 12: next V2
+R31.6	rule	any	j	D	3	any	next+	p18 p19 AB A3 A4 A6 A5	rule 7 of 12: next in {3}
+R31.7	rule	any	j	D	central-low-vowel !3	any	next+	p18 p19 A2 A3 A4 F2 F3 F4	rule 8 of 12: next V3
+R31.8	rule	any	j	D	R	any	next+	p18 p19 A3 A6 A5	rule 9 of 12: next in {R}
+R31.9	rule	any	j	D	n	any	next+	burstAV F2 F3 F4 p18 p19 A3 A5 A6	rule 10 of 12: next in {n}
+R31.10	rule	any	j	D	closure _ !n	any	next+	p18 p19	rule 11 of 12: cur released
+R31.11	rule	any	j	D	consonant !closure !R	any	next+	p18 p19	rule 12 of 12: otherwise
+R32.0	rule	any	phoneme !j !S	D	p	any	*	A5 A6 A4 A2 A3 F1 F2 F3 F4 AV p18 p19	rule 1 of 11: next in {p}
+R32.1	rule	any	sonorant !j	D	high-front-vowel	any	next-	burstAV A3 A4 F2 burstAF	rule 2 of 11: prev voiced and not next stressed and next V0
+R32.2a	rule	any	sonorant !j	D	high-front-vowel	any	next+	p18 p19 F2 B3 A2 A3 A4 A5 A6	rule 3 of 11: next V0
+R32.2b	rule	any	obstruent !S	D	high-front-vowel	any	*	p18 p19 F2 B3 A2 A3 A4 A5 A6	rule 3 of 11: next V0
+R32.3	rule	any	phoneme !j !S	D	nonhigh-front-vowel	any	*	p18 p19 A3 A4 A2 F2 F3	rule 4 of 11: next V1
+R32.4	rule	any	phoneme !j !S	D	back-rounded-vowel	any	*	p18 p19 A5 A6 F3	rule 5 of 11: next V2
+R32.5	rule	any	phoneme !j !S	D	3	any	*	p18 p19 AB A3 A4 A6 A5	rule 6 of 11: next in {3}
+R32.6	rule	any	phoneme !j !S	D	central-low-vowel !3	any	*	p18 p19 A2 A3 A4 F2 F3 F4	rule 7 of 11: next V3
+R32.7	rule	any	phoneme !j !S	D	R	any	*	p18 p19 A3 A6 A5	rule 8 of 11: next in {R}
+R32.8	rule	any	phoneme !j !S	D	n	any	*	burstAV F2 F3 F4 p18 p19 A3 A5 A6	rule 9 of 11: next in {n}
+R32.9	rule	any	phoneme !j !S	D	closure _ !n	any	*	p18 p19	rule 10 of 11: cur released
+R32.10	rule	any	phoneme !j !S	D	consonant !closure !R	any	*	p18 p19	rule 11 of 11: otherwise
+R33.0	rule	any	tense-front-vowel	K	high-front-vowel	any	*	A2 A3 A4 A6 A5 F2 F3 F4	rule 1 of 16: next V0
+R33.1	rule	any	tense-front-vowel	K	nonhigh-front-vowel	any	*	A4 A3 A5 A2 F2 F3 F4	rule 2 of 16: next V1
+R33.2	rule	any	tense-front-vowel	K	back-rounded-vowel	any	*	A2 A3 A4 A5 B3 F4 burstAF	rule 3 of 16: next V2
+R33.3	rule	any	tense-front-vowel	K	3	any	*	A4 A2 A3 A5 A6 F2 F3 F4	rule 4 of 16: next in {3}
+R33.4	rule	any	tense-front-vowel	K	central-low-vowel !3	any	*	A2 A5 A6 A3 A4 AB F2 F3 F4	rule 5 of 16: next V3
+R33.5	rule	any	tense-front-vowel	K	R	any	*	W[F4] F2 F3 F4 A3 A4 AB A5	rule 6 of 16: next in {R}
+R33.6	rule	any	tense-front-vowel	K	p	any	*	A5 AB A3 F2 F3 F4	rule 7 of 16: next in {p}
+R33.7	rule	any	tense-front-vowel	K	L	any	*	burstAF A2 A3 F2 F3 AB A5	rule 8 of 16: next in {L}
+R33.8	rule	any	tense-front-vowel	K	W	any	*	burstAF A3 A4 A5 A2 AB F2 F3	rule 9 of 16: next in {W}
+R33.9	rule	any	tense-front-vowel	K	l	any	*	A2 A3 A4 A6 A5 F2 F3 AB	rule 10 of 16: next in {l}
+R33.10	rule	any	tense-front-vowel	K	Y	any	*	A5 AB A2 A4 A6 AV burstAF burstAH F2 F3	rule 11 of 16: next in {Y}
+R33.11	rule	any	tense-front-vowel	K	s	any	*	burstAF A3 AB F2 F3 A4 A5	rule 12 of 16: next in {s}
+R33.12	rule	any	tense-front-vowel	K	fricative !s	any	*	A3 A4 F2 F3 A5 AB	rule 13 of 16: next fricative and not next in {s}
+R33.13	rule	any	tense-front-vowel	K	stop	any	*	A4 F2 F3	rule 14 of 16: next stop
+R33.14	rule	any	tense-front-vowel	K	closure _ !stop	any	*	A5 AB A3 F2 F3 F4	rule 15 of 16: cur released
+R33.15	rule	any	tense-front-vowel	K	h-like j	any	*	A5 AB A3 F2 F3 F4	rule 16 of 16: otherwise
+R34.0	rule	any	other-front-ending	K	high-front-vowel	any	*	A2 A3 A4 A6 A5 F2 F3 F4	rule 1 of 16: next V0
+R34.1	rule	any	other-front-ending	K	nonhigh-front-vowel	any	*	A4 A3 A5 A2 F2 F3 F4	rule 2 of 16: next V1
+R34.2	rule	any	other-front-ending	K	back-rounded-vowel	any	*	A2 A3 A4 A5 B3 F4 burstAF	rule 3 of 16: next V2
+R34.3	rule	any	other-front-ending	K	3	any	*	A4 A2 A3 A5 A6 F2 F3 F4	rule 4 of 16: next in {3}
+R34.4	rule	any	other-front-ending	K	central-low-vowel !3	any	*	A2 A5 A6 A3 A4 AB F2 F3 F4	rule 5 of 16: next V3
+R34.5	rule	any	other-front-ending	K	R	any	*	W[F4] F2 F3 F4 A3 A4 AB A5	rule 6 of 16: next in {R}
+R34.6	rule	any	other-front-ending	K	p	any	*	A2 A3 A5 AB F2 F3	rule 7 of 16: next in {p}
+R34.7	rule	any	other-front-ending	K	L	any	*	burstAF A2 A3 F2 F3 AB A5	rule 8 of 16: next in {L}
+R34.8	rule	any	other-front-ending	K	W	any	*	burstAF A3 A4 A5 A2 AB F2 F3	rule 9 of 16: next in {W}
+R34.9	rule	any	other-front-ending	K	l	any	*	A2 A3 A4 A6 A5 F2 F3 AB	rule 10 of 16: next in {l}
+R34.10	rule	any	other-front-ending	K	Y	any	*	A5 AB A2 A4 A6 AV burstAF burstAH F2 F3	rule 11 of 16: next in {Y}
+R34.11	rule	any	other-front-ending	K	s	any	*	burstAF A3 AB F2 F3 A4 A5	rule 12 of 16: next in {s}
+R34.12	rule	any	other-front-ending	K	fricative !s	any	*	A3 A4 F2 F3 A5 AB	rule 13 of 16: next fricative and not next in {s}
+R34.13	rule	any	other-front-ending	K	stop	any	*	A4 F2 F3	rule 14 of 16: next stop
+R34.14	rule	any	other-front-ending	K	closure _ !stop	any	*	A2 A3 A5 AB F2 F3	rule 15 of 16: cur released
+R34.15	rule	any	other-front-ending	K	h-like j	any	*	A2 A3 A5 AB F2 F3	rule 16 of 16: otherwise
+R35.0	rule	any	w-offglide-vowel	K	high-front-vowel	any	*	A2 A3 A4 A6 A5 F2 F3 F4	rule 1 of 16: next V0
+R35.1	rule	any	w-offglide-vowel	K	nonhigh-front-vowel	any	*	A4 A3 A5 A2 F2 F3 F4	rule 2 of 16: next V1
+R35.2	rule	any	w-offglide-vowel	K	back-rounded-vowel	any	*	A2 A3 A4 A5 B3 F4 burstAF	rule 3 of 16: next V2
+R35.3	rule	any	w-offglide-vowel	K	3	any	*	A4 A2 A3 A5 A6 F2 F3 F4	rule 4 of 16: next in {3}
+R35.4	rule	any	w-offglide-vowel	K	central-low-vowel !3	any	*	A2 A5 A6 A3 A4 AB F2 F3 F4	rule 5 of 16: next V3
+R35.5	rule	any	w-offglide-vowel	K	R	any	*	W[F4] F2 F3 F4 A3 A4 AB A5	rule 6 of 16: next in {R}
+R35.6	rule	any	w-offglide-vowel	K	p	any	*	AB A2 A5 burstAF burstAH A3 A4 F2 F3	rule 7 of 16: next in {p}
+R35.7	rule	any	w-offglide-vowel	K	L	any	*	burstAF A2 A3 F2 F3 AB A5	rule 8 of 16: next in {L}
+R35.8	rule	any	w-offglide-vowel	K	W	any	*	burstAF A3 A4 A5 A2 AB F2 F3	rule 9 of 16: next in {W}
+R35.9	rule	any	w-offglide-vowel	K	l	any	*	A2 A3 A4 A6 A5 F2 F3 AB	rule 10 of 16: next in {l}
+R35.10	rule	any	w-offglide-vowel	K	Y	any	*	A5 AB A2 A4 A6 AV burstAF burstAH F2 F3	rule 11 of 16: next in {Y}
+R35.11	rule	any	w-offglide-vowel	K	s	any	*	burstAF A3 AB F2 F3 A4 A5	rule 12 of 16: next in {s}
+R35.12	rule	any	w-offglide-vowel	K	fricative !s	any	*	A3 A4 F2 F3 A5 AB	rule 13 of 16: next fricative and not next in {s}
+R35.13	rule	any	w-offglide-vowel	K	stop	any	*	A4 F2 F3	rule 14 of 16: next stop
+R35.14	rule	any	w-offglide-vowel	K	closure _ !stop	any	*	AB A2 A5 burstAF burstAH A3 A4 F2 F3	rule 15 of 16: cur released
+R35.15	rule	any	w-offglide-vowel	K	h-like j	any	*	AB A2 A5 burstAF burstAH A3 A4 F2 F3	rule 16 of 16: otherwise
+R36.0	rule	any	central-back-vowel	K	high-front-vowel	any	*	A2 A3 A4 A6 A5 F2 F3 F4	rule 1 of 16: next V0
+R36.1	rule	any	central-back-vowel	K	nonhigh-front-vowel	any	*	A4 A3 A5 A2 F2 F3 F4	rule 2 of 16: next V1
+R36.2	rule	any	central-back-vowel	K	back-rounded-vowel	any	*	A2 A3 A4 A5 B3 F4 burstAF	rule 3 of 16: next V2
+R36.3	rule	any	central-back-vowel	K	3	any	*	A4 A2 A3 A5 A6 F2 F3 F4	rule 4 of 16: next in {3}
+R36.4	rule	any	central-back-vowel	K	central-low-vowel !3	any	*	A2 A5 A6 A3 A4 AB F2 F3 F4	rule 5 of 16: next V3
+R36.5	rule	any	central-back-vowel	K	R	any	*	W[F4] F2 F3 F4 A3 A4 AB A5	rule 6 of 16: next in {R}
+R36.6	rule	any	central-back-vowel	K	p	any	*	A5 A3 A4 F2 F3	rule 7 of 16: next in {p}
+R36.7	rule	any	central-back-vowel	K	L	any	*	burstAF A2 A3 F2 F3 AB A5	rule 8 of 16: next in {L}
+R36.8	rule	any	central-back-vowel	K	W	any	*	burstAF A3 A4 A5 A2 AB F2 F3	rule 9 of 16: next in {W}
+R36.9	rule	any	central-back-vowel	K	l	any	*	A2 A3 A4 A6 A5 F2 F3 AB	rule 10 of 16: next in {l}
+R36.10	rule	any	central-back-vowel	K	Y	any	*	A5 AB A2 A4 A6 AV burstAF burstAH F2 F3	rule 11 of 16: next in {Y}
+R36.11	rule	any	central-back-vowel	K	s	any	*	burstAF A3 AB F2 F3 A4 A5	rule 12 of 16: next in {s}
+R36.12	rule	any	central-back-vowel	K	fricative !s	any	*	A3 A4 F2 F3 A5 AB	rule 13 of 16: next fricative and not next in {s}
+R36.13	rule	any	central-back-vowel	K	stop	any	*	A4 F2 F3	rule 14 of 16: next stop
+R36.14	rule	any	central-back-vowel	K	closure _ !stop	any	*	A5 A3 A4 F2 F3	rule 15 of 16: cur released
+R36.15	rule	any	central-back-vowel	K	h-like j	any	*	A5 A3 A4 F2 F3	rule 16 of 16: otherwise
+R37.0	rule	any	r-colored-vowel	K	high-front-vowel	any	*	A2 A3 A4 A6 A5 F2 F3 F4	rule 1 of 16: next V0
+R37.1	rule	any	r-colored-vowel	K	nonhigh-front-vowel	any	*	A4 A3 A5 A2 F2 F3 F4	rule 2 of 16: next V1
+R37.2	rule	any	r-colored-vowel	K	back-rounded-vowel	any	*	A2 A3 A4 A5 B3 F4 burstAF	rule 3 of 16: next V2
+R37.3	rule	any	r-colored-vowel	K	3	any	*	A4 A2 A3 A5 A6 F2 F3 F4	rule 4 of 16: next in {3}
+R37.4	rule	any	r-colored-vowel	K	central-low-vowel !3	any	*	A2 A5 A6 A3 A4 AB F2 F3 F4	rule 5 of 16: next V3
+R37.5	rule	any	r-colored-vowel	K	R	any	*	W[F4] F2 F3 F4 A3 A4 AB A5	rule 6 of 16: next in {R}
+R37.6	rule	any	r-colored-vowel	K	p	any	*	A2 A3 A5 AB F2 F3	rule 7 of 16: next in {p}
+R37.7	rule	any	r-colored-vowel	K	L	any	*	burstAF A2 A3 F2 F3 AB A5	rule 8 of 16: next in {L}
+R37.8	rule	any	r-colored-vowel	K	W	any	*	burstAF A3 A4 A5 A2 AB F2 F3	rule 9 of 16: next in {W}
+R37.9	rule	any	r-colored-vowel	K	l	any	*	A2 A3 A4 A6 A5 F2 F3 AB	rule 10 of 16: next in {l}
+R37.10	rule	any	r-colored-vowel	K	Y	any	*	A5 AB A2 A4 A6 AV burstAF burstAH F2 F3	rule 11 of 16: next in {Y}
+R37.11	rule	any	r-colored-vowel	K	s	any	*	burstAF A3 AB F2 F3 A4 A5	rule 12 of 16: next in {s}
+R37.12	rule	any	r-colored-vowel	K	fricative !s	any	*	A3 A4 F2 F3 A5 AB	rule 13 of 16: next fricative and not next in {s}
+R37.13	rule	any	r-colored-vowel	K	stop	any	*	A4 F2 F3	rule 14 of 16: next stop
+R37.14	rule	any	r-colored-vowel	K	closure _ !stop	any	*	A2 A3 A5 AB F2 F3	rule 15 of 16: cur released
+R37.15	rule	any	r-colored-vowel	K	h-like j	any	*	A2 A3 A5 AB F2 F3	rule 16 of 16: otherwise
+R38.0	rule	any	any !vowel	K	high-front-vowel	any	*	A2 A3 A4 A6 A5 F2 F3 F4	rule 1 of 16: next V0
+R38.1	rule	any	any !vowel	K	nonhigh-front-vowel	any	*	A4 A3 A5 A2 F2 F3 F4	rule 2 of 16: next V1
+R38.2	rule	any	any !vowel	K	back-rounded-vowel	any	*	A2 A3 A4 A5 B3 F4 burstAF	rule 3 of 16: next V2
+R38.3	rule	any	any !vowel	K	3	any	*	A4 A2 A3 A5 A6 F2 F3 F4	rule 4 of 16: next in {3}
+R38.4	rule	any	any !vowel	K	central-low-vowel !3	any	*	A2 A5 A6 A3 A4 AB F2 F3 F4	rule 5 of 16: next V3
+R38.5	rule	any	any !vowel	K	R	any	*	W[F4] F2 F3 F4 A3 A4 AB A5	rule 6 of 16: next in {R}
+R38.6	rule	any	any !vowel	K	p	any	*	A2 A5 A3 A4 F2 F3	rule 7 of 16: next in {p}
+R38.7	rule	any	any !vowel	K	L	any	*	burstAF A2 A3 F2 F3 AB A5	rule 8 of 16: next in {L}
+R38.8	rule	any	any !vowel	K	W	any	*	burstAF A3 A4 A5 A2 AB F2 F3	rule 9 of 16: next in {W}
+R38.9	rule	any	any !vowel	K	l	any	*	A2 A3 A4 A6 A5 F2 F3 AB	rule 10 of 16: next in {l}
+R38.10	rule	any	any !vowel	K	Y	any	*	A5 AB A2 A4 A6 AV burstAF burstAH F2 F3	rule 11 of 16: next in {Y}
+R38.11	rule	any	any !vowel	K	s	any	*	burstAF A3 AB F2 F3 A4 A5	rule 12 of 16: next in {s}
+R38.12	rule	any	any !vowel	K	fricative !s	any	*	A3 A4 F2 F3 A5 AB	rule 13 of 16: next fricative and not next in {s}
+R38.13	rule	any	any !vowel	K	stop	any	*	A4 F2 F3	rule 14 of 16: next stop
+R38.14	rule	any	any !vowel	K	closure _ !stop	any	*	A2 A5 A3 A4 F2 F3	rule 15 of 16: cur released
+R38.15	rule	any	any !vowel	K	h-like j	any	*	A2 A5 A3 A4 F2 F3	rule 16 of 16: otherwise
+R39.0	rule	any	tense-front-vowel	G	high-front-vowel	any	*	p18 p19 A2 A3 A4 A6 A5 F2 F3 F4	rule 1 of 13: next V0
+R39.1	rule	any	tense-front-vowel	G	nonhigh-front-vowel	any	*	AV A2 A3 A4 A5 p18 p19 F1 F2 F3 F4	rule 2 of 13: next V1
+R39.2	rule	any	tense-front-vowel	G	back-rounded-vowel	any	*	p18 p19 burstAF A2 A3 A4 A5 A6 B2 F1 F2 F3 F4	rule 3 of 13: next V2
+R39.3	rule	any	tense-front-vowel	G	3	any	*	p18 p19 F2 F3 A5 A2 A3	rule 4 of 13: next in {3}
+R39.4	rule	any	tense-front-vowel	G	central-low-vowel !3	any	*	p18 p19 A2 A3 A5 burstAF F2 F3 F4	rule 5 of 13: next V3
+R39.5	rule	any	tense-front-vowel	G	R	any	*	p18 p19 A4 A5 A6 A2 A3 F2 F3 AB burstAH	rule 6 of 13: next in {R}
+R39.6	rule	any	tense-front-vowel	G	p	any	*	p18 p19 A4 A2 A3 A5 A6	rule 7 of 13: next in {p}
+R39.7	rule	any	tense-front-vowel	G	L	any	*	p18 p19 F2 F3 A5 A6 A2 A3 A4 burstAF burstAH AB	rule 8 of 13: next in {L}
+R39.8	rule	any	tense-front-vowel	G	W	any	*	p18 p19 burstAF A2 A3 A4 A5 A6 B2 F1 F2 F3 F4 AB	rule 9 of 13: next in {W}
+R39.9	rule	any	tense-front-vowel	G	Y	any	*	p18 p19 AB AV A2 A3 A5 F2 F3	rule 10 of 13: next in {Y}
+R39.10	rule	any	tense-front-vowel	G	closure _	any	*	p18 p19	rule 11 of 13: cur released
+R39.11	rule	any	tense-front-vowel	G	fricative h-like j	any	*	p18 p19	rule 12 of 13: not next syllabic
+R39.12	rule	any	tense-front-vowel	G	l	any	*	p18 p19 A4 A2 A3 A5 A6	rule 13 of 13: otherwise
+R40.0	rule	any	other-front-ending	G	high-front-vowel	any	*	p18 p19 A2 A3 A4 A6 A5 F2 F3 F4	rule 1 of 13: next V0
+R40.1	rule	any	other-front-ending	G	nonhigh-front-vowel	any	*	AV A2 A3 A4 A5 p18 p19 F1 F2 F3 F4	rule 2 of 13: next V1
+R40.2	rule	any	other-front-ending	G	back-rounded-vowel	any	*	p18 p19 burstAF A2 A3 A4 A5 A6 B2 F1 F2 F3 F4	rule 3 of 13: next V2
+R40.3	rule	any	other-front-ending	G	3	any	*	p18 p19 F2 F3 A5 A2 A3	rule 4 of 13: next in {3}
+R40.4	rule	any	other-front-ending	G	central-low-vowel !3	any	*	p18 p19 A2 A3 A5 burstAF F2 F3 F4	rule 5 of 13: next V3
+R40.5	rule	any	other-front-ending	G	R	any	*	p18 p19 A4 A5 A6 A2 A3 F2 F3 AB burstAH	rule 6 of 13: next in {R}
+R40.6	rule	any	other-front-ending	G	p	any	*	p18 p19 A4 A2 A3 A6 A5 F2 F3	rule 7 of 13: next in {p}
+R40.7	rule	any	other-front-ending	G	L	any	*	p18 p19 F2 F3 A5 A6 A2 A3 A4 burstAF burstAH AB	rule 8 of 13: next in {L}
+R40.8	rule	any	other-front-ending	G	W	any	*	p18 p19 burstAF A2 A3 A4 A5 A6 B2 F1 F2 F3 F4 AB	rule 9 of 13: next in {W}
+R40.9	rule	any	other-front-ending	G	Y	any	*	p18 p19 AB AV A2 A3 A5 F2 F3	rule 10 of 13: next in {Y}
+R40.10	rule	any	other-front-ending	G	closure _	any	*	p18 p19	rule 11 of 13: cur released
+R40.11	rule	any	other-front-ending	G	fricative h-like j	any	*	p18 p19	rule 12 of 13: not next syllabic
+R40.12	rule	any	other-front-ending	G	l	any	*	p18 p19 A4 A2 A3 A6 A5 F2 F3	rule 13 of 13: otherwise
+R41.0	rule	any	w-offglide-vowel	G	high-front-vowel	any	*	p18 p19 A2 A3 A4 A6 A5 F2 F3 F4	rule 1 of 13: next V0
+R41.1	rule	any	w-offglide-vowel	G	nonhigh-front-vowel	any	*	AV A2 A3 A4 A5 p18 p19 F1 F2 F3 F4	rule 2 of 13: next V1
+R41.2	rule	any	w-offglide-vowel	G	back-rounded-vowel	any	*	p18 p19 burstAF A2 A3 A4 A5 A6 B2 F1 F2 F3 F4	rule 3 of 13: next V2
+R41.3	rule	any	w-offglide-vowel	G	3	any	*	p18 p19 F2 F3 A5 A2 A3	rule 4 of 13: next in {3}
+R41.4	rule	any	w-offglide-vowel	G	central-low-vowel !3	any	*	p18 p19 A2 A3 A5 burstAF F2 F3 F4	rule 5 of 13: next V3
+R41.5	rule	any	w-offglide-vowel	G	R	any	*	p18 p19 A4 A5 A6 A2 A3 F2 F3 AB burstAH	rule 6 of 13: next in {R}
+R41.6	rule	any	w-offglide-vowel	G	p	any	*	p18 p19 A2 A3 A4 A5 A6 F2 F3	rule 7 of 13: next in {p}
+R41.7	rule	any	w-offglide-vowel	G	L	any	*	p18 p19 F2 F3 A5 A6 A2 A3 A4 burstAF burstAH AB	rule 8 of 13: next in {L}
+R41.8	rule	any	w-offglide-vowel	G	W	any	*	p18 p19 burstAF A2 A3 A4 A5 A6 B2 F1 F2 F3 F4 AB	rule 9 of 13: next in {W}
+R41.9	rule	any	w-offglide-vowel	G	Y	any	*	p18 p19 AB AV A2 A3 A5 F2 F3	rule 10 of 13: next in {Y}
+R41.10	rule	any	w-offglide-vowel	G	closure _	any	*	p18 p19 F2 F3	rule 11 of 13: cur released
+R41.11	rule	any	w-offglide-vowel	G	fricative h-like j	any	*	p18 p19 F2 F3	rule 12 of 13: not next syllabic
+R41.12	rule	any	w-offglide-vowel	G	l	any	*	p18 p19 A2 A3 A4 A5 A6 F2 F3	rule 13 of 13: otherwise
+R42.0	rule	any	central-back-vowel	G	high-front-vowel	any	*	p18 p19 A2 A3 A4 A6 A5 F2 F3 F4	rule 1 of 13: next V0
+R42.1	rule	any	central-back-vowel	G	nonhigh-front-vowel	any	*	AV A2 A3 A4 A5 p18 p19 F1 F2 F3 F4	rule 2 of 13: next V1
+R42.2	rule	any	central-back-vowel	G	back-rounded-vowel	any	*	p18 p19 burstAF A2 A3 A4 A5 A6 B2 F1 F2 F3 F4	rule 3 of 13: next V2
+R42.3	rule	any	central-back-vowel	G	3	any	*	p18 p19 F2 F3 A5 A2 A3	rule 4 of 13: next in {3}
+R42.4	rule	any	central-back-vowel	G	central-low-vowel !3	any	*	p18 p19 A2 A3 A5 burstAF F2 F3 F4	rule 5 of 13: next V3
+R42.5	rule	any	central-back-vowel	G	R	any	*	p18 p19 A4 A5 A6 A2 A3 F2 F3 AB burstAH	rule 6 of 13: next in {R}
+R42.6	rule	any	central-back-vowel	G	p	any	*	p18 p19 F2 F3	rule 7 of 13: next in {p}
+R42.7	rule	any	central-back-vowel	G	L	any	*	p18 p19 F2 F3 A5 A6 A2 A3 A4 burstAF burstAH AB	rule 8 of 13: next in {L}
+R42.8	rule	any	central-back-vowel	G	W	any	*	p18 p19 burstAF A2 A3 A4 A5 A6 B2 F1 F2 F3 F4 AB	rule 9 of 13: next in {W}
+R42.9	rule	any	central-back-vowel	G	Y	any	*	p18 p19 AB AV A2 A3 A5 F2 F3	rule 10 of 13: next in {Y}
+R42.10	rule	any	central-back-vowel	G	closure _	any	*	p18 p19 F2 F3	rule 11 of 13: cur released
+R42.11	rule	any	central-back-vowel	G	fricative h-like j	any	*	p18 p19 F2 F3	rule 12 of 13: not next syllabic
+R42.12	rule	any	central-back-vowel	G	l	any	*	p18 p19 F2 F3	rule 13 of 13: otherwise
+R43.0	rule	any	r-colored-vowel	G	high-front-vowel	any	*	p18 p19 A2 A3 A4 A6 A5 F2 F3 F4	rule 1 of 13: next V0
+R43.1	rule	any	r-colored-vowel	G	nonhigh-front-vowel	any	*	AV A2 A3 A4 A5 p18 p19 F1 F2 F3 F4	rule 2 of 13: next V1
+R43.2	rule	any	r-colored-vowel	G	back-rounded-vowel	any	*	p18 p19 burstAF A2 A3 A4 A5 A6 B2 F1 F2 F3 F4	rule 3 of 13: next V2
+R43.3	rule	any	r-colored-vowel	G	3	any	*	p18 p19 F2 F3 A5 A2 A3	rule 4 of 13: next in {3}
+R43.4	rule	any	r-colored-vowel	G	central-low-vowel !3	any	*	p18 p19 A2 A3 A5 burstAF F2 F3 F4	rule 5 of 13: next V3
+R43.5	rule	any	r-colored-vowel	G	R	any	*	p18 p19 A4 A5 A6 A2 A3 F2 F3 AB burstAH	rule 6 of 13: next in {R}
+R43.6	rule	any	r-colored-vowel	G	p	any	*	p18 p19 A3 A4 A2 A5 A6	rule 7 of 13: next in {p}
+R43.7	rule	any	r-colored-vowel	G	L	any	*	p18 p19 F2 F3 A5 A6 A2 A3 A4 burstAF burstAH AB	rule 8 of 13: next in {L}
+R43.8	rule	any	r-colored-vowel	G	W	any	*	p18 p19 burstAF A2 A3 A4 A5 A6 B2 F1 F2 F3 F4 AB	rule 9 of 13: next in {W}
+R43.9	rule	any	r-colored-vowel	G	Y	any	*	p18 p19 AB AV A2 A3 A5 F2 F3	rule 10 of 13: next in {Y}
+R43.10	rule	any	r-colored-vowel	G	closure _	any	*	p18 p19 F2 F3	rule 11 of 13: cur released
+R43.11	rule	any	r-colored-vowel	G	fricative h-like j	any	*	p18 p19 F2 F3	rule 12 of 13: not next syllabic
+R43.12	rule	any	r-colored-vowel	G	l	any	*	p18 p19 A3 A4 A2 A5 A6	rule 13 of 13: otherwise
+R44.0	rule	any	any !vowel	G	high-front-vowel	any	*	p18 p19 A2 A3 A4 A6 A5 F2 F3 F4	rule 1 of 13: next V0
+R44.1	rule	any	any !vowel	G	nonhigh-front-vowel	any	*	AV A2 A3 A4 A5 p18 p19 F1 F2 F3 F4	rule 2 of 13: next V1
+R44.2	rule	any	any !vowel	G	back-rounded-vowel	any	*	p18 p19 burstAF A2 A3 A4 A5 A6 B2 F1 F2 F3 F4	rule 3 of 13: next V2
+R44.3	rule	any	any !vowel	G	3	any	*	p18 p19 F2 F3 A5 A2 A3	rule 4 of 13: next in {3}
+R44.4	rule	any	any !vowel	G	central-low-vowel !3	any	*	p18 p19 A2 A3 A5 burstAF F2 F3 F4	rule 5 of 13: next V3
+R44.5	rule	any	any !vowel	G	R	any	*	p18 p19 A4 A5 A6 A2 A3 F2 F3 AB burstAH	rule 6 of 13: next in {R}
+R44.6	rule	any	any !vowel	G	p	any	*	p18 p19	rule 7 of 13: next in {p}
+R44.7	rule	any	any !vowel	G	L	any	*	p18 p19 F2 F3 A5 A6 A2 A3 A4 burstAF burstAH AB	rule 8 of 13: next in {L}
+R44.8	rule	any	any !vowel	G	W	any	*	p18 p19 burstAF A2 A3 A4 A5 A6 B2 F1 F2 F3 F4 AB	rule 9 of 13: next in {W}
+R44.9	rule	any	any !vowel	G	Y	any	*	p18 p19 AB AV A2 A3 A5 F2 F3	rule 10 of 13: next in {Y}
+R44.10	rule	any	any !vowel	G	closure _	any	*	p18 p19	rule 11 of 13: cur released
+R44.11	rule	any	any !vowel	G	fricative h-like j	any	*	p18 p19	rule 12 of 13: not next syllabic
+R44.12	rule	any	any !vowel	G	l	any	*	p18 p19	rule 13 of 13: otherwise
+R45.0	rule	any	any	C	s	high-front-vowel i |	*	A3 A4 A6 F3 A5 AB	rule 1 of 9: next in {s} and next2 high and next2 front vowel
+R45.1	rule	any	any	C	s	nonhigh-front-vowel !i !|	*	A2 A4 F3 A5 A6 B3 AB	rule 2 of 9: next in {s} and not next2 high and next2 front vowel
+R45.2	rule	any	any	C	s	rounded !U	*	A3 A2 A4 A5 A6 F3 AB	rule 3 of 9: next in {s} and not next2 front vowel and next2 back/rounded
+R45.3	rule	any	any	C	s	3	*	A3 A2 A4 A5 A6 F3 AB	rule 4 of 9: next in {s} and next2 in {3}
+R45.4	rule	any	any	C	s	central-low-vowel p !3	*	A3 A2 A4 F3 A5 A6 AB	rule 5 of 9: next in {s} and not next2 front vowel and not next2 back/rounded and next2 vowel
+R45.5	rule	any	any	C	s	R	*	A3 A4 A5 A6 AB burstLen burstAF burstAH F2 F3	rule 6 of 9: next in {s} and next2 in {R}
+R45.6	rule	any	any	C	s	_	*	A3 A5 A6 AB A4 F2 F3 F4	rule 7 of 9: next in {s} and next2 in {_}
+R45.7a	rule	any	any	C	phoneme !closure !s	any	*	-	rule 8 of 9: not cur released
+R45.7b	rule	any	any	C	s	consonant !rounded !R	*	-	rule 8 of 9: not cur released
+R45.8	rule	any	any	C	closure _	any	*	-	rule 9 of 9: otherwise
+R46.0	rule	any	any	J	z	R	*	p18 p19 A2 A3 burstAF F2	rule 1 of 3: cur in {J} and next in {z} and next2 in {R}
+R46.1a	rule	any	any	J	phoneme !closure !z	any	*	p18 p19	rule 2 of 3: not cur released
+R46.1b	rule	any	any	J	z	any !R	*	p18 p19	rule 2 of 3: not cur released
+R46.1c	rule	any	any	q	phoneme !closure	any	*	p18 p19	rule 2 of 3: not cur released
+R46.2	rule	any	any	J q	closure _	any	*	p18 p19	rule 3 of 3: otherwise
+R47.0	rule	any	front-ending	V	rounded	any	*	p18 p19 p18.durF p19.durF F2 W[F2] W[F3]	rule 1 of 4: cur voiced and next back/rounded
+R47.1	rule	any	front-ending	V	any !rounded	any	*	p18 p19 p18.durF p19.durF F2 W[F2] W[F3]	rule 2 of 4: cur voiced
+R47.2	rule	any	front-ending	F	rounded	any	*	F2 W[F2] W[F3]	rule 3 of 4: next back/rounded
+R47.3	rule	any	front-ending	F	any !rounded	any	*	F2 W[F2] W[F3]	rule 4 of 4: otherwise
+R48.0	rule	any	sonorant _ !front-ending !closure !lateral	V	front-vowel	any	*	p18 p19 p18.durF p19.durF F2 W[F2] W[F3]	rule 1 of 6: cur voiced and next front vowel
+R48.1	rule	any	sonorant _ !front-ending !closure !lateral	V	rounded !U	any	*	p18 p19 p18.durF p19.durF F2 W[F2] W[F3]	rule 2 of 6: cur voiced and next back/rounded
+R48.2	rule	any	sonorant _ !front-ending !closure !lateral	V	any !rounded !front-vowel	any	*	p18 p19 p18.durF p19.durF W[F2] W[F3]	rule 3 of 6: cur voiced
+R48.3	rule	any	sonorant _ !front-ending !closure !lateral	F	front-vowel	any	*	F2 W[F2] W[F3]	rule 4 of 6: next front vowel
+R48.4	rule	any	sonorant _ !front-ending !closure !lateral	F	rounded !U	any	*	F2 W[F2] W[F3]	rule 5 of 6: next back/rounded
+R48.5	rule	any	sonorant _ !front-ending !closure !lateral	F	any !rounded !front-vowel	any	*	W[F2] W[F3]	rule 6 of 6: otherwise
+R49.0	rule	any	fricative l L	V	front-vowel	any	*	p18 p19 p18.durF p19.durF F2	rule 1 of 6: cur voiced and next front vowel
+R49.1	rule	any	fricative l L	V	rounded !U	any	*	p18 p19 p18.durF p19.durF F2	rule 2 of 6: cur voiced and next back/rounded
+R49.2	rule	any	fricative l L	V	any !rounded !front-vowel	any	*	p18 p19 p18.durF p19.durF	rule 3 of 6: cur voiced
+R49.3	rule	any	fricative l L	F	front-vowel	any	*	F2	rule 4 of 6: next front vowel
+R49.4	rule	any	fricative l L	F	rounded !U	any	*	F2	rule 5 of 6: next back/rounded
+R49.5	rule	any	fricative l L	F	any !rounded !front-vowel	any	*	-	rule 6 of 6: otherwise
+R50.0	rule	any	j	V	front-vowel	any	*	p18 p19 p18.durF p19.durF F2 W[F2] W[F3]	rule 1 of 7: cur voiced and next front vowel
+R50.1	rule	any	j	V	rounded !U	any	*	p18 p19 p18.durF p19.durF F2 W[F2] W[F3]	rule 2 of 7: cur voiced and next back/rounded
+R50.2	rule	any	j	V	any !rounded !front-vowel	any	*	p18 p19 p18.durF p19.durF W[F2] W[F3]	rule 3 of 7: cur voiced
+R50.3	rule	any	j	F	front-vowel	any	*	F2 W[F2] W[F3]	rule 4 of 7: next front vowel
+R50.4	rule	any	j	F	rounded !U	any	*	F2 W[F2] W[F3]	rule 5 of 7: next back/rounded
+R50.5	rule	any	j	F	S	any	*	AH A2	rule 6 of 7: next in {S}
+R50.6	rule	any	j	F	any !rounded !front-vowel !S	any	*	W[F2] W[F3]	rule 7 of 7: otherwise
+R51.0	rule	any	closure	V	front-vowel	any	*	p18 p19 p18.durF p19.durF F2	rule 1 of 6: cur voiced and next front vowel
+R51.1	rule	any	closure	V	rounded !U	any	*	p18 p19 p18.durF p19.durF F2	rule 2 of 6: cur voiced and next back/rounded
+R51.2	rule	any	closure	V	any !rounded !front-vowel	any	*	p18 p19 p18.durF p19.durF	rule 3 of 6: cur voiced
+R51.3	rule	any	closure	F	front-vowel	any	*	F2	rule 4 of 6: next front vowel
+R51.4	rule	any	closure	F	rounded !U	any	*	F2	rule 5 of 6: next back/rounded
+R51.5	rule	any	closure	F	any !rounded !front-vowel	any	*	-	rule 6 of 6: otherwise
+R52.0	rule	any	tense-front-vowel	S	high-front-vowel	any	*	AF A2 A3 A4 A5 A6 AH AB F2 F3 F4	rule 1 of 9: next V0
+R52.1	rule	any	tense-front-vowel	S	nonhigh-front-vowel	any	*	AF A2 A3 A4 A5 A6 AB AH B1 B3 F2 F3 F4	rule 2 of 9: next V1
+R52.2	rule	any	tense-front-vowel	S	back-rounded-vowel	any	*	AF A2 A3 A4 A5 A6 AB AH F2	rule 3 of 9: next V2
+R52.3	rule	any	tense-front-vowel	S	3	any	*	AF A4 A5 A6 AB AH A2 A3 F3 F4	rule 4 of 9: next in {3}
+R52.4	rule	any	tense-front-vowel	S	central-low-vowel !3	any	*	AF A2 A3 A4 A5 A6 AB AH F2 F3	rule 5 of 9: next V3
+R52.5	rule	any	tense-front-vowel	S	closure	any	*	A2 A3 A4 A5 A6 AB AF	rule 6 of 9: next closure
+R52.6	rule	any	tense-front-vowel	S	_	any	*	A6 AF AH A4 A5	rule 7 of 9: next in {_}
+R52.7	rule	any	tense-front-vowel	S	fricative	any	*	AF AH A4 A5 AB A6	rule 8 of 9: next fricative
+R52.8	rule	any	tense-front-vowel	S	liquid-glide h-like p	any	*	AF AH A4 A5 A6	rule 9 of 9: otherwise
+R53.0	rule	any	other-front-ending	S	high-front-vowel	any	*	AF A2 A3 A4 A5 A6 AH AB F2 F3 F4	rule 1 of 9: next V0
+R53.1	rule	any	other-front-ending	S	nonhigh-front-vowel	any	*	AF A2 A3 A4 A5 A6 AB AH B1 B3 F2 F3 F4	rule 2 of 9: next V1
+R53.2	rule	any	other-front-ending	S	back-rounded-vowel	any	*	AF A2 A3 A4 A5 A6 AB AH F2	rule 3 of 9: next V2
+R53.3	rule	any	other-front-ending	S	3	any	*	AF A4 A5 A6 AB AH A2 A3 F3 F4	rule 4 of 9: next in {3}
+R53.4	rule	any	other-front-ending	S	central-low-vowel !3	any	*	AF A2 A3 A4 A5 A6 AB AH F2 F3	rule 5 of 9: next V3
+R53.5	rule	any	other-front-ending	S	closure	any	*	A2 A3 A4 A5 A6 AB AF	rule 6 of 9: next closure
+R53.6	rule	any	other-front-ending	S	_	any	*	A6 AF AH A4 A5	rule 7 of 9: next in {_}
+R53.7	rule	any	other-front-ending	S	fricative	any	*	AF AH A4 A5 AB A6	rule 8 of 9: next fricative
+R53.8	rule	any	other-front-ending	S	liquid-glide h-like p	any	*	AF AH A4 A5 A6	rule 9 of 9: otherwise
+R54.0	rule	any	w-offglide-vowel	S	high-front-vowel	any	*	AF A2 A3 A4 A5 A6 AH AB F2 F3 F4	rule 1 of 9: next V0
+R54.1	rule	any	w-offglide-vowel	S	nonhigh-front-vowel	any	*	AF A2 A3 A4 A5 A6 AB AH B1 B3 F2 F3 F4	rule 2 of 9: next V1
+R54.2	rule	any	w-offglide-vowel	S	back-rounded-vowel	any	*	AF A2 A3 A4 A5 A6 AB AH F2	rule 3 of 9: next V2
+R54.3	rule	any	w-offglide-vowel	S	3	any	*	AF A4 A5 A6 AB AH A2 A3 F3 F4	rule 4 of 9: next in {3}
+R54.4	rule	any	w-offglide-vowel	S	central-low-vowel !3	any	*	AF A2 A3 A4 A5 A6 AB AH F2 F3	rule 5 of 9: next V3
+R54.5	rule	any	w-offglide-vowel	S	closure	any	*	A2 A3 A4 A5 A6 AB AF	rule 6 of 9: next closure
+R54.6	rule	any	w-offglide-vowel	S	_	any	*	A6 AF AH A4 A5	rule 7 of 9: next in {_}
+R54.7	rule	any	w-offglide-vowel	S	fricative	any	*	AF AH A4 A5 AB A6	rule 8 of 9: next fricative
+R54.8	rule	any	w-offglide-vowel	S	liquid-glide h-like p	any	*	AF AH A4 A5 A6	rule 9 of 9: otherwise
+R55.0	rule	any	central-back-vowel p	S	high-front-vowel	any	*	AF A2 A3 A4 A5 A6 AH AB F2 F3 F4	rule 1 of 9: next V0
+R55.1	rule	any	central-back-vowel p	S	nonhigh-front-vowel	any	*	AF A2 A3 A4 A5 A6 AB AH B1 B3 F2 F3 F4	rule 2 of 9: next V1
+R55.2	rule	any	central-back-vowel p	S	back-rounded-vowel	any	*	AF A2 A3 A4 A5 A6 AB AH F2	rule 3 of 9: next V2
+R55.3	rule	any	central-back-vowel p	S	3	any	*	AF A4 A5 A6 AB AH A2 A3 F3 F4	rule 4 of 9: next in {3}
+R55.4	rule	any	central-back-vowel p	S	central-low-vowel !3	any	*	AF A2 A3 A4 A5 A6 AB AH F2 F3	rule 5 of 9: next V3
+R55.5	rule	any	central-back-vowel p	S	closure	any	*	A2 A3 A4 A5 A6 AB AF	rule 6 of 9: next closure
+R55.6	rule	any	central-back-vowel p	S	_	any	*	A6 AF AH A4 A5	rule 7 of 9: next in {_}
+R55.7	rule	any	central-back-vowel p	S	fricative	any	*	AF AH A4 A5 AB A6	rule 8 of 9: next fricative
+R55.8	rule	any	central-back-vowel p	S	liquid-glide h-like p	any	*	AF AH A4 A5 A6	rule 9 of 9: otherwise
+R56.0	rule	any	r-colored-vowel	S	high-front-vowel	any	*	AF A2 A3 A4 A5 A6 AH AB F2 F3 F4	rule 1 of 9: next V0
+R56.1	rule	any	r-colored-vowel	S	nonhigh-front-vowel	any	*	AF A2 A3 A4 A5 A6 AB AH B1 B3 F2 F3 F4	rule 2 of 9: next V1
+R56.2	rule	any	r-colored-vowel	S	back-rounded-vowel	any	*	AF A2 A3 A4 A5 A6 AB AH F2	rule 3 of 9: next V2
+R56.3	rule	any	r-colored-vowel	S	3	any	*	AF A4 A5 A6 AB AH A2 A3 F3 F4	rule 4 of 9: next in {3}
+R56.4	rule	any	r-colored-vowel	S	central-low-vowel !3	any	*	AF A2 A3 A4 A5 A6 AB AH F2 F3	rule 5 of 9: next V3
+R56.5	rule	any	r-colored-vowel	S	closure	any	*	A2 A3 A4 A5 A6 AB AF	rule 6 of 9: next closure
+R56.6	rule	any	r-colored-vowel	S	_	any	*	A6 AF AH A4 A5	rule 7 of 9: next in {_}
+R56.7	rule	any	r-colored-vowel	S	fricative	any	*	AF AH A4 A5 AB A6	rule 8 of 9: next fricative
+R56.8	rule	any	r-colored-vowel	S	liquid-glide h-like p	any	*	AF AH A4 A5 A6	rule 9 of 9: otherwise
+R57.0	rule	any	closure	S	high-front-vowel	any	*	AF A2 A3 A4 A5 A6 AH AB F2 F3 F4	rule 1 of 9: next V0
+R57.1	rule	any	closure	S	nonhigh-front-vowel	any	*	AF A2 A3 A4 A5 A6 AB AH B1 B3 F2 F3 F4	rule 2 of 9: next V1
+R57.2	rule	any	closure	S	back-rounded-vowel	any	*	AF A2 A3 A4 A5 A6 AB AH F2	rule 3 of 9: next V2
+R57.3	rule	any	closure	S	3	any	*	AF A4 A5 A6 AB AH A2 A3 F3 F4	rule 4 of 9: next in {3}
+R57.4	rule	any	closure	S	central-low-vowel !3	any	*	AF A2 A3 A4 A5 A6 AB AH F2 F3	rule 5 of 9: next V3
+R57.5	rule	any	closure	S	closure	any	*	A2 A3 A4 A5 A6 AB AF	rule 6 of 9: next closure
+R57.6	rule	any	closure	S	_	any	*	A6 AF AH A4 A5	rule 7 of 9: next in {_}
+R57.7	rule	any	closure	S	fricative	any	*	AF AH A4 A5 AB A6	rule 8 of 9: next fricative
+R57.8	rule	any	closure	S	liquid-glide h-like p	any	*	AF AH A4 A5 A6	rule 9 of 9: otherwise
+R58.0	rule	any	consonant _ !closure	S	high-front-vowel	any	*	AF A2 A3 A4 A5 A6 AH AB F2 F3 F4	rule 1 of 9: next V0
+R58.1	rule	any	consonant _ !closure	S	nonhigh-front-vowel	any	*	AF A2 A3 A4 A5 A6 AB AH B1 B3 F2 F3 F4	rule 2 of 9: next V1
+R58.2	rule	any	consonant _ !closure	S	back-rounded-vowel	any	*	AF A2 A3 A4 A5 A6 AB AH F2	rule 3 of 9: next V2
+R58.3	rule	any	consonant _ !closure	S	3	any	*	AF A4 A5 A6 AB AH A2 A3 F3 F4	rule 4 of 9: next in {3}
+R58.4	rule	any	consonant _ !closure	S	central-low-vowel !3	any	*	AF A2 A3 A4 A5 A6 AB AH F2 F3	rule 5 of 9: next V3
+R58.5	rule	any	consonant _ !closure	S	closure	any	*	A2 A3 A4 A5 A6 AB AF	rule 6 of 9: next closure
+R58.6	rule	any	consonant _ !closure	S	_	any	*	A6 AF AH A4 A5	rule 7 of 9: next in {_}
+R58.7	rule	any	consonant _ !closure	S	fricative	any	*	AF AH A4 A5 AB A6	rule 8 of 9: next fricative
+R58.8	rule	any	consonant _ !closure	S	liquid-glide h-like p	any	*	AF AH A4 A5 A6	rule 9 of 9: otherwise
+R59.0	rule	any	vowel p	Z	high-front-vowel	any	*	p18 p19 p18.durF p19.durF B1 F2 W[F2] W[F3] A5 F3 AF F1	rule 1 of 9: next V0
+R59.1	rule	any	vowel p	Z	nonhigh-front-vowel	any	*	p18 p19 p18.durF p19.durF AV AF A5 F2 F3 F4 F1	rule 2 of 9: next V1
+R59.2	rule	any	vowel p	Z	back-rounded-vowel	any	*	p18 p19 p18.durF p19.durF AV F1 F2 F3 F4 AF A6 A4 A5	rule 3 of 9: next V2
+R59.3	rule	any	vowel p	Z	3	any	*	p18 p19 p18.durF p19.durF AV AF A5 A6 F1 F2 F3 F4	rule 4 of 9: next in {3}
+R59.4	rule	any	vowel p	Z	central-low-vowel !3	any	*	p18 p19 p18.durF p19.durF A2 A3 AF F1 F2 F3 F4 A4 A5	rule 5 of 9: next V3
+R59.5	rule	any	vowel p	Z	_	any	*	p18 p19 p18.durF p19.durF AV AF A5 AF.durF AH A4 F1 F4 A3 A6	rule 6 of 9: next in {_}
+R59.6	rule	any	vowel p	Z	stop	any	*	p18 p19 p18.durF p19.durF AF F1 AV AH AF.durF	rule 7 of 9: next stop
+R59.7	rule	any	vowel p	Z	consonant !stop	any	*	p18 p19 p18.durF p19.durF AV AF F1 A5 A6 A3	rule 8 of 9: not next vowel
+R59.8	rule	any	vowel p	Z	p	any	*	p18 p19 p18.durF p19.durF W[F2] W[F3] AV AF A5	rule 9 of 9: otherwise
+R60.0	rule	any	closure	Z	high-front-vowel	any	*	p18 p19 p18.durF p19.durF B1 F2 W[F2] W[F3] A5 F3 AF F1	rule 1 of 9: next V0
+R60.1	rule	any	closure	Z	nonhigh-front-vowel	any	*	p18 p19 p18.durF p19.durF AV AF A5 F2 F3 F4 F1	rule 2 of 9: next V1
+R60.2	rule	any	closure	Z	back-rounded-vowel	any	*	p18 p19 p18.durF p19.durF AV F1 F2 F3 F4 AF A6 A4 A5	rule 3 of 9: next V2
+R60.3	rule	any	closure	Z	3	any	*	p18 p19 p18.durF p19.durF AV AF A5 A6 F1 F2 F3 F4	rule 4 of 9: next in {3}
+R60.4	rule	any	closure	Z	central-low-vowel !3	any	*	p18 p19 p18.durF p19.durF A2 A3 AF F1 F2 F3 F4 A4 A5	rule 5 of 9: next V3
+R60.5	rule	any	closure	Z	_	any	*	p18 p19 p18.durF p19.durF AV AF A5 AF.durF AH A4 F1 F4 A3 A6	rule 6 of 9: next in {_}
+R60.6	rule	any	closure	Z	stop	any	*	p18 p19 p18.durF p19.durF AF F1 AV AH AF.durF	rule 7 of 9: next stop
+R60.7	rule	any	closure	Z	consonant !stop	any	*	p18 p19 p18.durF p19.durF AV A4 AF.durF AF A3 A5 A6	rule 8 of 9: not next vowel
+R60.8	rule	any	closure	Z	p	any	*	p18 p19 p18.durF p19.durF AV AF A5	rule 9 of 9: otherwise
+R61.0	rule	any	consonant _ !closure	Z	high-front-vowel	any	*	p18 p19 p18.durF p19.durF B1 F2 W[F2] W[F3] A5 F3 AF F1	rule 1 of 9: next V0
+R61.1	rule	any	consonant _ !closure	Z	nonhigh-front-vowel	any	*	p18 p19 p18.durF p19.durF AV AF A5 F2 F3 F4 F1	rule 2 of 9: next V1
+R61.2	rule	any	consonant _ !closure	Z	back-rounded-vowel	any	*	p18 p19 p18.durF p19.durF AV F1 F2 F3 F4 AF A6 A4 A5	rule 3 of 9: next V2
+R61.3	rule	any	consonant _ !closure	Z	3	any	*	p18 p19 p18.durF p19.durF AV AF A5 A6 F1 F2 F3 F4	rule 4 of 9: next in {3}
+R61.4	rule	any	consonant _ !closure	Z	central-low-vowel !3	any	*	p18 p19 p18.durF p19.durF A2 A3 AF F1 F2 F3 F4 A4 A5	rule 5 of 9: next V3
+R61.5	rule	any	consonant _ !closure	Z	_	any	*	p18 p19 p18.durF p19.durF AV AF A5 AF.durF AH A4 F1 F4 A3 A6	rule 6 of 9: next in {_}
+R61.6	rule	any	consonant _ !closure	Z	stop	any	*	p18 p19 p18.durF p19.durF AF F1 AV AH AF.durF	rule 7 of 9: next stop
+R61.7	rule	any	consonant _ !closure	Z	consonant !stop	any	*	p18 p19 p18.durF p19.durF AV A4 AF.durF AF A3 A5 A6	rule 8 of 9: not next vowel
+R61.8	rule	any	consonant _ !closure	Z	p	any	*	p18 p19 p18.durF p19.durF AV AF A5	rule 9 of 9: otherwise
+R62.0	rule	any	_	x	consonant _	any	*	p18 p19 p18.durF p19.durF F2 A6 AV	rule 1 of 2: not next vowel
+R62.1	rule	any	_	x	vowel p	any	*	p18 p19 p18.durF p19.durF F2 A6	rule 2 of 2: otherwise
+R63.0	rule	any	closure	x	consonant _	any	*	p18 p19 p18.durF p19.durF AV	rule 1 of 2: not next vowel
+R63.1	rule	any	closure	x	vowel p	any	*	p18 p19 p18.durF p19.durF	rule 2 of 2: otherwise
+R64.0	rule	any	vowel p	x	consonant _	any	*	p18 p19 p18.durF p19.durF W[F2] W[F3] AV	rule 1 of 2: not next vowel
+R64.1	rule	any	vowel p	x	vowel p	any	*	p18 p19 p18.durF p19.durF W[F2] W[F3]	rule 2 of 2: otherwise
+R65.0	rule	any	consonant !closure	x	consonant _	any	*	p18 p19 p18.durF p19.durF AV	rule 1 of 2: not next vowel
+R65.1	rule	any	consonant !closure	x	vowel p	any	*	p18 p19 p18.durF p19.durF	rule 2 of 2: otherwise
+R66.0	rule	any	_	X	high-front-vowel	any	*	F1.type F1 F2 F3 AF AH AB A2 A3 A4 A5 A6	rule 1 of 7: next V0
+R66.1	rule	any	_	X	nonhigh-front-vowel	any	*	F1.type F1 F2 F4 AF AH AB A2 A3 A4 A5 A6	rule 2 of 7: next V1
+R66.2	rule	any	_	X	back-rounded-vowel	any	*	F1 F2 AF AH AB A2 A3 A4 A5 A6	rule 3 of 7: next V2
+R66.3	rule	any	_	X	3	any	*	F1.type F1 F2 AF AH AB A2 A3 A4 A5 A6	rule 4 of 7: next in {3}
+R66.4	rule	any	_	X	central-low-vowel !3	any	*	AF AH AB A2 A3 A4 A5 A6	rule 5 of 7: next V3
+R66.5	rule	any	_	X	R	any	*	AF.durF AH.durF F1 F3 AF AH AB A2 A3 A4 A5 A6	rule 6 of 7: next in {R}
+R66.6	rule	any	_	X	any !vowel !R	any	*	-	rule 7 of 7: otherwise
+R67.0	rule	any	closure	X	high-front-vowel	any	*	F1.type F1 F2 F3 AF AH AB A2 A3 A4 A5 A6	rule 1 of 7: next V0
+R67.1	rule	any	closure	X	nonhigh-front-vowel	any	*	F1.type F1 F2 F4 AF AH AB A2 A3 A4 A5 A6	rule 2 of 7: next V1
+R67.2	rule	any	closure	X	back-rounded-vowel	any	*	F1 F2 AF AH AB A2 A3 A4 A5 A6	rule 3 of 7: next V2
+R67.3	rule	any	closure	X	3	any	*	F1.type F1 F2 AF AH AB A2 A3 A4 A5 A6	rule 4 of 7: next in {3}
+R67.4	rule	any	closure	X	central-low-vowel !3	any	*	AF AH AB A2 A3 A4 A5 A6	rule 5 of 7: next V3
+R67.5	rule	any	closure	X	R	any	*	AF.durF AH.durF F1 F3 AF AH AB A2 A3 A4 A5 A6	rule 6 of 7: next in {R}
+R67.6	rule	any	closure	X	any !vowel !R	any	*	-	rule 7 of 7: otherwise
+R68.0	rule	any	vowel p	X	high-front-vowel	any	*	F1.type F1 F2 F3 AF AH AB A2 A3 A4 A5 A6	rule 1 of 7: next V0
+R68.1	rule	any	vowel p	X	nonhigh-front-vowel	any	*	F1.type F1 F2 F4 AF AH AB A2 A3 A4 A5 A6	rule 2 of 7: next V1
+R68.2	rule	any	vowel p	X	back-rounded-vowel	any	*	F1 F2 AF AH AB A2 A3 A4 A5 A6	rule 3 of 7: next V2
+R68.3	rule	any	vowel p	X	3	any	*	F1.type F1 F2 AF AH AB A2 A3 A4 A5 A6	rule 4 of 7: next in {3}
+R68.4	rule	any	vowel p	X	central-low-vowel !3	any	*	AF AH AB A2 A3 A4 A5 A6	rule 5 of 7: next V3
+R68.5	rule	any	vowel p	X	R	any	*	AF.durF AH.durF F1 F3 AF AH AB A2 A3 A4 A5 A6	rule 6 of 7: next in {R}
+R68.6	rule	any	vowel p	X	any !vowel !R	any	*	W[F2] W[F3]	rule 7 of 7: otherwise
+R69.0	rule	any	consonant !closure	X	high-front-vowel	any	*	F1.type F1 F2 F3 AF AH AB A2 A3 A4 A5 A6	rule 1 of 7: next V0
+R69.1	rule	any	consonant !closure	X	nonhigh-front-vowel	any	*	F1.type F1 F2 F4 AF AH AB A2 A3 A4 A5 A6	rule 2 of 7: next V1
+R69.2	rule	any	consonant !closure	X	back-rounded-vowel	any	*	F1 F2 AF AH AB A2 A3 A4 A5 A6	rule 3 of 7: next V2
+R69.3	rule	any	consonant !closure	X	3	any	*	F1.type F1 F2 AF AH AB A2 A3 A4 A5 A6	rule 4 of 7: next in {3}
+R69.4	rule	any	consonant !closure	X	central-low-vowel !3	any	*	AF AH AB A2 A3 A4 A5 A6	rule 5 of 7: next V3
+R69.5	rule	any	consonant !closure	X	R	any	*	AF.durF AH.durF F1 F3 AF AH AB A2 A3 A4 A5 A6	rule 6 of 7: next in {R}
+R69.6	rule	any	consonant !closure	X	any !vowel !R	any	*	-	rule 7 of 7: otherwise
+R70.0	rule	any	closure	s	reduced-vowel	any	*	AH A4 A5 A6 F3 F4 A3 AB	rule 1 of 8: next in {@ |}
+R70.1	rule	any	closure	s	high-front-vowel	any	*	A5 A4 AH AF A3 A6 F3	rule 2 of 8: next V0
+R70.2	rule	any	closure	s	nonhigh-front-vowel !|	any	*	A5 A4 AF A3 A6	rule 3 of 8: next V1
+R70.3	rule	any	closure	s	back-rounded-vowel	any	*	AH A6 A5 A4 AF F3 F4	rule 4 of 8: next V2
+R70.4	rule	any	closure	s	3	any	*	AH A6 A5 A4 AF F3	rule 5 of 8: next in {3}
+R70.5	rule	any	closure	s	central-low-vowel !3 !@	any	*	A5 A4 AH F4 A3 A6	rule 6 of 8: next V3
+R70.6	rule	any	closure	s	W h	any	*	F2 F3	rule 7 of 8: not cur voiced and next back/rounded
+R70.7	rule	any	closure	s	any !vowel !rounded	any	*	A4 A5 A6 A3	rule 8 of 8: otherwise
+R71.0	rule	any	tense-front-vowel	s	high-front-vowel	any	*	A5 A4 AH AF A3 A6 F3	rule 1 of 7: next V0
+R71.1	rule	any	tense-front-vowel	s	nonhigh-front-vowel	any	*	A5 A4 AF A3 A6	rule 2 of 7: next V1
+R71.2	rule	any	tense-front-vowel	s	back-rounded-vowel	any	*	AH A6 A5 A4 AF F3 F4	rule 3 of 7: next V2
+R71.3	rule	any	tense-front-vowel	s	3	any	*	AH A6 A5 A4 AF F3	rule 4 of 7: next in {3}
+R71.4	rule	any	tense-front-vowel	s	central-low-vowel !3	any	*	A5 A4 AH F4 A3 A6	rule 5 of 7: next V3
+R71.5	rule	any	tense-front-vowel	s	W h	any	*	F2 F3	rule 6 of 7: not cur voiced and next back/rounded
+R71.6	rule	any	tense-front-vowel	s	any !vowel !rounded	any	*	A5 A6 B3	rule 7 of 7: otherwise
+R72.0	rule	any	other-front-ending	s	high-front-vowel	any	*	A5 A4 AH AF A3 A6 F3	rule 1 of 7: next V0
+R72.1	rule	any	other-front-ending	s	nonhigh-front-vowel	any	*	A5 A4 AF A3 A6	rule 2 of 7: next V1
+R72.2	rule	any	other-front-ending	s	back-rounded-vowel	any	*	AH A6 A5 A4 AF F3 F4	rule 3 of 7: next V2
+R72.3	rule	any	other-front-ending	s	3	any	*	AH A6 A5 A4 AF F3	rule 4 of 7: next in {3}
+R72.4	rule	any	other-front-ending	s	central-low-vowel !3	any	*	A5 A4 AH F4 A3 A6	rule 5 of 7: next V3
+R72.5	rule	any	other-front-ending	s	W h	any	*	F2 F3	rule 6 of 7: not cur voiced and next back/rounded
+R72.6	rule	any	other-front-ending	s	any !vowel !rounded	any	*	A5 A6 F3 F4 A3 A4	rule 7 of 7: otherwise
+R73.0	rule	any	w-offglide-vowel	s	high-front-vowel	any	*	A5 A4 AH AF A3 A6 F3	rule 1 of 7: next V0
+R73.1	rule	any	w-offglide-vowel	s	nonhigh-front-vowel	any	*	A5 A4 AF A3 A6	rule 2 of 7: next V1
+R73.2	rule	any	w-offglide-vowel	s	back-rounded-vowel	any	*	AH A6 A5 A4 AF F3 F4	rule 3 of 7: next V2
+R73.3	rule	any	w-offglide-vowel	s	3	any	*	AH A6 A5 A4 AF F3	rule 4 of 7: next in {3}
+R73.4	rule	any	w-offglide-vowel	s	central-low-vowel !3	any	*	A5 A4 AH F4 A3 A6	rule 5 of 7: next V3
+R73.5	rule	any	w-offglide-vowel	s	W h	any	*	F2 F3	rule 6 of 7: not cur voiced and next back/rounded
+R73.6	rule	any	w-offglide-vowel	s	any !vowel !rounded	any	*	F2 A2 A3 A4 A5 A6	rule 7 of 7: otherwise
+R74.0	rule	any	central-back-vowel p	s	high-front-vowel	any	*	A5 A4 AH AF A3 A6 F3	rule 1 of 7: next V0
+R74.1	rule	any	central-back-vowel p	s	nonhigh-front-vowel	any	*	A5 A4 AF A3 A6	rule 2 of 7: next V1
+R74.2	rule	any	central-back-vowel p	s	back-rounded-vowel	any	*	AH A6 A5 A4 AF F3 F4	rule 3 of 7: next V2
+R74.3	rule	any	central-back-vowel p	s	3	any	*	AH A6 A5 A4 AF F3	rule 4 of 7: next in {3}
+R74.4	rule	any	central-back-vowel p	s	central-low-vowel !3	any	*	A5 A4 AH F4 A3 A6	rule 5 of 7: next V3
+R74.5	rule	any	central-back-vowel p	s	W h	any	*	F2 F3	rule 6 of 7: not cur voiced and next back/rounded
+R74.6	rule	any	central-back-vowel p	s	any !vowel !rounded	any	*	A4 A5 A6 F4	rule 7 of 7: otherwise
+R75.0	rule	any	r-colored-vowel	s	high-front-vowel	any	*	A5 A4 AH AF A3 A6 F3	rule 1 of 7: next V0
+R75.1	rule	any	r-colored-vowel	s	nonhigh-front-vowel	any	*	A5 A4 AF A3 A6	rule 2 of 7: next V1
+R75.2	rule	any	r-colored-vowel	s	back-rounded-vowel	any	*	AH A6 A5 A4 AF F3 F4	rule 3 of 7: next V2
+R75.3	rule	any	r-colored-vowel	s	3	any	*	AH A6 A5 A4 AF F3	rule 4 of 7: next in {3}
+R75.4	rule	any	r-colored-vowel	s	central-low-vowel !3	any	*	A5 A4 AH F4 A3 A6	rule 5 of 7: next V3
+R75.5	rule	any	r-colored-vowel	s	W h	any	*	F2 F3	rule 6 of 7: not cur voiced and next back/rounded
+R75.6	rule	any	r-colored-vowel	s	any !vowel !rounded	any	*	A3 F3 F4 A5 A6	rule 7 of 7: otherwise
+R76.0	rule	any	consonant _ !closure	s	high-front-vowel	any	*	A5 A4 AH AF A3 A6 F3	rule 1 of 7: next V0
+R76.1	rule	any	consonant _ !closure	s	nonhigh-front-vowel	any	*	A5 A4 AF A3 A6	rule 2 of 7: next V1
+R76.2	rule	any	consonant _ !closure	s	back-rounded-vowel	any	*	AH A6 A5 A4 AF F3 F4	rule 3 of 7: next V2
+R76.3	rule	any	consonant _ !closure	s	3	any	*	AH A6 A5 A4 AF F3	rule 4 of 7: next in {3}
+R76.4	rule	any	consonant _ !closure	s	central-low-vowel !3	any	*	A5 A4 AH F4 A3 A6	rule 5 of 7: next V3
+R76.5	rule	any	consonant _ !closure	s	W h	any	*	F2 F3	rule 6 of 7: not cur voiced and next back/rounded
+R76.6	rule	any	consonant _ !closure	s	any !vowel !rounded	any	*	A4 A5 A6 A3	rule 7 of 7: otherwise
+R77.0	rule	any	closure	z	rounded	any	*	p18 p19 p18.durF p19.durF F2 F3	rule 1 of 3: next back/rounded
+R77.1	rule	any	closure	z	consonant _ !rounded	any	*	p18 p19 p18.durF p19.durF AV	rule 2 of 3: not next vowel
+R77.2	rule	any	closure	z	vowel p !rounded	any	*	p18 p19 p18.durF p19.durF	rule 3 of 3: otherwise
+R78.0	rule	any	vowel p	z	rounded	any	*	p18 p19 p18.durF p19.durF F2 F3 W[F2] W[F3]	rule 1 of 3: next back/rounded
+R78.1	rule	any	vowel p	z	consonant _ !rounded	any	*	p18 p19 p18.durF p19.durF W[F2] W[F3] AV	rule 2 of 3: not next vowel
+R78.2	rule	any	vowel p	z	vowel p !rounded	any	*	p18 p19 p18.durF p19.durF W[F2] W[F3]	rule 3 of 3: otherwise
+R79.0	rule	any	consonant _ !closure	z	rounded	any	*	p18 p19 p18.durF p19.durF F2 F3	rule 1 of 3: next back/rounded
+R79.1	rule	any	consonant _ !closure	z	consonant _ !rounded	any	*	p18 p19 p18.durF p19.durF AV	rule 2 of 3: not next vowel
+R79.2	rule	any	consonant _ !closure	z	vowel p !rounded	any	*	p18 p19 p18.durF p19.durF	rule 3 of 3: otherwise
+R80.0	rule	any	closure	H	front-vowel	any	*	p18 p19 F1 F2 F3 AH	rule 1 of 4: cur in {H} and next front vowel
+R80.1	rule	any	closure	H	central-low-vowel p	any	*	p18 p19 F1 F2 F3 AH	rule 2 of 4: cur in {H} and next vowel and not next back/rounded
+R80.2	rule	any	closure	H	consonant back-rounded-vowel _	any	*	p18 p19 F1 F2 F3	rule 3 of 4: cur in {H}
+R80.3	rule	any	closure	d	any	any	*	p18 p19 F1 F2 F3	rule 4 of 4: otherwise
+R81.0	rule	any	any !closure	H	front-vowel	any	*	p18 p19 F1 F2 F3 AH	rule 1 of 4: cur in {H} and next front vowel
+R81.1	rule	any	any !closure	H	central-low-vowel p	any	*	p18 p19 F1 F2 F3 AH	rule 2 of 4: cur in {H} and next vowel and not next back/rounded
+R81.2	rule	any	any !closure	H	consonant back-rounded-vowel _	any	*	p18 p19 F1 F2 F3	rule 3 of 4: cur in {H}
+R81.3	rule	any	any !closure	d	any	any	*	p18 p19 F1 F2 F3	rule 4 of 4: otherwise
+R82.0	rule	any	closure	h	any	any	*	-	rule 1 of 1: otherwise
+R83.0	rule	any	any !closure	h	any	any	*	-	rule 1 of 1: otherwise
+R84.0	rule	any	any	t Q	any	any	*	AV	rule 1 of 1: otherwise
+R85.0	rule	any	closure	_	any	any	*	aspShift aspAH	rule 1 of 1: otherwise
+R86.0	rule	any	phoneme !closure	_	any	any	*	aspShift aspAH	rule 1 of 1: otherwise
+R87.0	rule	any	_	_	any	any	*	-	rule 1 of 1: otherwise
+REL.B.0	release	any	any	B	high-front-vowel	any	*	burstAV burstAF burstAH burstLen	stop release into a V0 (high front vowel)
+REL.B.1	release	any	any	B	nonhigh-front-vowel	any	*	burstAF burstAH burstLen	stop release into a V1 (other front vowel)
+REL.B.2	release	any	any	B	back-rounded-vowel	any	*	burstAV burstAF burstAH burstLen AB	stop release into a V2 (back rounded vowel)
+REL.B.3	release	any	any	B	central-low-vowel	any	*	burstAV burstAF burstAH burstLen	stop release into a V3 (central/low vowel)
+REL.B.4	release	any	any	B	liquid-glide	any	*	burstAF burstAH burstLen AB	stop release into a glide or liquid
+REL.B.5	release	any	any	B	p	any	*	burstAF burstAH burstLen AB	stop release into a release vocoid p
+REL.B.6	release	any	any	B	fricative	any	*	burstAV burstAF burstAH burstLen AB	stop release into a fricative
+REL.B.7	release	any	any	B	h-like	any	*	burstAF burstAH burstLen AB	stop release into a h-like sound
+REL.P.0	release	any	any	P	high-front-vowel	any	*	burstAF burstAH burstLen VOT AB	stop release into a V0 (high front vowel)
+REL.P.1	release	any	any	P	nonhigh-front-vowel	any	*	burstAF burstAH burstLen VOT AB	stop release into a V1 (other front vowel)
+REL.P.2	release	any	any	P	back-rounded-vowel	any	*	burstAF burstAH burstLen VOT AB	stop release into a V2 (back rounded vowel)
+REL.P.3	release	any	any	P	central-low-vowel	any	*	burstAF burstAH burstLen VOT AB	stop release into a V3 (central/low vowel)
+REL.P.4	release	any	any	P	liquid-glide	any	*	burstAF burstAH burstLen VOT AB	stop release into a glide or liquid
+REL.P.5	release	any	any	P	p	any	*	burstAF burstAH burstLen VOT AB	stop release into a release vocoid p
+REL.P.6	release	any	any	P	fricative	any	*	burstAF burstAH burstLen AB	stop release into a fricative
+REL.P.7	release	any	any	P	h-like	any	*	burstAF burstAH burstLen VOT AB	stop release into a h-like sound
+REL.D.0	release	any	any	D	high-front-vowel	any	*	burstAV burstAF burstAH burstLen AB	stop release into a V0 (high front vowel)
+REL.D.1	release	any	any	D	nonhigh-front-vowel	any	*	burstAV burstAF burstAH burstLen AB	stop release into a V1 (other front vowel)
+REL.D.2	release	any	any	D	back-rounded-vowel	any	*	burstAV burstAF burstAH burstLen AB	stop release into a V2 (back rounded vowel)
+REL.D.3	release	any	any	D	central-low-vowel	any	*	burstAV burstAF burstAH burstLen AB	stop release into a V3 (central/low vowel)
+REL.D.4	release	any	any	D	liquid-glide	any	*	burstAF burstAH burstLen	stop release into a glide or liquid
+REL.D.5	release	any	any	D	p	any	*	burstAV burstAF burstAH burstLen	stop release into a release vocoid p
+REL.D.6	release	any	any	D	fricative	any	*	burstAF burstAH burstLen	stop release into a fricative
+REL.D.7	release	any	any	D	h-like	any	*	burstAF burstAH burstLen	stop release into a h-like sound
+REL.T.0	release	any	any	T	high-front-vowel	any	*	burstAV burstAF burstAH burstLen VOT AB	stop release into a V0 (high front vowel)
+REL.T.1	release	any	any	T	nonhigh-front-vowel	any	*	burstAV burstAF burstAH burstLen VOT	stop release into a V1 (other front vowel)
+REL.T.2	release	any	any	T	back-rounded-vowel	any	*	burstAV burstAF burstAH burstLen VOT AB	stop release into a V2 (back rounded vowel)
+REL.T.3	release	any	any	T	central-low-vowel	any	*	burstAV burstAF burstAH burstLen VOT AB	stop release into a V3 (central/low vowel)
+REL.T.4	release	any	any	T	liquid-glide	any	*	burstAF burstAH burstLen VOT AB	stop release into a glide or liquid
+REL.T.5	release	any	any	T	p	any	*	burstAF burstAH burstLen VOT AB	stop release into a release vocoid p
+REL.T.6	release	any	any	T	fricative	any	*	burstAF burstAH burstLen AB	stop release into a fricative
+REL.T.7	release	any	any	T	h-like	any	*	burstAF burstAH burstLen VOT AB	stop release into a h-like sound
+REL.t.0	release	any	any	t	high-front-vowel	any	*	burstAH	stop release into a V0 (high front vowel)
+REL.t.1	release	any	any	t	nonhigh-front-vowel	any	*	burstAH	stop release into a V1 (other front vowel)
+REL.t.2	release	any	any	t	back-rounded-vowel	any	*	burstAH	stop release into a V2 (back rounded vowel)
+REL.t.3	release	any	any	t	central-low-vowel	any	*	burstAH	stop release into a V3 (central/low vowel)
+REL.t.4	release	any	any	t	liquid-glide	any	*	burstAH	stop release into a glide or liquid
+REL.t.5	release	any	any	t	p	any	*	burstAH	stop release into a release vocoid p
+REL.t.6	release	any	any	t	fricative	any	*	burstAH	stop release into a fricative
+REL.t.7	release	any	any	t	h-like	any	*	burstAH	stop release into a h-like sound
+REL.J.0	release	any	any	J	high-front-vowel	any	*	burstAH burstLen	stop release into a V0 (high front vowel)
+REL.J.1	release	any	any	J	nonhigh-front-vowel	any	*	burstAH burstLen	stop release into a V1 (other front vowel)
+REL.J.2	release	any	any	J	back-rounded-vowel	any	*	burstAH burstLen	stop release into a V2 (back rounded vowel)
+REL.J.3	release	any	any	J	central-low-vowel	any	*	burstAH burstLen	stop release into a V3 (central/low vowel)
+REL.J.4	release	any	any	J	liquid-glide	any	*	burstAH burstLen	stop release into a glide or liquid
+REL.J.5	release	any	any	J	p	any	*	burstAH burstLen	stop release into a release vocoid p
+REL.J.6	release	any	any	J	fricative	any	*	burstAV burstAF burstAH burstLen AB	stop release into a fricative
+REL.J.7	release	any	any	J	h-like	any	*	burstAH burstLen	stop release into a h-like sound
+REL.C.0	release	any	any	C	high-front-vowel	any	*	burstAH burstLen	stop release into a V0 (high front vowel)
+REL.C.1	release	any	any	C	nonhigh-front-vowel	any	*	burstAH burstLen	stop release into a V1 (other front vowel)
+REL.C.2	release	any	any	C	back-rounded-vowel	any	*	burstAH burstLen	stop release into a V2 (back rounded vowel)
+REL.C.3	release	any	any	C	central-low-vowel	any	*	burstAH burstLen	stop release into a V3 (central/low vowel)
+REL.C.4	release	any	any	C	liquid-glide	any	*	burstAH burstLen	stop release into a glide or liquid
+REL.C.5	release	any	any	C	p	any	*	burstAH burstLen	stop release into a release vocoid p
+REL.C.6	release	any	any	C	fricative	any	*	burstAF burstAH burstLen AB	stop release into a fricative
+REL.C.7	release	any	any	C	h-like	any	*	burstAH burstLen	stop release into a h-like sound
+REL.G.0	release	any	any	G	high-front-vowel	any	*	burstAV burstAF burstAH burstLen AB	stop release into a V0 (high front vowel)
+REL.G.1	release	any	any	G	nonhigh-front-vowel	any	*	burstAV burstAF burstAH burstLen AB	stop release into a V1 (other front vowel)
+REL.G.2	release	any	any	G	back-rounded-vowel	any	*	burstAV burstAF burstAH burstLen AB	stop release into a V2 (back rounded vowel)
+REL.G.3	release	any	any	G	central-low-vowel	any	*	burstAV burstAF burstAH burstLen AB	stop release into a V3 (central/low vowel)
+REL.G.4	release	any	any	G	liquid-glide	any	*	burstAF burstAH burstLen AB	stop release into a glide or liquid
+REL.G.5	release	any	any	G	p	any	*	burstAV burstAF burstAH burstLen	stop release into a release vocoid p
+REL.G.6	release	any	any	G	fricative	any	*	burstAV burstAF burstAH burstLen AB	stop release into a fricative
+REL.G.7	release	any	any	G	h-like	any	*	burstAF burstAH burstLen AB	stop release into a h-like sound
+REL.K.0	release	any	any	K	high-front-vowel	any	*	burstAF burstAH burstLen VOT AB	stop release into a V0 (high front vowel)
+REL.K.1	release	any	any	K	nonhigh-front-vowel	any	*	burstAF burstAH burstLen VOT AB	stop release into a V1 (other front vowel)
+REL.K.2	release	any	any	K	back-rounded-vowel	any	*	burstAF burstAH burstLen VOT AB	stop release into a V2 (back rounded vowel)
+REL.K.3	release	any	any	K	central-low-vowel	any	*	burstAF burstAH burstLen VOT AB	stop release into a V3 (central/low vowel)
+REL.K.4	release	any	any	K	liquid-glide	any	*	burstAF burstAH burstLen VOT AB	stop release into a glide or liquid
+REL.K.5	release	any	any	K	p	any	*	burstAF burstAH burstLen VOT AB	stop release into a release vocoid p
+REL.K.6	release	any	any	K	fricative	any	*	burstAF burstAH burstLen AB	stop release into a fricative
+REL.K.7	release	any	any	K	h-like	any	*	burstAF burstAH burstLen VOT AB	stop release into a h-like sound
+C.after_closure.lab	code	any	labial !rounded !fricative	any !closure	any	any	*	F1-FN.durF	out of a labial closure: 6 frames
+C.after_closure.alv	code	any	alveolar Q !fricative	any !closure	any	any	*	F1-FN.durF	out of an alveolar closure: 8 frames
+C.after_closure.vel	code	any	velar affricate	any !closure	any	any	*	F1-FN.durF	out of a palatal/velar closure: 10 frames
+C.after_closure.stop_V	code	any	stop	vowel p	any	any	*	W[F2] W[F3]	F2/F3 start from the burst locus
+C.after_closure.T3	code	any	T	3	any	any	*	W[F4]	
+C.after_closure.Kp	code	any	K	p	any	any	*	A2-A6.durF	
+C.after_closure.s@	code	any	any	s	@	any	*	AF.durF A3-A6.durF	also P s @
+C.sonorant_onset.st	code	j S	T	vowel	any	any	cur-	VOT	st, lt clusters: no aspiration
+C.sonorant_onset.T_n3	code	any	T	3 n	any	any	*	VOT	VOT 2
+C.sonorant_onset.vfric_glide	code	any	voiced-fricative	liquid-glide h	any	any	*	VOT aspAH	release after a voiced fricative
+C.sonorant_onset.asp_stressed	code	any	voiceless-plosive C	vowel p	any	any	prev+	len	vowel lengthened by VOT/2
+C.sonorant_onset.after_glide	code	any	liquid-glide h	any	any	any	*	F1-FN.durF	7 frames
+C.sonorant_onset.Y_back	code	any	Y	rounded	any	any	*	F1-FN.durF	11 frames
+C.sonorant_onset.after_R	code	any	R	any	any	any	*	F3.durF	
+C.sonorant_onset.offglide	code	any	y-offglide-vowel w-offglide-vowel	any !labial	any	any	*	W[F1] W[F2] W[F3]	after a w- or y-offglide vowel
+C.sonorant_onset.pal_back	code	any	palatal	rounded	any	any	*	F2.durF	
+C.sonorant_onset.keep_TV	code	any	T	vowel p	any	any	*	A2-AB	parallel amplitudes carried over
+C.sonorant_onset.keep_K	code	any	K	back-rounded-vowel central-low-vowel liquid-glide a p !j !R	any	any	*	A2-AB	
+C.sonorant_onset.keep_Pi	code	any	P	i	any	any	*	A2-AB	
+C.sonorant_onset.keep_X	code	any	X	vowel R p	any	any	*	A2-AB	
+C.sonorant_onset.PR	code	any	P	R	vowel p	any	next+	A2-AB	
+C.sonorant_onset.Tn	code	any	T	n	any	any	*	A2-AB	
+C.release.fric_nonsyl	code	any	voiceless-fricative	any !syllabic	any	any	*	AH.len	
+C.release.T_rhotic	code	any	T	3 R	any	any	*	aspAH	
+C.release.T_V3	code	any	T	central-low-vowel !3	any	any	*	aspAH AF	
+C.release.T_V	code	any	T	vowel W p n	any	any	*	aspAH AF F0	
+C.release.K_V02	code	any	K	back-rounded-vowel high-front-vowel	any	any	*	aspAH AF F0	
+C.release.K_a	code	any	K	a	any	any	*	aspAH AF F0	
+C.release.K_V1	code	any	K	nonhigh-front-vowel !a	any	any	*	aspAH AF F0	
+C.release.K_V3	code	any	K	central-low-vowel	any	any	*	aspAH AF F0	
+C.release.K_W	code	any	K	W	any	any	*	VOT AF F0	
+C.release.K_Y	code	any	K	Y	any	any	*	VOT AF F0	
+C.release.K_L	code	any	K	L	any	any	*	AF F0	
+C.release.P_L	code	any	P	nonhigh-front-vowel L	any	any	*	AF F0	
+C.release.p	code	any	voiceless-plosive	p	any	any	*	AF	release vocoid: 3 frames of frication
+C.release.unstressed	code	any	voiceless-plosive C	any	any	any	prev-	aspAH VOT	less aspiration, VOT 2
+C.vowel.voiced_p	code	any	stop !voiceless	p	any	any	*	AV	
+C.vowel.Xp	code	any	X	p	any	any	*	AV	
+C.vowel.lax_velar	code	any	any	other-front-ending !y-offglide-vowel	velar	any	*	F2 offglide	no F2 offglide before a velar
+C.vowel.uj	code	any	any	u	j	any	*	F2	no diphthong
+C.vowel.Rb	code	any	R	b	any	any	*	F2	F2 1164
+C.vowel.bV	code	any	any	b	vowel p	any	*	F2	F2 1164
+C.vowel.after_rhotic	code	any	3 R	vowel p	any !lateral	any	*	F2 F3 offglide	F3 (front vowels also F2) lowered
+C.vowel.lateral	code	any	any	front-vowel y-offglide-vowel	lateral	any	*	F2 offglide	F2 -300 before a lateral
+C.vowel.U_alv	code	any	any	U	D T q	any	*	F2 offglide	
+C.vowel.velar_E	code	any	G K	E	any	any	*	F3 F4 A5.type	
+C.vowel.Po	code	any	P	o	any	any	*	A2.type A3.type	
+C.vowel.EUY_back	code	any	E U Y	rounded	any	any	*	F2.durF	
+C.vowel.yoff_alv	code	any	any	y-offglide-vowel	alveolar	any	*	F2 offglide	
+C.vowel.Kp	code	any	K	p	any	any	*	F2 F3	
+C.vowel.stressed	code	any	any	vowel p	any	any	cur+	AV onglide	AV +2
+C.vowel.unstressed	code	any	any	vowel p	any	any	cur-	AV onglide	AV -3; r-coloured onglide closer to the offglide
+C.vowel.EU_nonlabial	code	any	any !labial	E U	any	any	*	F2.durF	
+C.vowel.velar_V	code	any	G K	vowel p	any	any	*	F4.type W[F4]	
+C.vowel.G_V23	code	any	G	back-rounded-vowel central-low-vowel	any	any	*	F1.type	
+C.sonorant.pause_voiced	code	any	_	sonorant-consonant	any	any	*	AV	AV 56 after a pause
+C.sonorant.velar_R	code	any	G ~	R	any	any	*	AV F2 F3	
+C.sonorant.R_V2	code	any	any !K	R	back-rounded-vowel	any	*	AV F2 F3	
+C.sonorant.R_V0	code	any	any !K	R	high-front-vowel	any	*	AV F2 F3	F2 a quarter of the way to the next
+C.sonorant.PR_unstressed	code	any	P	R	vowel p	any	next-	F2 F3	
+C.sonorant.tr	code	C	s	R	any	any	*	F2 F3	tr = C s R
+C.sonorant.velar_L	code	any	velar	L	any	any	*	AV F2	
+C.sonorant.KW	code	any	K	W	any	any	*	F2	F2 800
+C.sonorant.GY	code	any	G	Y	any	any	*	F2 F3	
+C.sonorant.son_lateral	code	any	sonorant !closure	lateral	any	any	*	W[F1] W[F2] W[F3]	
+C.sonorant.glide_glide	code	any	liquid-glide h	liquid-glide h	any	any	*	F1-FN.durF	5 frames
+C.sonorant.pause_WE	code	any	_	W	E	any	*	B3	
+C.sonorant.n__	code	any	any	n	_	_	*	F2-F4.durF	
+C.sonorant.Dn	code	any	D	n	any	any	*	F2.type	
+C.voicing.voice_bar	code	any	any	stop !voiceless	consonant _	any	*	AV	voiced stop not before a vowel
+C.voicing.after_voiceless	code	any	voiceless _	stop !voiceless	any	any	*	AV	voice bar off
+C.voicing.palatal	code	any	any	palatal !Y	any	any	*	AF.durF	
+C.voicing.affr_voiceless	code	any	voiceless _	affricate	any	any	*	AV	
+C.voicing.before_son	code	any	any	fricative	sonorant	any	*	AF.len	frication overlaps the sonorant
+C.voicing.DV	code	any	phoneme !S	D	vowel p	any	next+	AV	AV 43
+C.voicing.D_flap	code	any	syllabic	D	vowel	any	next-	A3 A4	flap-like d between vowels
+C.voicing.BV	code	any	any	B	vowel p	any	*	AV	
+C.voicing.s@	code	any	any	s	@	any	*	AF	
+C.voicing.S_BG	code	any	S	B G	any	any	*	AV	unaspirated p k after s
+C.voicing.GV	code	any	any	G	vowel p	any	*	p18	
+C.voicing.Jz	code	any	any	J	z	nonhigh-front-vowel	*	burstAF burstAH AV F1 F2 F3 F4	
+C.voicing.CsR	code	any	any	C	s	R	cur+	burstAF burstAH A3 A6	
+C.fricative.after_pause	code	any	_	fricative	any	any	*	A2-A6.type	
+C.fricative.before_pause	code	any	any	voiceless-fricative	_	any	*	AV	
+C.fricative.Jz	code	any	J	z	any	any	*	AV AF	
+C.fricative.voiceless_nonV	code	any	any	voiceless-fricative	consonant _	any	*	AH	
+C.fricative.S_unstressed	code	any	any	S	vowel p	any	next-	AF AH A2-A6 AB	
+C.fricative.voiced_S	code	any	voiced	S	any	any	*	AV	
+C.fricative.Z_stop	code	any	any	Z	stop	any	*	A4-A6 AV	
+C.fricative.pause_Z_son	code	any	_	Z	sonorant	any	*	A4 A6	
+C.fricative.V_Z_son	code	any	vowel p	Z	sonorant	any	*	AF A2-A6	
+C.fricative.Z_son	code	any	consonant	Z	sonorant	any	*	A4-A6 p18	
+C.fricative.Jz_V1	code	any	J	z	nonhigh-front-vowel	any	*	AV AF AH A3-A5 F1-F4 p18	
+C.fricative.CsR	code	any	C	s	R	any	*	AF AH A6 F2 F3	stressed: AF A3
+C.fricative.Cs_	code	any	C	s	_	any	*	AF F2 F3 F4	
+C.closure.after_aspirated	code	any	P T C	closure	any	any	*	F1-FN.durF	5 frames
+C.closure.after_lateral	code	any	lateral	closure	any	any	*	F2.type F3.type	
+C.closure.EC	code	any	E	C	any	any	*	F1.type	
+C.closure.PT	code	any	any	P	T	any	*	burstAV burstAF burstAH burstLen A2	
+C.closure.P_fric	code	any	any	P	fricative	any	*	burstLen	
+C.closure.K_closure	code	any	any	K	closure !stop	any	*	burstAF burstLen VOT AB	K before a nasal, t or Q
+C.closure.VK	code	any	two-target-vowel	K	any !closure	any	*	F2.type	
+C.closure.GY	code	any	any	G	Y	any	*	AV.type	
+C.burst.voiced_Z	code	any	any	stop !voiceless	Z	any	*	burstAV	
+C.burst.SB	code	any	S	B	any	any	*	burstAF burstLen	
+C.burst.GZ	code	any	any	G	Z	any	*	burstAF burstAH AB burstLen	
+C.burst.SGR	code	any	S	G	R	any	*	burstAF AV	
+C.burst.SD	code	any	S	D	vowel p	any	next+	burstAF burstAH burstLen	
+C.burst.G_unstressed	code	any	any	G	vowel p	any	next-	burstAV burstLen	
+C.burst.decay	code	any	any	stop	any	any	cur-	burst	per-frame decay: K 1, G, others 3
+C.burst.decay_nasal	code	any	nasal	stop	any	any	cur-	burst	6 per frame after a nasal
+C.burst.back_K	code	any	back-rounded-vowel U	K	any	any	*	burstLen	K next to a back vowel
+C.burst.K_back	code	any	any	K	back-rounded-vowel U	any	*	burstLen	
+C.burst.prevoice	code	any	_	B D	any	any	*	AV	prevoicing after a pause
+C.burst.VTV	code	any	vowel p	T	vowel p	any	*	AV	intervocalic t
+C.burst.voiced_BD	code	any	voiced	B D	any	any	*	AV	
+C.burst.Dp	code	any	any	D	p	any	*	AF	
+C.locus.rhotic_into	code	any	3 R	consonant	any	any	*	W[F2] W[F3]	
+C.locus.palatal_obstruent	code	any	phoneme	palatal !Y	any	any	*	W[F2] F2.durF	
+C.locus.G	code	any	phoneme	G	any	any	*	W[F1] F1.durB	
+C.locus.Vq	code	any	vowel p	q	any	any	*	W[F1] F1.durB	
+C.locus.T3	code	any	any	T	3	any	*	W[F2] W[F3] W[F4]	
+C.locus.Cs_	code	any	any	C	s	_	*	W[F2] W[F3]	
+C.locus.alveolar	code	any	any !lateral !3 !R	alveolar !fricative	any	any	*	L[F2] L[F3]	F2 1600, F3 2620
+C.locus.lateral_alv	code	any	lateral	alveolar !fricative	any	any	*	L[F2]	F2 1050
+C.locus.rhotic_alv	code	any	3 R	alveolar !fricative	any	any	*	L[F3]	F3 2300
+C.locus.labial_velar	code	any	labial	K ~	any	any	*	L[F3]	
+C.locus.ng_obstruent	code	any	any	~	obstruent _	any	*	L[F2] L[F3]	after a front vowel F2 1200, F3 2500
+C.locus.ng_sonorant	code	any	any	~	sonorant	any	*	L[F2] L[F3]	F2 900, F3 2176
+C.locus.VK	code	any	two-target-vowel	K	any	any	*	W[F2]	
+C.locus.pause_nasal	code	any	_	nasal	any	any	*	W[AV] AV.durF	
+C.locus.son_nasal	code	any	sonorant	nasal	any	any	*	W[FN] W[B1] L[B1] W[F3]	
+C.locus.high_Nn	code	any	b c u W Y h	N n	any	any	*	L[F2]	F2 1670
+C.locus.nonfront_Mm	code	any	any !front-vowel	M m	any	any	*	W[F2] L[F2]	F2 700
+C.locus.s_	code	any	any !front-vowel	s	_	any	*	F3.type	
+C.locus.rhotic_cur	code	any	any	3 R	any	any	*	W[F2] W[F3]	
+C.locus.after_palatal	code	any	palatal !Y	any	any	any	*	W[F2] F2.durF	
+C.locus.fric_V	code	any	fricative	vowel p	any	any	*	W[F2] W[F3]	
+C.locus.S_V3	code	any	S	central-low-vowel	any	any	*	W[F2] W[F3]	0.1 into a central vowel
+C.locus.nasal_obstruent	code	any	nasal	obstruent _	any	any	*	F2-F4.durF B1-FN.durF	
+C.locus.labial_into	code	any	labial !rounded !fricative	any !closure	any	any	*	W[F2] W[F3]	
+C.locus.labial_front	code	any	labial !rounded !fricative	front-vowel	any	any	*	W[F2] W[F3]	
+C.locus.labial_rhotic	code	any	labial !rounded !fricative	3 R	any	any	*	W[F2] L[F3]	F3 1750
+C.locus.alveolar_into	code	any	alveolar !fricative	any !closure	any	any	*	L[F2] L[F3]	
+C.locus.velar_into	code	any	velar	any !closure	any	any	*	W[F1] L[F2] L[F3]	
+C.locus.nasal_son	code	any	nasal	sonorant	any	any	*	W[F1] W[F4] L[F2] L[F3] L[F4]	
+C.locus.ng_p_	code	any	~	p	_	any	*	F2-FN	
+C.locus.F0	code	any	voiced	syllabic	any	any	cur+ prev+	W[F0]	F0 between stressed syllables
+C.loci.alvstop_W	code	any	D T q	W	any	any	*	L[F2] L[F3] L[F4]	1200/2050/2500 Hz
+C.loci.rhotic_K	code	any	r-colored-vowel R	K ~	consonant _	any	*	F2 F3	F2 1700, F3 1900
+C.loci.rhotic_alv	code	any	r-colored-vowel R	alveolar !fricative !T	any	any	*	F2 F3 F4	
+C.loci.rhotic_V	code	any	r-colored-vowel R	vowel p	any	any	*	F3.durF	
+C.loci.RE	code	any	R	E	any	any	*	AV.durF AV	
+C.loci.Nn_EUY	code	any	N n	E U Y	any	any	*	L[F2]	F2 1850
+C.loci.yoff_alv	code	any	y-offglide-vowel	alveolar !T	any	any	*	F2	F2 1900
+C.loci.alv_rhotic	code	any	alveolar !D	3 R	any	any	*	L[F3]	F3 2100
+C.loci.lab_rhotic	code	any	labial	3 R	any	any	*	L[F3]	F3 1700
+C.apply.flap	code	any	any	t	any	any	*	F1 F2 F3	mean of target, last and next
+C.apply.EUY	code	any	E U Y	any !labial !nasal !velar !x !X	any	any	*	F2.durF	
+C.apply.voiceless_J	code	any	voiceless _	J	any	any	*	AV.durF	
+C.apply.Gp	code	any	G	p	any	any	*	F2.durB	
+C.apply.pause_F	code	any	_	F	any	any	*	AF AB AF.durF AB.durF	
+C.apply.ZS_V	code	any	Z S	vowel p	any	any	*	F2/F3.durB/durF A2-A6.durF	
+C.apply.VFxX_V	code	any	fricative !alveolar !palatal	vowel p	any	any	*	F2/F3.durB AV.durF	
+C.apply.s_V	code	any	s	vowel p	any	any	*	AF.durF	
+C.apply.V_ZS	code	any	vowel p	Z S	any	any	*	AV.durB F2/F3.durB/durF	
+C.apply.V_VFxX	code	any	vowel p	fricative !alveolar !palatal	any	any	*	AV.durB F2/F3.durB/durF	
+C.apply.D_front	code	any	D	front-vowel	any	any	*	F2/F3.durB/durF	
+C.apply.D_back	code	any	D	b u o	any	any	*	AV.durF F2/F3.durF	
+C.apply.D_V0	code	any	D	high-front-vowel	any	any	*	F2 onset	F2 onset 1924
+C.apply.T_V01	code	any	T	front-vowel	any	any	*	F3 onset	F3 2700
+C.apply.BP_V	code	any	B P	vowel p	any	any	*	F1-F3.durF AV.durF	
+C.apply.velar	code	any	G K	any	any	any	*	F2/F3.durB AV.durF	
+C.apply.K_bu	code	any	K	b u	any	any	*	F3.durF	
+C.apply.KE	code	any	K	E	any	any	*	F2/F3.durF	
+C.apply.G_V23	code	any	G	back-rounded-vowel central-low-vowel	any	any	*	F1-F4.durF	
+C.apply.Go	code	any	G	o	any	any	*	AV.durF	
+C.apply.GE	code	any	G	E	any	any	*	AV.durF F3.durF	
+C.apply.lateral	code	any	lateral	any	any	any	*	F1/F2 onset locB	
+C.apply.A	code	any	A	any	any	any	*	F2.durB	
+C.apply.G_mid	code	any	phoneme	G	any !Y	any	*	F2/F3.durB	
+C.apply.ZV	code	any	any	Z	vowel p	any	*	F1-F4.durF	
+C.apply.XR	code	any	X	R	any	any	*	F3.durB AF	
+C.amp.voiced_stop_V	code	any	stop !voiceless	vowel p	any	any	*	AV onset	AV onset 60
+C.amp.G_V	code	any	G	central-low-vowel E O g w y !o	any	any	*	AV onset	
+C.amp.B_back	code	any	B	b c u	any	any	*	AV B1 B2 onset	
+C.amp.B_Eo	code	any	B	E o	any	any	*	AV F2 onset	
+C.amp.DE	code	any	D	E	any	any	*	AV B1 B2 onset	
+C.amp.vfric_son	code	any	voiced-fricative	sonorant	any	any	*	AV onset	
+C.amp.front_ng	code	any	front-vowel	~	any	any	*	F2 locB	2100
+C.amp.EC	code	any	E	C	any	any	*	F1 B1 onset	
+C.amp.G_front	code	any	any	G	any !b !c !u !o !W !Y !h	any	*	AV onset locB	
+C.amp.Do	code	any	any	D	o	any	*	AV onset	
+C.amp.WE	code	any	W	E	any	any	*	F2 F3 B3	
+C.amp.pause_WE	code	any	_	W	E	any	*	F3 B3 onset	
+C.amp.H_front	code	any	any	H	front-vowel	any	*	AH onset AH.durF	
+C.amp.RE	code	any	R	E	any	any	*	AV onset	
+C.amp.Kp	code	any	K	p	any	any	*	AF AF.durF	
+C.amp.pause_F	code	any	_	F	any	any	*	AF AB onset	
+C.amp.XR	code	any	X	R	any	any	*	AF onset	
+C.amp.CsV	code	any	C	s	vowel p	any	*	A3-A6	
+C.amp.VTV	code	any	vowel p	T	vowel p	any	*	AV	AV 45
+C.amp.D_unstressed	code	any	sonorant	D	sonorant	any	cur-	AB	
+C.amp.voiced_voiceless	code	any	voiced	voiceless	any	any	*	AV.durB AV locB	
+C.amp.before_pause	code	any	any	voiced !stop	_	any	*	AV.durF	cur dur/4 before a pause
+C.amp.voiced_K	code	any	voiced	K	any	any	*	AV.type AV.durF	
+C.amp.B_voiced	code	any	B	voiced	any	any	*	AV.type AV.durF	
+C.amp.B_V023	code	any	any	B	vowel !nonhigh-front-vowel	any	*	p18 p19	
+C.amp.Dp	code	any	D	p	any	any	*	p18 p19	
+C.amp.after_Z	code	any	Z	any	any	any	*	p18 onset	
+C.amp.voiced_SZ	code	any	voiced	Z S	any	any	*	AV.type AV.durF AV.durB	
+C.amp.voiced_SZ_	code	any	voiced	Z S	_	any	*	AV	before a pause
+C.amp.Z_nonV	code	any	consonant _	Z	consonant	any	*	F0.durB F0.durF	
+C.amp.prepausal	code	any	voiced !Z	_	any	any	*	F0 locB, AV locB	pre-pausal fall
+C.amp.Z_pause	code	any	Z	_	any	any	*	AF AF.durB	
+C.amp.n__	code	any	n	_	_	any	*	F2 locB, AV	
+C.amp.son_q	code	any	sonorant	q	any	any	*	AV F0	
+C.finalize.T3	code	any	any	T	3	any	*	F1-F4	the F(n+1) >= F(n)+200 rule is skipped
