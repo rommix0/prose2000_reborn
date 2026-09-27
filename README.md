@@ -64,8 +64,9 @@ python samples/python/speak_events.py
 ```
 
 They find the library in `build/` or `build64/`, or wherever `PROSE_LIB` points. Python and the library must have the
-same bitness: the usual 64-bit Python on Windows needs a `prose.dll` built with a 64-bit MinGW-w64 gcc, e.g.
-`cmake -S src -B build64 -G Ninja -DCMAKE_C_COMPILER=C:/winlibs/mingw64/bin/gcc.exe -DCMAKE_BUILD_TYPE=Release`.
+same bitness: the usual 64-bit Python on Windows needs a `prose.dll` built with a 64-bit MinGW-w64 gcc
+(`x86_64-w64-mingw32`), for example with that gcc first on `PATH`:
+`cmake -S src -B build64 -G Ninja -DCMAKE_C_COMPILER=gcc -DCMAKE_BUILD_TYPE=Release`.
 
 ## Running the tests
 
