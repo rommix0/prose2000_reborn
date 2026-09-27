@@ -21,12 +21,12 @@ void pg_voiceless_onset(void)
 	ww(PARAM(P_AV, F_TYPE), 5);
 }
 
-/* DEC87: the segment after a stop, nasal or glottal closure. Formants move over DS:9856[prev] frames (F1 over
- * half as many); the source amplitudes jump (type 4) after a stop and ramp (6) otherwise. */
+/* DEC87: the segment after a stop, nasal or glottal closure. Formants move over DS:9856[place of prev] frames (F1
+ * over half as many); the source amplitudes jump (type 4) after a stop and ramp (6) otherwise. */
 void pg_after_closure(void)
 {
 	int prev = node_char(rw(NODE_PREV)), p;
-	for (p = P_F1; p <= P_FN; p++) /* DS:AEA8 is a second pointer to the phoneme map */
+	for (p = P_F1; p <= P_FN; p++) /* DS:[AEA8]: place of articulation per phoneme char */
 		ww(PARAM(p, F_DURF), rsb(0x9856 + rsb(rw(0xAEA8) + node_char(rw(NODE_PREV)))));
 	ww(PARAM(P_F1, F_DURF), rw(PARAM(P_F1, F_DURF)) / 2 + 1);
 	if (feature(prev, 0x80) & 8) { /* affricate */
@@ -248,6 +248,7 @@ void pg_vowel(void)
 		if (d > 0xFF)
 			d = 0xFF;
 		k = rw(REDUCTION + 2 * (d / 16));
+		PG_TRACE(PG_TR_REDUCTION, k, 0);
 		for (int i = 0; i < 3; i++) {
 			ww(PARAM(P_F1 + i, F_TARGET),
 			   rw(PARAM(P_F1 + i, F_TARGET)) + fx_mul_q15(rw(NEUTRAL_F1 + 2 * i) - rw(PARAM(P_F1 + i, F_TARGET)), k));
@@ -273,6 +274,7 @@ void pg_vowel(void)
 			int f1_len = rw(PARAM(P_F1, F_LEN));
 			ww(0xEBBA, s16(s16(s16(f1_len * rw(0xEBBA)) / rsb(rw(0xADE4) + cur)) + rw(0xEBBA)) >> 1);
 			ww(0xEBBC, fx_mul_q15(f1_len, rw(0x9720 + 2 * phoneme_index(cur))));
+			PG_TRACE(PG_TR_ONGLIDE, rw(0xEBBC), rw(0xEBBA));
 			for (int p = P_F1; p <= P_B3; p++)
 				if (p != P_F4)
 					diphthong_onglide(p, cur);
@@ -689,6 +691,7 @@ void pg_stop_burst(void)
 		ww(BURST_LEN, 1); /* K next to a back vowel */
 	if (rw(BURST_LEN) < closure) {
 		closure -= rw(BURST_LEN);
+		PG_TRACE(PG_TR_CLOSURE, closure, rw(BURST_LEN));
 		for (p = P_AV; p <= P_AH; p++) {
 			int track = rw(TRK_BASE(p)), pos = rw(TRK_POS(p)), target;
 			if (rw(BURST(p)) == 0x7F)
@@ -854,6 +857,7 @@ void pg_release_onset(void)
 	if (rw(0xEBB4) <= 0)
 		return;
 	n = rw(0xEBB4);
+	PG_TRACE(PG_TR_RELEASE, n, rw(0xEBC4));
 	if (node_char(rw(NODE_PREV)) == 'K' && n > 2) {
 		track_fill(rw(TRK_BASE(P_AV)), rw(TRK_POS(P_AV)), n - 2, 0);
 		track_fill(rw(TRK_BASE(P_AV)), rw(TRK_POS(P_AV)) + n - 2, 2, 0x37);

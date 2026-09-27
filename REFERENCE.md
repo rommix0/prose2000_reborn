@@ -1017,13 +1017,13 @@ previous phoneme's:
 |---|---|---|
 | `DEBFA` | `pg_voiceless_onset` | After a voiceless stop: `[EBB2]=1` and `pg_shift_aspiration`; sets AV/AF transition types |
 | `D3FFB` | `pg_shift_aspiration` | Moves the AH/AV boundary back by `[EBB2]` frames, so aspiration overlaps the previous segment |
-| `DEC87` | `pg_after_closure` | Previous = closure: formant durF from `DS:9856[prev]`, amplitude types 4/6 (hold vs ramp); special pairs K+p, s+@, T+3 |
+| `DEC87` | `pg_after_closure` | Previous = closure: formant durF from `DS:9856[place of prev]` (place = `DS:[AEA8]`: labial 6, dental/alveolar/glottal 8, palatal/velar 10 frames; corrected 2026-09-27), amplitude types 4/6 (hold vs ramp); special pairs K+p, s+@, T+3 |
 | `DEE85` | `pg_sonorant_onset` | VOT: the stop-release delay `EBB4` lengthens every parameter's `len` and the node duration; formant durF 7/11 after glides; parallel amplitudes carried over (`EB7E`) after K/T/X… |
 | `DF245` | `pg_vowel` | Stress (node `+4` bit 5) gives AV +2 / −3 (`o`, `a` a further −3). **Vowel reduction:** short vowels are pulled toward the neutral F1-F3 `DS:985E-9862` by `DS:9884[dur·10/16]`. **Diphthongs** are written as a held onglide (via `track_fill`) plus a transition to the offglide `EB44-EB48`. F2/F3 are lowered next to r-coloured phonemes; F2 −300 before `l`-class. |
 | `DFB5B` | `pg_sonorant_consonant` | R/L/W: F2 is interpolated toward the next vowel's F2 (fx_mul 0x2008 / 0x0CD0), with fixed loci in some clusters (R after dental: F2 1140, F3 1400 Hz); formant durF 5/7/9 |
 | `DFE87` | `pg_obstruent_voicing` | Voice-bar AV during voiced stops/fricatives (−20, or 0; 30 for `J`); release delay `EBB8` from the next vowel's duration; affricate clusters (J+z, C+s+R) |
 | `E01C0` | `pg_fricative_amps` | AF/AH/A2-A6/AB for S, Z, z and s by context (pre-pausal +6 AV, before a vowel, after J/C) |
-| `E067F` | `pg_closure_types` | Stops/nasals: types 5/7, formant durF `DS:9856[cur]`, P/K burst settings (`EBC6-EBCA`, `EBB6`); for P/K it calls `pg_stop_burst` itself |
+| `E067F` | `pg_closure_types` | Stops/nasals: types 5/7, formant durF `DS:9856[place of cur]`, P/K burst settings (`EBC6-EBCA`, `EBB6`); for P/K it calls `pg_stop_burst` itself, so with the rule list's call **P and K run it twice** and the burst is split again (verified by trace 2026-09-27) |
 | `E08EA` | `pg_stop_burst` | **[verified by trace]** Splits the stop into closure and burst+aspiration of `[EBB6]` frames. Burst AV/AF/AH come from `EBC6-EBCA` (0x7F = keep), with per-frame decay 1 (K), 3, or 6 (after a nasal). Prevoicing for B/D after a pause. "tea.": 3 silent closure frames, then 7 frames (70 ms) of AF 60 / AH 48 with AV 0, then AV ramps to 62. |
 
 ### 12.5a Boundary values: the locus model (decompiled 2026-09-24) [verified by code and trace]
@@ -1061,6 +1061,9 @@ The `pg_finalize` helpers decide where every transition starts. The model is **K
   them, `DS:9884[dur·10/16]`, falls from 0.88 for 1-frame vowels to about 0.02 for 24+ frames.
 - **Trace check ("see."):** /s/ ends at F2 = 1852 Hz, and W(F2) after `s` = 0.2, so the predicted onset for /i/
   is 0.2·2220 + 0.8·1852 = 1926 Hz = byte 178. The first vowel frame reads **179**, followed by the ramp to 213.
+
+The formant rules as a whole (targets, transition types and ramps, the locus model, stops, fricatives, nasals,
+glides, vowels) are described in [FORMANT_SYSTEM.md](FORMANT_SYSTEM.md), with traced graphs in `formant_graphs/`.
 
 ### 12.6 TruVoice match and open points
 - **TruVoice match [confirmed 2026-09-24]:** `TV_ENG32.DLL` contains this generator ported to 32-bit C.

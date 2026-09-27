@@ -165,6 +165,25 @@ extern int (*pg_host_send_hook)(int kind, int ch, int count, const int *params);
 /* Not in the firmware (for the DLL): called with the phoneme of each timed segment the playback stage passes, which
    is when the frame builder has started the segment. NULL: nothing. */
 extern void (*pg_segment_hook)(int ch);
+/* Not in the firmware (for tools such as formant_trace, FORMANT_SYSTEM.md): what the generator does while it builds a
+ * segment. The hook reads the rest (positions, structs, loci) from the data segment. NULL in normal use. */
+enum {
+	PG_TR_SEGMENT,    /* a: the node, at the start of paramgen_segment */
+	PG_TR_RULE,       /* a: the rule group, b: the index of the rule applied in it */
+	PG_TR_ROUTINE,    /* a: a routine of the rule's list, by linear address */
+	PG_TR_REDUCTION,  /* pg_vowel: a = the pull toward the neutral vowel, q15 */
+	PG_TR_ONGLIDE,    /* pg_vowel: a diphthong's onglide is held a frames, then moves to the offglide over b */
+	PG_TR_ASPIRATION, /* pg_shift_aspiration: AH starts a frames early, at TRK_POS(P_AH) */
+	PG_TR_CLOSURE,    /* pg_stop_burst: a closure frames from TRK_POS(P_AF), then b frames of burst */
+	PG_TR_RELEASE,    /* pg_release_onset: a frames of AV 0 from TRK_POS(P_AV), with aspiration b dB */
+	PG_TR_EMIT,       /* the structs, weights and loci are final; the 22 tracks are written next */
+};
+extern void (*pg_trace_hook)(int event, int a, int b);
+#define PG_TRACE(event, a, b)                                                                                          \
+	do {                                                                                                           \
+		if (pg_trace_hook)                                                                                     \
+			pg_trace_hook((event), (a), (b));                                                              \
+	} while (0)
 
 /* ---- helpers ---- */
 static inline int fx_mul_q15(int a, int b) { return (int16_t)(((int32_t)(int16_t)a * (int16_t)b) >> 15); } /* D3521 */

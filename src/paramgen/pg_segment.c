@@ -160,10 +160,13 @@ void paramgen_segment_setup(void)
 	}
 }
 
+void (*pg_trace_hook)(int event, int a, int b);
+
 void paramgen_segment(void)
 {
 	int ch = node_char(rw(NODE_CUR)), v;
 
+	PG_TRACE(PG_TR_SEGMENT, rw(NODE_CUR), 0);
 	paramgen_load_targets();
 	paramgen_segment_setup();
 	for (int i = 0; i < 11; i++)
@@ -232,6 +235,7 @@ void paramgen_segment(void)
 			ww(TRK_PREV(p), rw(TRK_POS(p)));
 		ww(0xEAE6, 0);
 	}
+	PG_TRACE(PG_TR_EMIT, 0, 0);
 	for (int p = 0; p < NPARAM; p++)
 		param_emit_segment(p);
 	if (node_bit(rw(NODE_CUR), 6)) {
@@ -319,6 +323,7 @@ static void call_routine(unsigned far_ptr)
 	uint32_t linear = (uint32_t)ruw(far_ptr + 2) * 16 + ruw(far_ptr);
 	for (unsigned i = 0; i < sizeof routines / sizeof routines[0]; i++)
 		if (routines[i].linear == linear) {
+			PG_TRACE(PG_TR_ROUTINE, (int)linear, 0);
 			routines[i].fn();
 			return;
 		}
@@ -337,6 +342,7 @@ void paramgen_apply_rules(void)
 		unsigned cond = ruw(rule), list;
 		if (cond != 0 && !rule_condition(cond))
 			continue;
+		PG_TRACE(PG_TR_RULE, group, i);
 		if (rw(rule + 2))
 			paramgen_rule_action(ruw(rule + 2), mask);
 		list = ruw(rule + 4);

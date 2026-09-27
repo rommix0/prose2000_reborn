@@ -597,7 +597,8 @@ and `v1_pipeline_play.c`, the programs that were checked against the emulator.
 - **Hooks in the decompiled code** (not firmware behaviour): `prose_synth_reset` / `prose_synth_continue` (the DSP
   model in pieces) and `prose_synth_set_custom_pulse`; `pg_segment_hook` and `v1_segment_hook` (a segment has been
   played); `v1_params_hook` (a v1.1 frame's parameter bytes); `pr_f0_hook` (the parts of each F0 target, for
-  `pitch_trace`, PITCH_SYSTEM.md). The replay tests give the same results with them.
+  `pitch_trace`, PITCH_SYSTEM.md); `pg_trace_hook` (what the parameter generator does for each segment, for
+  `formant_trace`, FORMANT_SYSTEM.md). The replay tests give the same results with them.
 - **Checked** (2026-09-26): `prose_speak_to_wave` gives the same samples as `pipeline_play` / `v1_pipeline_play` for
   the same text (up to the end, where the DLL stops sooner); two handles of each version in four threads give the
   same audio as one handle alone; stop, pause, busy and re-entrant calls, settings, reset, parameter units and the WAV

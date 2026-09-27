@@ -160,6 +160,7 @@ void pg_shift_aspiration(void)
 	if (rw(TRK_POS(P_AH)) < back)
 		return;
 	ww(TRK_POS(P_AH), rw(TRK_POS(P_AH)) - back);
+	PG_TRACE(PG_TR_ASPIRATION, back, 0);
 	pos = rw(TRK_POS(P_AH));
 	track_decay_back(rw(TRK_BASE(P_AH)), P_AH, pos, 3, s16(pos - rw(TRK_PREV(P_AH))),
 	                 s16(rw(0xEBC4) - rsb(track_at(rw(TRK_BASE(P_AH)), pos))));

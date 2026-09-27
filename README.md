@@ -106,6 +106,8 @@ REFERENCE.md §14.
 | `VOICE_CONTEXTS.md`                    | The phonetic contexts the parameter generator distinguishes: what a new voice's data must cover                   |
 | `PITCH_SYSTEM.md`                      | How the pitch (F0) contour is built: phrase line, contours, accents, phrase endings, the F0 track                 |
 | `pitch_graphs/`                        | Annotated graphs of pitch contours, made by `make_graphs.py` from `pitch_trace` (`src/cli/`)                      |
+| `FORMANT_SYSTEM.md`                    | How formants move: targets, transitions, the locus model, and the rules for stops, fricatives, nasals, vowels    |
+| `formant_graphs/`                      | Annotated graphs of formant movements, made by `make_graphs.py` from `formant_trace` (`src/cli/`)                 |
 | `voice/`                               | The contexts and phoneme classes as TSV, an ARPABET to Prose mapping, a corpus coverage checker (VOICE_CONTEXTS.md §8) |
 | `docs/`                                | The patents describing the Prose 2000 (text extracts and scans)                                                   |
 

@@ -102,7 +102,8 @@ target_link_libraries(prose_say PRIVATE prose)
 set_target_properties(prose_say PROPERTIES BUILD_RPATH "$ORIGIN")
 
 # The same library linked statically, for tools that also use the firmware's internal hooks: pitch_trace writes the
-# F0 targets and their parts (PITCH_SYSTEM.md; pitch_graphs/ plots them)
+# F0 targets and their parts (PITCH_SYSTEM.md; pitch_graphs/ plots them), formant_trace what the parameter generator
+# does for each segment (FORMANT_SYSTEM.md; formant_graphs/ plots it)
 add_library(prose_static STATIC dll/prose_api.c dll/prose_engine.c dll/prose_eng3.c dll/prose_eng1.c
 	dll/prose_params.c dll/prose_sys.c)
 target_include_directories(prose_static PUBLIC include PRIVATE dll)
@@ -114,6 +115,8 @@ if(NOT WIN32)
 endif()
 add_executable(pitch_trace cli/pitch_trace.c)
 target_link_libraries(pitch_trace PRIVATE prose_static)
+add_executable(formant_trace cli/formant_trace.c)
+target_link_libraries(formant_trace PRIVATE prose_static)
 
 # The examples of API.md (../samples)
 option(PROSE_SAMPLES "Build the samples" ON)
