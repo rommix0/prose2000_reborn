@@ -428,6 +428,29 @@ for (int i = 0; i < N; i++) {
 prose_save_wave("pulse.wav", period, N);
 ```
 
+### Python
+
+`samples/python/` has each example above in Python, byte-for-byte the same output as the C samples. `prose.py` there
+declares the exports and callback types for `ctypes`, so the calls read as in C:
+
+```python
+import ctypes
+from prose import *                       # lib, the constants, prose_callbacks, ON_INDEX ... FRAME_CB
+
+h = prose_h()
+lib.prose_open(ctypes.byref(h), PROSE_V341)
+cb = prose_callbacks(on_done=ON_DONE(lambda h, last, total, user: print(total, "samples")))
+lib.prose_set_callbacks(h, ctypes.byref(cb), None)
+lib.prose_speak_to_wave(h, b"out.wav", b"Hello from Python.")
+lib.prose_close(h)
+```
+
+- Text and file names are `bytes`. The 7-bit rule of Speaking still applies.
+- Keep every callback object (and the `prose_callbacks` structure) referenced while it can fire; `ctypes` does not,
+  and a collected callback crashes the process.
+- `user` is unnecessary in Python, where a closure or bound method carries the state: pass `None`.
+- Python and the library must have the same bitness (README).
+
 ## Frame parameters
 
 One byte each per 10 ms frame, in the Prose's own coding (REFERENCE §11.4). Defaults and limits are the ROM tables
