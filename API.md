@@ -595,10 +595,12 @@ and `v1_pipeline_play.c`, the programs that were checked against the emulator.
 - **Sound device.** Windows: winmm. Linux: PulseAudio's simple API, else ALSA, loaded at run time; `PROSE_AUDIO=pulse`
   or `alsa` picks one. The device gets at most 150 ms ahead of what it has played, so stop and pause act at once.
 - **Hooks in the decompiled code** (not firmware behaviour): `prose_synth_reset` / `prose_synth_continue` (the DSP
-  model in pieces) and `prose_synth_set_custom_pulse`; `pg_segment_hook` and `v1_segment_hook` (a segment starts
-  playing); `v1_params_hook` (a v1.1 frame's parameter bytes). The replay tests give the same results with them.
+  model in pieces) and `prose_synth_set_custom_pulse`; `pg_segment_hook` and `v1_segment_hook` (a segment has been
+  played); `v1_params_hook` (a v1.1 frame's parameter bytes); `pr_f0_hook` (the parts of each F0 target, for
+  `pitch_trace`, PITCH_SYSTEM.md). The replay tests give the same results with them.
 - **Checked** (2026-09-26): `prose_speak_to_wave` gives the same samples as `pipeline_play` / `v1_pipeline_play` for
   the same text (up to the end, where the DLL stops sooner); two handles of each version in four threads give the
   same audio as one handle alone; stop, pause, busy and re-entrant calls, settings, reset, parameter units and the WAV
-  errors behave as described here. The output is identical on 32-bit Windows (MinGW) and 64-bit Linux (gcc), and the
-  samples run on both, including speaker output through winmm, PulseAudio (WSLg) and ALSA.
+  errors behave as described here. The output is identical on 64-bit and 32-bit Windows (MinGW; 64-bit checked
+  2026-09-27) and 64-bit Linux (gcc), and the samples run on both systems, including speaker output through winmm,
+  PulseAudio (WSLg) and ALSA.

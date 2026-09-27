@@ -19,7 +19,8 @@ sample-exact end to end.
 Everything is built with CMake (3.20 or later) and a C99 compiler: gcc or clang on Linux, MinGW-w64 gcc on Windows.
 The ROM data the C needs is built in (`src/data/`), and no audio packages are needed.
 
-Windows (MinGW-w64, e.g. winlibs, which includes Ninja):
+Windows (a 64-bit MinGW-w64 gcc, `x86_64-w64-mingw32`, e.g. winlibs, which includes Ninja; its `bin` folder first on
+`PATH`):
 
 ```
 cmake -S src -B build -G Ninja -DCMAKE_C_COMPILER=gcc -DCMAKE_BUILD_TYPE=Release
@@ -29,6 +30,17 @@ cmake --build build
 `-G Ninja` and `-DCMAKE_C_COMPILER=gcc` matter when Visual Studio is installed too: without them CMake picks Visual
 Studio and MSVC, which the project is not built or tested with. With `mingw32-make` instead of Ninja, use
 `-G "MinGW Makefiles"`.
+
+The Windows build is **64-bit**, which is what 64-bit programs, the usual Python among them, can load. For a 32-bit
+program, build a 32-bit library with a 32-bit MinGW-w64 gcc (`i686-w64-mingw32`) first on `PATH` instead:
+
+```
+cmake -S src -B build32 -G Ninja -DCMAKE_C_COMPILER=gcc -DCMAKE_BUILD_TYPE=Release -DPROSE_32BIT=ON
+cmake --build build32
+```
+
+Configuring with a 32-bit gcc without `-DPROSE_32BIT=ON` stops with an error, so a 32-bit library is not built by
+mistake. Both give the same output.
 
 Linux:
 
@@ -54,8 +66,9 @@ build/prose_say -1 -t "Hello."          (v1.1; print the phonemes)
 ```
 
 The samples (`samples/`) are the examples from API.md: events and markers, audio buffers, raw frame synthesis,
-parameter export and import as CSV, a custom glottal pulse, and lip sync (a mouth that follows the phonemes). On Linux the speaker output uses PulseAudio or ALSA,
-loaded at run time.
+parameter export and import as CSV, a custom glottal pulse, and lip sync (a mouth that follows the phonemes). On
+Linux the speaker output uses PulseAudio or ALSA, loaded at run time. The programs find the library next to themselves
+(on Linux through their `$ORIGIN` run path) or in the build folder they were built in.
 
 `samples/python/` has the same samples in Python, through `ctypes` (no packages needed; `prose.py` declares the API):
 
@@ -63,10 +76,11 @@ loaded at run time.
 python samples/python/speak_events.py
 ```
 
-They find the library in `build/` or `build64/`, or wherever `PROSE_LIB` points. Python and the library must have the
-same bitness: the usual 64-bit Python on Windows needs a `prose.dll` built with a 64-bit MinGW-w64 gcc
-(`x86_64-w64-mingw32`), for example with that gcc first on `PATH`:
-`cmake -S src -B build64 -G Ninja -DCMAKE_C_COMPILER=gcc -DCMAKE_BUILD_TYPE=Release`.
+They find the library (`prose.dll`, or `libprose.so` under that name) next to the script being run or to `prose.py`,
+in the repository's build folders (`build/`, then any other `build*`), on the system path, or wherever
+`PROSE_LIB` points; so the folder can be copied anywhere with the library in it. Python and the library must have the
+same bitness: the default Windows build is 64-bit, as the usual Python is, and a 32-bit Python needs the 32-bit build
+(`build32` above). A library of the other bitness is skipped, and if none loads the error says so.
 
 ## Running the tests
 

@@ -116,7 +116,9 @@ needs none of them to build or run), so don't add them, and don't assume they ex
   PascalCase warnings can be ignored.
 - Environment: Windows, Git Bash plus PowerShell. `python` is 3.13 and there is no `python3`.
   ImageMagick (`magick`) renders PDF pages. `pdftoppm` is not installed.
-- Compiler: 32-bit MinGW-w64 gcc (winlibs, with Ninja). Visual Studio is installed too, so configure `src/` with
+- Compiler: 64-bit MinGW-w64 gcc (winlibs `C:/winlibs/mingw64/bin` first on `PATH`, with Ninja); the Windows build is
+  64-bit by default, and CMake refuses a 32-bit gcc unless `-DPROSE_32BIT=ON` (the 32-bit one is
+  `C:/winlibs/mingw32/bin`, output identical). Visual Studio is installed too, so configure `src/` with
   `-G Ninja -DCMAKE_C_COMPILER=gcc`, or CMake picks MSVC (not supported). Check Linux builds in WSL (Ubuntu, gcc 13,
   CMake): write the commands to a script file and run `MSYS_NO_PATHCONV=1 wsl bash /mnt/c/...script.sh`; build in the
   WSL home, since `/tmp` is cleared when WSL idles.

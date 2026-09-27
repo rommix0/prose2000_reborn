@@ -1,7 +1,10 @@
 """prose.py: ctypes declarations for the Prose 2000 speech library (API.md), shared by the Python samples.
 
-The library is looked for in $PROSE_LIB (a file), then in build/ and build64/ at the top of the repository, then on
-the system path. Python must match its bitness: 64-bit Python needs a 64-bit prose.dll (README).
+The library (prose.dll; libprose.so on Linux, under that name) is looked for in $PROSE_LIB (a file), then next to the
+program being run, next to this file, in the build folders at the top of the repository (build/, then any other
+build*, and their Release/Debug folders), then on the system path. The first that loads is used, so a library of the
+wrong bitness is skipped: 64-bit Python needs the default (64-bit) Windows build, 32-bit Python the 32-bit one
+(README).
 
 Everything is plain ctypes, so the calls read as in API.md: lib.prose_open(byref(h), PROSE_V341) and so on. The
 callbacks' `user` pointer is not needed in Python (closures do its job), so the samples pass None."""
@@ -72,27 +75,77 @@ _SIGNATURES = {
 }
 
 
+# Not prose.so: next to this file, Python would take it for the `prose` module and fail to import it.
+_NAMES = {"win32": ["prose.dll"], "darwin": ["libprose.dylib"]}.get(sys.platform, ["libprose.so"])
+
+
+def _script_dir():
+    """The folder of the program being run, if it is a file."""
+    path = getattr(sys.modules.get("__main__"), "__file__", None) or (sys.argv[0] if sys.argv else "")
+    return os.path.dirname(os.path.abspath(path)) if path else None
+
+
+def _search_dirs():
+    here = os.path.dirname(os.path.abspath(__file__))
+    top = os.path.normpath(os.path.join(here, "..", ".."))
+    dirs = [_script_dir(), here]  # next to the sample being run, or to prose.py
+    try:  # build/ (README) first, then any other build* folder
+        builds = sorted((d for d in os.listdir(top) if d.startswith("build") and os.path.isdir(os.path.join(top, d))),
+                        key=lambda d: (d != "build", d))
+    except OSError:
+        builds = []
+    for b in builds:  # multi-config generators (Visual Studio, Ninja Multi-Config) add a folder per configuration
+        dirs += [os.path.join(top, b)] + [os.path.join(top, b, c) for c in ("Release", "RelWithDebInfo", "Debug")]
+    return [d for i, d in enumerate(dirs) if d and d not in dirs[:i]]
+
+
 def _candidates():
+    """The library files found, or the bare name for the system path when there are none."""
     if os.environ.get("PROSE_LIB"):
         return [os.environ["PROSE_LIB"]]
-    name = "prose.dll" if sys.platform == "win32" else "libprose.so"
-    top = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
-    paths = [os.path.normpath(os.path.join(top, build, name)) for build in ("build", "build64")]
-    return [p for p in paths if os.path.exists(p)] + [ctypes.util.find_library("prose") or name]
+    paths = [os.path.join(d, n) for d in _search_dirs() for n in _NAMES if os.path.isfile(os.path.join(d, n))]
+    return paths or [ctypes.util.find_library("prose") or _NAMES[0]]
+
+
+def _file_bits(path):
+    """32 or 64 from a library file's header (Windows PE or ELF), or None."""
+    try:
+        with open(path, "rb") as f:
+            head = f.read(4096)
+    except OSError:
+        return None
+    if head[:4] == b"\x7fELF":
+        return {1: 32, 2: 64}.get(head[4])
+    if head[:2] == b"MZ" and len(head) >= 0x40:
+        pe = int.from_bytes(head[0x3C:0x40], "little")
+        if head[pe:pe + 4] == b"PE\0\0":
+            return {0x14C: 32, 0x8664: 64, 0xAA64: 64}.get(int.from_bytes(head[pe + 4:pe + 6], "little"))
+    return None
 
 
 def _load():
-    errors = []
-    for path in _candidates():  # the first that loads: a library of the wrong bitness fails and is skipped
+    bits = ctypes.sizeof(c_void_p) * 8
+    errors, mismatch = [], False
+    for path in _candidates():  # the first that loads
         try:
             lib = ctypes.CDLL(path)
             break
         except OSError as e:
-            errors.append(f"  {path}: {e}")
+            other = _file_bits(path)
+            if other and other != bits:  # a 64-bit process cannot load a 32-bit library, nor the reverse
+                errors.append(f"  {path}: a {other}-bit library, and this Python is {bits}-bit")
+                mismatch = True
+            else:
+                errors.append(f"  {path}: {e}")
     else:
-        bits = ctypes.sizeof(c_void_p) * 8
-        sys.exit("cannot load the Prose library:\n" + "\n".join(errors) +
-                 f"\n(this Python is {bits}-bit; the library must be too, or set PROSE_LIB)")
+        lines = ["cannot load the Prose library:"] + errors
+        if mismatch:
+            made = "the default Windows build" if bits == 64 else "build32, configured with -DPROSE_32BIT=ON"
+            lines.append(f"Python and the library must have the same bitness: use a {bits}-bit library (README: "
+                         f"{made}) or a {96 - bits}-bit Python.")
+        lines.append(f"(looked for {' or '.join(_NAMES)} in {', '.join(_search_dirs())}, then on the system path; "
+                     "PROSE_LIB can name the file)")
+        sys.exit("\n".join(lines))
     for name, (restype, argtypes) in _SIGNATURES.items():
         f = getattr(lib, name)
         f.restype, f.argtypes = restype, argtypes

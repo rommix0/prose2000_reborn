@@ -6,6 +6,21 @@
 # directory. That file embeds the DSP program ROM, so it is never written into the source tree.
 cmake_minimum_required(VERSION 3.20)
 project(prose_decomp LANGUAGES C)
+# Windows: 64-bit by default, since a 64-bit program (the usual Python among them) cannot load a 32-bit DLL. The
+# compiler decides: a 64-bit MinGW-w64 gcc (x86_64-w64-mingw32) builds 64-bit code, a 32-bit one (i686) 32-bit code.
+option(PROSE_32BIT "Windows: build 32-bit, for 32-bit programs, with a 32-bit MinGW-w64 gcc" OFF)
+if(WIN32)
+	math(EXPR prose_bits "${CMAKE_SIZEOF_VOID_P} * 8")
+	if(prose_bits EQUAL 32 AND NOT PROSE_32BIT)
+		message(FATAL_ERROR "${CMAKE_C_COMPILER} builds 32-bit code, and the Windows build is 64-bit by default: put a "
+			"64-bit MinGW-w64 gcc (x86_64-w64-mingw32) first on PATH, or add -DPROSE_32BIT=ON for a 32-bit build "
+			"(README). Delete CMakeCache.txt in the build folder before configuring again with another compiler.")
+	elseif(prose_bits EQUAL 64 AND PROSE_32BIT)
+		message(FATAL_ERROR "PROSE_32BIT is on, but ${CMAKE_C_COMPILER} builds 64-bit code: use a 32-bit MinGW-w64 "
+			"gcc (i686-w64-mingw32).")
+	endif()
+	message(STATUS "Building ${prose_bits}-bit")
+endif()
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 # the libraries also go into the shared library (prose.dll / libprose.so)
@@ -83,6 +98,8 @@ if(NOT WIN32)
 endif()
 add_executable(prose_say cli/prose_say.c)
 target_link_libraries(prose_say PRIVATE prose)
+# Linux: the programs also find libprose.so in their own folder (Windows looks next to the .exe anyway)
+set_target_properties(prose_say PROPERTIES BUILD_RPATH "$ORIGIN")
 
 # The same library linked statically, for tools that also use the firmware's internal hooks: pitch_trace writes the
 # F0 targets and their parts (PITCH_SYSTEM.md; pitch_graphs/ plots them)
@@ -104,6 +121,7 @@ if(PROSE_SAMPLES)
 	foreach(sample speak_events speak_buffer raw_glide params_export params_import glottal_pulse lip_sync)
 		add_executable(${sample} ../samples/${sample}.c)
 		target_link_libraries(${sample} PRIVATE prose)
+		set_target_properties(${sample} PROPERTIES BUILD_RPATH "$ORIGIN")
 		if(NOT WIN32)
 			target_link_libraries(${sample} PRIVATE m)
 		endif()
