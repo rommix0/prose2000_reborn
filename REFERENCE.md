@@ -517,10 +517,10 @@ so `DS:xxxx` = `F4100 + xxxx`.
 | `F555E-F5E06`, `F6153-F61F8` | `DS:145E…` | `1010D728…`, `1010E340` (used by `1000F2D0`, `1000F8BE`) | Exception dictionary and number words **spelled in the 1-char phoneme alphabet** (§5), e.g. `&Mi1jY@N`. About 32-100 % match, so TruVoice edited some entries. | verified |
 | `F6271-F62A5` | `DS:2171` | `1010080F` (table proper at `DS:2172` ↔ `10100810`) | Packing length-adjust table (`DS:2172` in `lex_lookup`) | verified |
 | `F70AC-F7432` | `DS:2FAC…` | `100AEEC8-100AF305` (268 pointers from `100AF000-100B3FFF`) | Context-pattern strings with flag bytes. Endings are stored reversed (`LLI`, `SS`, `NIR`), and class codes are ≥ `0x80`. | inferred: affix/LTS contexts |
-| `FA22B-FA2FE` | `DS:612B` | `100A1B59` (used near `10012139`, `1005C99D`) | 28-byte records ending `0E FF 10 08 00 00 FF`, with bytes like `64 70 96 CE 46 2D 37` — inside the `ESC[t` test rows (DS:6122-61FD) | unknown; possibly parameter-target records |
-| `FD5C1-FD9FD`, `FEF64-FEFA8` | `DS:94C1…`, `DS:AE64` | `100D9B8A-100DA15A`, `100DA4B4` (per-phoneme byte tables `100DA098`, `100DA158`) | Per-phoneme byte arrays. One looks like durations or percentages (`19 1D 19 57 … 64 64 96`) — `94C1` is the F3 target row (`T_F3`, DS:94C0 = 944C + 2 × 58, entry 1); another like small class numbers `0-9` — `AE64` is inside the place table (DS:AE48-AEA7). | verified |
+| `FA22B-FA2FE` | `DS:612B` | `100A1B59` (used near `10012139`, `1005C99D`) | Inside the `ESC[t` test-mode rows (`test_rows`, DS:6122-61FD, 10 rows of 22 track bytes): `0xFF` marks a computed value, and the row-ending bytes `0E FF 10 08 00 00` recur every 22 bytes. | verified (inside `test_rows`) |
+| `FD5C1-FD9FD`, `FEF64-FEFA8` | `DS:94C1…`, `DS:AE64` | `100D9B8A-100DA15A`, `100DA4B4` (per-phoneme byte tables `100DA098`, `100DA158`) | Per-phoneme parameter-generator tables, `DS:94C1-98FD`: from entry 1 of the `T_F3` target row (`targets`, `94C0` = `944C` + 2 × 58) through the rest of `targets` (`T_F4`, `T_B1`, `T_B2`, `T_B3`, `T_AV`), then `961c`, `offglides`, `96fc`, `onglide_hold`, `9744`, `cons_targets`, `formant_dur`, `neutral_f1`, `locus_weights`, `reduction`, `default_dur`, `nasal_fn`, `nasal_fn_ptr` and `next_class`. (An earlier note misquoted `19 1D 19 57` as `94C1`'s bytes; those are at `DS:9534`, the start of the `T_B1` row.) `AE64` is inside the place table (DS:AE48-AEA7). | verified (span matched against the tables) |
 | `FDCE8-FE843` | `DS:9BE8-A743` | `100CF854-100D1167` (989 internal pointers; code users `1002A1AD-1002A64A`) | **Affix tables.** Suffix lists per last letter at `DS:A696` and prefix lists per first letter at `DS:AD50` (`ANTI`, `AUTO`, `BE`, `CIRC` …), plus cluster contexts (`SCH`, `SHR`, `SPL`, `THR`). | verified (Prose side decompiled) |
-| `F954E-F9580` | `DS:544E` | `100BC214` | 16-bit constants (`0x0528` ×8, `0xFAD8`, `0xF5B0` …) — inside `T_JITTER` (DS:5428-54A7) | unknown |
+| `F954E-F9580` | `DS:544E` | `100BC214` | Inside `T_JITTER` (DS:5428-54A7, jitter-depth values picked by the LFSR): the matched slice runs from the tail of a `0x0528` (1320) run, through zeros, into `0xFAD8` (-1320) and `0xF5B0` (-2640) values. | verified (inside `t_jitter`) |
 
 Not shared: the ROM `C0000-E91FF` (8086 code) and the DLL `.text` (i386), as expected.
 
@@ -1218,12 +1218,14 @@ and `.h`, and the programs need no ROM files. The 8086 ROM holds code at `D3000-
 `E9000-F268D` and the data segment at `F4100-FEFA9` (`DS:0000-AEA9`); the rest is FF fill, apart from the reset jump
 at `FFFF0` (the script checks this layout). It extracts the two data areas (83,256 bytes), the DSP data ROM
 (512 words) and the byte sums of ROM lanes 2-7, which the boot self-test (`rom_checksum`) compares with `DS:0010-001A`.
-Since 2026-09-28 the data segment is not one byte dump but 110 named, typed tables (`src/data/ds_boot.c`,
+Since 2026-09-28 the data segment is not one byte dump but 109 named, typed tables (`src/data/ds_boot.c`,
 `ds_textrules.c`, `ds_lexical.c`, `ds_frame.c`, `ds_prosody.c`, `ds_paramgen.c`; types, `PROSE_DS_<NAME>` offsets and
 the layout in `prose_ds_tables.h` and `ds_layout.c`). Record tables are structs (LTS rules, affixes, generator rules
 and actions, consonant blocks), and pointers are written as `PROSE_DS_<TABLE> + k`. `prose_rom_builtin` copies each
-table to its offset. The tables were generated once by `tools/ds_gen.py` (table list `tools/ds_spec.py`, called by
-`rom_extract.py`) and may now be edited: `ds_image_check` checks the layout and the FNV-1a hash of DS:0000-AEA9.
+table to its offset. The tables were generated once by `tools/rom_extract.py --ds` (`ds_gen.py` machinery, table list
+`tools/ds_spec.py`) and may now be edited: `ds_image_check` checks the layout and the FNV-1a hash of DS:0000-AEA9,
+and runs after every build (`src/CMakeLists.txt`). Without `--ds`, `rom_extract.py` only rewrites `prose_data.c/.h`,
+leaving the data-segment tables (which may have been hand-edited since) alone.
 The C never reads the code. `prose_rom_builtin` builds the image from these tables (code areas FF). **The C has no
 ROM loader and the programs take no ROM directory** (removed 2026-09-25); the extractor is the only code that reads
 the dumps. Before the loader was removed, a test compared the tables with the dumps (equal; in the window

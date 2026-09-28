@@ -16,10 +16,10 @@ const uint16_t prose_ds_lane_sums[8] = {
 PROSE_DS_ASSERT(prose_ds_lane_sums, sizeof prose_ds_lane_sums == 16);
 
 /* DS:001C-001F no reader found [opaque] */
-const uint8_t prose_ds_ds_001c[4] = {
+const uint8_t prose_ds_001c[4] = {
 	0xF5, 0x1F, 0x8B, 0x55, /* DS:001C */
 };
-PROSE_DS_ASSERT(prose_ds_ds_001c, sizeof prose_ds_ds_001c == 4);
+PROSE_DS_ASSERT(prose_ds_001c, sizeof prose_ds_001c == 4);
 
 /* DS:0020-002F the bit each node kind sets in a stage window (REFERENCE §15.1) [full] */
 const uint16_t prose_ds_stage_accept[8] = {
@@ -28,11 +28,11 @@ const uint16_t prose_ds_stage_accept[8] = {
 PROSE_DS_ASSERT(prose_ds_stage_accept, sizeof prose_ds_stage_accept == 16);
 
 /* DS:0030-0047 a symmetric curve 0252 ... 7ED8 ... 0252; no v3 reader [opaque] */
-const uint16_t prose_ds_ds_0030[12] = {
+const uint16_t prose_ds_0030[12] = {
 	0x0252, 0x12D2, 0x2FF4, 0x5514, 0x6E16, 0x7ED8, 0x7ED8, 0x6E16, /* DS:0030 */
 	0x5514, 0x2FF4, 0x12D2, 0x0252, /* DS:0040 */
 };
-PROSE_DS_ASSERT(prose_ds_ds_0030, sizeof prose_ds_ds_0030 == 24);
+PROSE_DS_ASSERT(prose_ds_0030, sizeof prose_ds_0030 == 24);
 
 /* DS:03A8-03A9 TR_ATTR_PTR: the text-rule attribute record in RAM (DS:DB04) [full] */
 const uint16_t prose_ds_tr_attr_ptr[1] = {
@@ -47,10 +47,10 @@ const uint8_t prose_ds_int8_stub[15] = {
 PROSE_DS_ASSERT(prose_ds_int8_stub, sizeof prose_ds_int8_stub == 15);
 
 /* DS:03B9-03B9 padding [opaque] */
-const uint8_t prose_ds_ds_03b9[1] = {
+const uint8_t prose_ds_03b9[1] = {
 	0xFF, /* DS:03B9 */
 };
-PROSE_DS_ASSERT(prose_ds_ds_03b9, sizeof prose_ds_ds_03b9 == 1);
+PROSE_DS_ASSERT(prose_ds_03b9, sizeof prose_ds_03b9 == 1);
 
 /* DS:03BA-03CD SPEED_CAP: the highest speed for each fast-read level (REFERENCE §8.2) [full] */
 const uint16_t prose_ds_speed_cap[10] = {
@@ -66,7 +66,7 @@ const uint8_t prose_ds_identity[1] = {
 PROSE_DS_ASSERT(prose_ds_identity, sizeof prose_ds_identity == 1);
 
 /* DS:03CF-03CF padding [opaque] */
-const uint8_t prose_ds_ds_03cf[1] = {
+const uint8_t prose_ds_03cf[1] = {
 	0xFF, /* DS:03CF */
 };
-PROSE_DS_ASSERT(prose_ds_ds_03cf, sizeof prose_ds_ds_03cf == 1);
+PROSE_DS_ASSERT(prose_ds_03cf, sizeof prose_ds_03cf == 1);

@@ -1,6 +1,6 @@
 # Structured tables for the v3.4.1 data segment
 
-Date: 2026-09-28. Status: approved design, not yet implemented. Plan: `docs/superpowers/plans/2026-09-28-ds-structured-tables.md`.
+Date: 2026-09-28. Status: implemented 2026-09-28 on branch `restructure`. Plan: `docs/superpowers/plans/2026-09-28-ds-structured-tables.md`.
 
 Found while planning (verified from the dump): text-rule lists are arrays of pattern pointers, each replacement
 following its pattern; LTS rule fields +6/+8 point to word pairs (33E2-37FD); `LTS_RULES` has 28 entries (52C0-52F7);

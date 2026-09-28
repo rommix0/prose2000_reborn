@@ -2,21 +2,27 @@
 
 The structure is that of src/dsp/prose_synth.c (REFERENCE.md section 13); the frame word roles are those of
 src/frame/frame_build.c (section 11.3). The fixed resonators (per-voice F5 and glottal filter, the frame template's
-HF pole and nasal pole) are decoded from the data extracted from the ROM, src/data/prose_data.c.
+HF pole and nasal pole) are decoded from the data segment, read from the raw image the ds_image_check test writes
+(src/data/ds_*.c built the ROM's DS:0000-AEA9 in memory; there is no more single prose_ds_data[] array to parse).
 
-    python dsp_graphs/make_graph.py      (needs Graphviz's dot on PATH)
+Build ds_image_check once (any CMake build directory; it also runs on every build, REFERENCE §14) and have it write
+the image, then run this script:
+
+    cmake --build <builddir> --target ds_image_check
+    <builddir>/ds_image_check build-ds/ds.bin
+    python dsp_graphs/make_graph.py [DS_IMAGE]      (needs Graphviz's dot on PATH; DS_IMAGE default build-ds/ds.bin)
 
 writes synth_topology.dot, .svg and .png next to this script.
 """
 import math
 import os
-import re
 import shutil
 import subprocess
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-DATA = os.path.join(HERE, '..', 'src', 'data', 'prose_data.c')
+DS_SIZE = 0xAEAA  # DS:0000-AEA9
+DEFAULT_DS_IMAGE = os.path.join(HERE, '..', 'build-ds', 'ds.bin')
 FS = 10000.0  # sample rate
 
 # DS offsets of the frame builder's tables (src/frame/frame_build.c)
@@ -25,13 +31,19 @@ T_VOICE_F5A, T_VOICE_F5B = 0x53B8, 0x53C8
 T_SETUP, T_TEMPLATE = 0x5646, 0x5656
 
 
-def load_ds():
-    src = re.sub(r'/\*.*?\*/', '', open(DATA).read(), flags=re.S)
-    m = re.search(r'prose_ds_data\[[^\]]*\]\s*=\s*\{(.*?)\};', src, re.S)
-    return bytes(int(x, 16) for x in re.findall(r'0x[0-9A-Fa-f]+', m.group(1)))
+def load_ds(path):
+    if not os.path.isfile(path):
+        raise SystemExit('%s not found: build ds_image_check and run it with this path to write the DS image, e.g.\n'
+                          '  cmake --build <builddir> --target ds_image_check\n'
+                          '  <builddir>/ds_image_check %s' % (path, path))
+    data = open(path, 'rb').read()
+    if len(data) != DS_SIZE:
+        raise SystemExit('%s is %d bytes, expected %d (DS:0000-AEA9): re-run ds_image_check %s to rewrite it'
+                          % (path, len(data), DS_SIZE, path))
+    return data
 
 
-DS = load_ds()
+DS = load_ds(sys.argv[1] if len(sys.argv) > 1 else DEFAULT_DS_IMAGE)
 
 
 def word(off, i=0):

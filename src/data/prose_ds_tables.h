@@ -94,12 +94,12 @@ PROSE_DS_ASSERT(prose_affix, sizeof(prose_affix) == 10);
 extern const uint16_t prose_ds_ram_ptrs[6];
 #define PROSE_DS_LANE_SUMS 0x000Cu
 extern const uint16_t prose_ds_lane_sums[8];
-#define PROSE_DS_DS_001C 0x001Cu
-extern const uint8_t prose_ds_ds_001c[4];
+#define PROSE_DS_001C 0x001Cu
+extern const uint8_t prose_ds_001c[4];
 #define PROSE_DS_STAGE_ACCEPT 0x0020u
 extern const uint16_t prose_ds_stage_accept[8];
-#define PROSE_DS_DS_0030 0x0030u
-extern const uint16_t prose_ds_ds_0030[12];
+#define PROSE_DS_0030 0x0030u
+extern const uint16_t prose_ds_0030[12];
 #define PROSE_DS_CLASS_MASKS 0x0048u
 extern const uint16_t prose_ds_class_masks[48];
 #define PROSE_DS_FEATURES 0x00A8u
@@ -108,14 +108,14 @@ extern const uint8_t prose_ds_features[6][128];
 extern const uint16_t prose_ds_tr_attr_ptr[1];
 #define PROSE_DS_INT8_STUB 0x03AAu
 extern const uint8_t prose_ds_int8_stub[15];
-#define PROSE_DS_DS_03B9 0x03B9u
-extern const uint8_t prose_ds_ds_03b9[1];
+#define PROSE_DS_03B9 0x03B9u
+extern const uint8_t prose_ds_03b9[1];
 #define PROSE_DS_SPEED_CAP 0x03BAu
 extern const uint16_t prose_ds_speed_cap[10];
 #define PROSE_DS_IDENTITY 0x03CEu
 extern const uint8_t prose_ds_identity[1];
-#define PROSE_DS_DS_03CF 0x03CFu
-extern const uint8_t prose_ds_ds_03cf[1];
+#define PROSE_DS_03CF 0x03CFu
+extern const uint8_t prose_ds_03cf[1];
 #define PROSE_DS_TR_PATTERNS 0x03D0u
 extern const uint8_t prose_ds_tr_patterns[3544];
 #define PROSE_DS_TR_LIST_ITEMS 0x11A8u
@@ -134,8 +134,8 @@ extern const uint8_t prose_ds_letter_states[3][12];
 extern const uint8_t prose_ds_phoneme_states[4][8];
 #define PROSE_DS_ENTRY_ADJUST 0x2172u
 extern const uint8_t prose_ds_entry_adjust[3][17];
-#define PROSE_DS_DS_21A5 0x21A5u
-extern const uint8_t prose_ds_ds_21a5[1];
+#define PROSE_DS_21A5 0x21A5u
+extern const uint8_t prose_ds_21a5[1];
 #define PROSE_DS_LTS_HEAD 0x21A6u
 extern const uint8_t prose_ds_lts_head[6];
 #define PROSE_DS_LTS_OUTPUTS 0x21ACu
@@ -146,18 +146,18 @@ extern const uint8_t prose_ds_lts_letters[1297];
 extern const uint8_t prose_ds_lts_patterns[1457];
 #define PROSE_DS_LTS_PAIRS 0x33E2u
 extern const prose_lts_pair prose_ds_lts_pairs[263];
-#define PROSE_DS_LTS_RULES 0x37FEu
-extern const prose_lts_rule prose_ds_lts_rules[685];
-#define PROSE_DS_LTS_LETTER_RULES 0x52C0u
-extern const uint16_t prose_ds_lts_letter_rules[28];
+#define PROSE_DS_LTS_RULE_RECORDS 0x37FEu
+extern const prose_lts_rule prose_ds_lts_rule_records[685];
+#define PROSE_DS_LTS_RULES 0x52C0u
+extern const uint16_t prose_ds_lts_rules[28];
 #define PROSE_DS_VOICE_SCALE 0x52F8u
 extern const uint16_t prose_ds_voice_scale[8];
 #define PROSE_DS_VOICE_SRC 0x5308u
 extern const uint8_t prose_ds_voice_src[32];
 #define PROSE_DS_VOICE_PITCH 0x5328u
 extern const uint16_t prose_ds_voice_pitch[8];
-#define PROSE_DS_DS_5338 0x5338u
-extern const uint16_t prose_ds_ds_5338[8];
+#define PROSE_DS_5338 0x5338u
+extern const uint16_t prose_ds_5338[8];
 #define PROSE_DS_VOICE_F4 0x5348u
 extern const uint16_t prose_ds_voice_f4[8];
 #define PROSE_DS_VOICE_F4_MAX 0x5358u
@@ -221,9 +221,7 @@ extern const uint16_t prose_ds_demo_text_ptr[1];
 #define PROSE_DS_PG_CONDITIONS 0x626Cu
 extern const uint8_t prose_ds_pg_conditions[266];
 #define PROSE_DS_PG_ACTIONS 0x6376u
-extern const prose_pg_action prose_ds_pg_actions[632];
-#define PROSE_DS_DS_7246 0x7246u
-extern const uint8_t prose_ds_ds_7246[24];
+extern const prose_pg_action prose_ds_pg_actions[636];
 #define PROSE_DS_PG_ACTION_LISTS 0x725Eu
 extern const uint16_t prose_ds_pg_action_lists[752];
 #define PROSE_DS_PG_ROUTINES 0x783Eu
@@ -244,16 +242,16 @@ extern const uint8_t prose_ds_phoneme_map[96];
 extern const uint16_t prose_ds_phoneme_map_ptr[1];
 #define PROSE_DS_TARGETS 0x944Cu
 extern const uint8_t prose_ds_targets[8][58];
-#define PROSE_DS_DS_961C 0x961Cu
-extern const uint16_t prose_ds_ds_961c[58];
+#define PROSE_DS_961C 0x961Cu
+extern const uint16_t prose_ds_961c[58];
 #define PROSE_DS_OFFGLIDES 0x9690u
 extern const uint8_t prose_ds_offglides[6][18];
-#define PROSE_DS_DS_96FC 0x96FCu
-extern const uint16_t prose_ds_ds_96fc[18];
+#define PROSE_DS_96FC 0x96FCu
+extern const uint16_t prose_ds_96fc[18];
 #define PROSE_DS_ONGLIDE_HOLD 0x9720u
 extern const uint16_t prose_ds_onglide_hold[18];
-#define PROSE_DS_DS_9744 0x9744u
-extern const uint8_t prose_ds_ds_9744[18];
+#define PROSE_DS_9744 0x9744u
+extern const uint8_t prose_ds_9744[18];
 #define PROSE_DS_CONS_TARGETS 0x9756u
 extern const prose_cons_block prose_ds_cons_targets[8];
 #define PROSE_DS_FORMANT_DUR 0x9856u
@@ -276,10 +274,10 @@ extern const uint8_t prose_ds_next_class[58];
 extern const uint8_t prose_ds_stop_locus_rows[9];
 #define PROSE_DS_STOP_LOCI 0x9905u
 extern const uint8_t prose_ds_stop_loci[6][72];
-#define PROSE_DS_RAMPS 0x9AB5u
-extern const uint8_t prose_ds_ramps[233];
-#define PROSE_DS_RAMP_PTRS 0x9B9Eu
-extern const uint16_t prose_ds_ramp_ptrs[21];
+#define PROSE_DS_RAMP_POOL 0x9AB5u
+extern const uint8_t prose_ds_ramp_pool[233];
+#define PROSE_DS_RAMPS 0x9B9Eu
+extern const uint16_t prose_ds_ramps[21];
 #define PROSE_DS_BIT_MASKS 0x9BC8u
 extern const uint16_t prose_ds_bit_masks[16];
 #define PROSE_DS_SUFFIX_POOL 0x9BE8u

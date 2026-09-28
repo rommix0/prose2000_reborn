@@ -136,6 +136,8 @@ endif()
 # library is always built
 add_executable(ds_image_check tests/ds_image_check.c)
 target_link_libraries(ds_image_check PRIVATE prose_common)
+add_custom_command(TARGET ds_image_check POST_BUILD COMMAND ds_image_check
+                    COMMENT "Checking the data-segment tables against the ROM")
 
 # Which firmware to build: 3 = v3.4.1 (default), 1 = the older v1.1 (1983, REFERENCE §16).
 set(PROSE_VERSION 3 CACHE STRING "Firmware version to build: 3 (v3.4.1) or 1 (v1.1)")

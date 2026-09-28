@@ -1,7 +1,11 @@
 """gen_contexts.py: writes contexts.tsv, the phoneme contexts the v3.4.1 parameter generator distinguishes
-(VOICE_CONTEXTS.md). It reads the ROM tables from src/data/prose_data.c, so it needs no ROM files.
+(VOICE_CONTEXTS.md). It reads the data segment from the raw image the ds_image_check test writes (there is no more
+single prose_ds_data[] array in src/data/ to parse). Build ds_image_check once (any CMake build directory; it also
+runs on every build, REFERENCE §14) and have it write the image, then run this script:
 
-    python voice/gen_contexts.py
+    cmake --build <builddir> --target ds_image_check
+    <builddir>/ds_image_check build-ds/ds.bin
+    python voice/gen_contexts.py [DS_IMAGE]      (DS_IMAGE default build-ds/ds.bin)
 
 Three kinds of rows:
 - rule:    the rule table (DS:8CFE, 88 groups, 621 rules). Every (prev, cur, next) triple is run through the rule
@@ -13,21 +17,27 @@ Three kinds of rows:
 import collections
 import functools
 import os
-import re
 import struct
+import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+DS_SIZE = 0xAEAA  # DS:0000-AEA9
+DEFAULT_DS_IMAGE = os.path.join(HERE, "..", "build-ds", "ds.bin")
 
 
-def load_ds():
-    src = open(os.path.join(HERE, "..", "src", "data", "prose_data.c"), encoding="utf-8").read()
-    body = src.split("const uint8_t prose_ds_data[")[1].split("};")[0].split("{", 1)[1]
-    body = re.sub(r"/\*.*?\*/", "", body, flags=re.S)
-    data = bytes(int(x, 16) for x in re.findall(r"0x([0-9A-Fa-f]{2})", body))
+def load_ds(path):
+    if not os.path.isfile(path):
+        raise SystemExit("%s not found: build ds_image_check and run it with this path to write the DS image, e.g.\n"
+                          "  cmake --build <builddir> --target ds_image_check\n"
+                          "  <builddir>/ds_image_check %s" % (path, path))
+    data = open(path, "rb").read()
+    if len(data) != DS_SIZE:
+        raise SystemExit("%s is %d bytes, expected %d (DS:0000-AEA9): re-run ds_image_check %s to rewrite it"
+                          % (path, len(data), DS_SIZE, path))
     return data + b"\xFF" * (0x10000 - len(data))
 
 
-DS = load_ds()
+DS = load_ds(sys.argv[1] if len(sys.argv) > 1 else DEFAULT_DS_IMAGE)
 def rb(a): return DS[a & 0xFFFF]
 def rsb(a): v = rb(a); return v - 256 if v > 127 else v
 def rw(a): return struct.unpack_from("<h", DS, a & 0xFFFF)[0]

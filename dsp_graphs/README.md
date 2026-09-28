@@ -4,8 +4,13 @@
 
 `synth_topology.png` (and `.svg`, `.dot`) is the signal flow of the µPD7720 program (DSP v3.12), drawn from its
 decompilation [`src/dsp/prose_synth.c`](../src/dsp/prose_synth.c) (REFERENCE.md §13). `make_graph.py` writes the
-Graphviz source and renders it (`python dsp_graphs/make_graph.py`, needs `dot` on `PATH`). It decodes the fixed
-resonators from the ROM data in `src/data/prose_data.c`, so their frequencies and bandwidths are computed, not typed in.
+Graphviz source and renders it, needing `dot` on `PATH` and the DS:0000-AEA9 image that `ds_image_check` writes:
+
+    cmake --build <builddir> --target ds_image_check
+    <builddir>/ds_image_check build-ds/ds.bin
+    python dsp_graphs/make_graph.py [DS_IMAGE]      (default build-ds/ds.bin)
+
+It decodes the fixed resonators from that image, so their frequencies and bandwidths are computed, not typed in.
 
 ## Reading the graph
 

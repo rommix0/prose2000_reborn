@@ -23,10 +23,10 @@ const uint16_t prose_ds_voice_pitch[8] = {
 PROSE_DS_ASSERT(prose_ds_voice_pitch, sizeof prose_ds_voice_pitch == 16);
 
 /* DS:5338-5347 per voice (000D 000D 000F ...); no reader found [opaque] */
-const uint16_t prose_ds_ds_5338[8] = {
+const uint16_t prose_ds_5338[8] = {
 	0x000D, 0x000D, 0x000F, 0x000D, 0x000D, 0x000F, 0x000D, 0x000D, /* DS:5338 */
 };
-PROSE_DS_ASSERT(prose_ds_ds_5338, sizeof prose_ds_ds_5338 == 16);
+PROSE_DS_ASSERT(prose_ds_5338, sizeof prose_ds_5338 == 16);
 
 /* DS:5348-5357 VOICE_F4: F4 offset per voice [full] */
 const uint16_t prose_ds_voice_f4[8] = {
