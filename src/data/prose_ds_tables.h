@@ -29,16 +29,104 @@ extern const prose_ds_span prose_ds_layout[];
 extern const unsigned prose_ds_layout_count;
 
 /* the tables, in DS order: offset, then the array (src/data/ds_<file>.c) */
-#define PROSE_DS_RAW_0000 0x0000u
-extern const uint8_t prose_ds_raw_0000[976];
+#define PROSE_DS_RAM_PTRS 0x0000u
+extern const uint16_t prose_ds_ram_ptrs[6];
+#define PROSE_DS_LANE_SUMS 0x000Cu
+extern const uint16_t prose_ds_lane_sums[8];
+#define PROSE_DS_DS_001C 0x001Cu
+extern const uint8_t prose_ds_ds_001c[4];
+#define PROSE_DS_STAGE_ACCEPT 0x0020u
+extern const uint16_t prose_ds_stage_accept[8];
+#define PROSE_DS_DS_0030 0x0030u
+extern const uint16_t prose_ds_ds_0030[12];
+#define PROSE_DS_CLASS_MASKS 0x0048u
+extern const uint16_t prose_ds_class_masks[48];
+#define PROSE_DS_FEATURES 0x00A8u
+extern const uint8_t prose_ds_features[6][128];
+#define PROSE_DS_TR_ATTR_PTR 0x03A8u
+extern const uint16_t prose_ds_tr_attr_ptr[1];
+#define PROSE_DS_INT8_STUB 0x03AAu
+extern const uint8_t prose_ds_int8_stub[15];
+#define PROSE_DS_DS_03B9 0x03B9u
+extern const uint8_t prose_ds_ds_03b9[1];
+#define PROSE_DS_SPEED_CAP 0x03BAu
+extern const uint16_t prose_ds_speed_cap[10];
+#define PROSE_DS_IDENTITY 0x03CEu
+extern const uint8_t prose_ds_identity[1];
+#define PROSE_DS_DS_03CF 0x03CFu
+extern const uint8_t prose_ds_ds_03cf[1];
 #define PROSE_DS_RAW_03D0 0x03D0u
 extern const uint8_t prose_ds_raw_03d0[7518];
 #define PROSE_DS_RAW_212E 0x212Eu
 extern const uint8_t prose_ds_raw_212e[12746];
-#define PROSE_DS_RAW_52F8 0x52F8u
-extern const uint8_t prose_ds_raw_52f8[3418];
-#define PROSE_DS_RAW_6052 0x6052u
-extern const uint8_t prose_ds_raw_6052[538];
+#define PROSE_DS_VOICE_SCALE 0x52F8u
+extern const uint16_t prose_ds_voice_scale[8];
+#define PROSE_DS_VOICE_SRC 0x5308u
+extern const uint8_t prose_ds_voice_src[32];
+#define PROSE_DS_VOICE_PITCH 0x5328u
+extern const uint16_t prose_ds_voice_pitch[8];
+#define PROSE_DS_DS_5338 0x5338u
+extern const uint16_t prose_ds_ds_5338[8];
+#define PROSE_DS_VOICE_F4 0x5348u
+extern const uint16_t prose_ds_voice_f4[8];
+#define PROSE_DS_VOICE_F4_MAX 0x5358u
+extern const uint16_t prose_ds_voice_f4_max[8];
+#define PROSE_DS_VOICE_FRAME 0x5368u
+extern const uint16_t prose_ds_voice_frame[8][8];
+#define PROSE_DS_T_JITTER_DEPTH 0x53E8u
+extern const uint16_t prose_ds_t_jitter_depth[16];
+#define PROSE_DS_T_SHIMMER_DEPTH 0x5408u
+extern const uint16_t prose_ds_t_shimmer_depth[16];
+#define PROSE_DS_T_JITTER 0x5428u
+extern const int16_t prose_ds_t_jitter[64];
+#define PROSE_DS_T_VGAIN_SCALE 0x54A8u
+extern const uint16_t prose_ds_t_vgain_scale[32];
+#define PROSE_DS_T_VGAIN 0x54E8u
+extern const uint16_t prose_ds_t_vgain[126];
+#define PROSE_DS_T_AV_BY_P18 0x55E4u
+extern const uint16_t prose_ds_t_av_by_p18[32];
+#define PROSE_DS_T_AV_BY_P19 0x5624u
+extern const uint16_t prose_ds_t_av_by_p19[16];
+#define PROSE_DS_DSP_BOOT 0x5644u
+extern const uint16_t prose_ds_dsp_boot[9];
+#define PROSE_DS_T_TEMPLATE 0x5656u
+extern const uint16_t prose_ds_t_template[40];
+#define PROSE_DS_T_NZ_GAIN 0x56A6u
+extern const uint16_t prose_ds_t_nz_gain[18];
+#define PROSE_DS_T_EXP1 0x56CAu
+extern const uint16_t prose_ds_t_exp1[128];
+#define PROSE_DS_T_EXP2 0x57CAu
+extern const uint16_t prose_ds_t_exp2[128];
+#define PROSE_DS_T_COS 0x58CAu
+extern const int16_t prose_ds_t_cos[512];
+#define PROSE_DS_T_DB 0x5CCAu
+extern const uint16_t prose_ds_t_db[213];
+#define PROSE_DS_T_PAR_CORR1 0x5E74u
+extern const uint16_t prose_ds_t_par_corr1[121];
+#define PROSE_DS_T_PAR_CORR2 0x5F66u
+extern const uint16_t prose_ds_t_par_corr2[118];
+#define PROSE_DS_PAUSE_SCALE 0x6052u
+extern const uint16_t prose_ds_pause_scale[26];
+#define PROSE_DS_SPEED_PCT 0x6086u
+extern const uint16_t prose_ds_speed_pct[26];
+#define PROSE_DS_BREAK_MASK 0x60BAu
+extern const uint8_t prose_ds_break_mask[30];
+#define PROSE_DS_CLUSTER_PCT 0x60D8u
+extern const uint16_t prose_ds_cluster_pct[4];
+#define PROSE_DS_LOW_MAX 0x60E0u
+extern const uint16_t prose_ds_low_max[22];
+#define PROSE_DS_TRACK_DEFAULT 0x610Cu
+extern const uint8_t prose_ds_track_default[22];
+#define PROSE_DS_TEST_ROWS 0x6122u
+extern const uint8_t prose_ds_test_rows[10][22];
+#define PROSE_DS_LOW_DEFAULT 0x61FEu
+extern const uint8_t prose_ds_low_default[22];
+#define PROSE_DS_AV_BY_F0 0x6214u
+extern const uint8_t prose_ds_av_by_f0[16];
+#define PROSE_DS_DEMO_TEXT 0x6224u
+extern const uint8_t prose_ds_demo_text[70];
+#define PROSE_DS_DEMO_TEXT_PTR 0x626Au
+extern const uint16_t prose_ds_demo_text_ptr[1];
 #define PROSE_DS_RAW_626C 0x626Cu
 extern const uint8_t prose_ds_raw_626c[14716];
 #define PROSE_DS_RAW_9BE8 0x9BE8u
