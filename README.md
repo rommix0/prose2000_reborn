@@ -108,6 +108,7 @@ REFERENCE.md §14.
 | `pitch_graphs/`                        | Annotated graphs of pitch contours, made by `make_graphs.py` from `pitch_trace` (`src/cli/`)                      |
 | `FORMANT_SYSTEM.md`                    | How formants move: targets, transitions, the locus model, and the rules for stops, fricatives, nasals, vowels    |
 | `formant_graphs/`                      | Annotated graphs of formant movements, made by `make_graphs.py` from `formant_trace` (`src/cli/`)                 |
+| `dsp_graphs/`                          | The DSP synthesizer's signal-flow topology (Graphviz), made by `make_graph.py` from the decompiled DSP program     |
 | `voice/`                               | The contexts and phoneme classes as TSV, an ARPABET to Prose mapping, a corpus coverage checker (VOICE_CONTEXTS.md §8) |
 | `docs/`                                | The patents describing the Prose 2000 (text extracts and scans)                                                   |
 

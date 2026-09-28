@@ -1174,7 +1174,8 @@ length−1 = 99 (100 samples per frame), initial countdown 0, `0x2710` (10000), 
 3. **Excitation**: first difference of the flow, ×8 with saturation, × w17.
 4. **Noise** `07A`: two registers `RAM[2A]`/`RAM[3A]`. k = a ^ b, then new = ((k >> 7) & 0x1F8) | (k << 6), with 0
    replaced by 0xAAAA. Aspiration = noise × AH (w16). The source is voice + aspiration.
-5. **Glottal filter** (w37-w39), then the **cascade**: F5 (w4/w5, fixed per voice) → F4 (w6/w7) → F3 → F2 → nasal
+5. **Glottal filter** (w37-w39; per voice from `DS:53A8`/`5388`/`5398`, decoded 2026-09-28: V0 has no poles, gain only;
+   V1 1500 Hz / 2000 Hz, V2 2500 Hz / 2000 Hz), then the **cascade**: F5 (w4/w5, fixed per voice) → F4 (w6/w7) → F3 → F2 → nasal
    pole (w12/w13, fixed ≈ 250 Hz) → nasal zero (FN, w32/w33) → F1. Each stage's input gain is the gain word of the
    resonator before it (w19, w21, w23, w25, w27, w29). Output ×2·w36.
 6. **Parallel branch**: the noise is halved while `RAM[3F] ^ RAM[3E]` < 0 (the second half of each pitch period,
@@ -1184,6 +1185,8 @@ length−1 = 99 (100 samples per frame), initial countdown 0, `0x2710` (10000), 
    Silence (w0 bit 7) outputs 0x0FE0. `RAM[28]` (a one-sample offset from w0's high byte, `ROM[0x145 + n]`) is
    stored back from source 0 every sample, which the emulator reads as `TRB` = 0. On a real 7720, source 0 is
    `NON`, which is probably also 0.
+
+**Topology graph:** `dsp_graphs/synth_topology.png` draws this flow (`dsp_graphs/make_graph.py`).
 
 F1-F3 and FN update **pitch-synchronously** at period starts; unvoiced (period 0), that is every other sample. F4,
 F5 and all gains update when the frame arrives.
