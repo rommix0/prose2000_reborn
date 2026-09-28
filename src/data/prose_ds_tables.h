@@ -55,8 +55,18 @@ extern const uint16_t prose_ds_speed_cap[10];
 extern const uint8_t prose_ds_identity[1];
 #define PROSE_DS_DS_03CF 0x03CFu
 extern const uint8_t prose_ds_ds_03cf[1];
-#define PROSE_DS_RAW_03D0 0x03D0u
-extern const uint8_t prose_ds_raw_03d0[7518];
+#define PROSE_DS_TR_PATTERNS 0x03D0u
+extern const uint8_t prose_ds_tr_patterns[3544];
+#define PROSE_DS_TR_LIST_ITEMS 0x11A8u
+extern const uint16_t prose_ds_tr_list_items[326];
+#define PROSE_DS_TR_LISTS 0x1434u
+extern const uint16_t prose_ds_tr_lists[21];
+#define PROSE_DS_TR_WORD_CHARS 0x145Eu
+extern const uint8_t prose_ds_tr_word_chars[16];
+#define PROSE_DS_TR_PROGRAM 0x146Eu
+extern const uint8_t prose_ds_tr_program[3045];
+#define PROSE_DS_TR_STRINGS 0x2053u
+extern const uint8_t prose_ds_tr_strings[219];
 #define PROSE_DS_RAW_212E 0x212Eu
 extern const uint8_t prose_ds_raw_212e[12746];
 #define PROSE_DS_VOICE_SCALE 0x52F8u
