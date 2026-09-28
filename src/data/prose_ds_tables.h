@@ -45,6 +45,38 @@ typedef struct {
 } prose_lts_rule;
 PROSE_DS_ASSERT(prose_lts_rule, sizeof(prose_lts_rule) == 10);
 
+/* generator action: op, voice mask, value, RAM address (DS:DE2E-EBCA) it acts on (paramgen_rule_action, REFERENCE §12.5) */
+typedef struct {
+	uint8_t op;
+	uint8_t voices;
+	int16_t value;
+	uint16_t addr;
+} prose_pg_action;
+PROSE_DS_ASSERT(prose_pg_action, sizeof(prose_pg_action) == 6);
+
+/* far pointer (offset, segment) to a generator routine; 0:0 ends a list */
+typedef struct {
+	uint16_t off;
+	uint16_t seg;
+} prose_far_ptr;
+PROSE_DS_ASSERT(prose_far_ptr, sizeof(prose_far_ptr) == 4);
+
+/* generator rule: condition, action list, routine list, second action list (paramgen_apply_rules, REFERENCE §12.5) */
+typedef struct {
+	uint16_t cond;
+	uint16_t actions;
+	uint16_t routines;
+	uint16_t actions_b;
+} prose_pg_rule;
+PROSE_DS_ASSERT(prose_pg_rule, sizeof(prose_pg_rule) == 8);
+
+/* consonant targets of one parameter (AF ... AB): bytes for phoneme indices 29-58, then the block's address minus 29, which the generator indexes by phoneme */
+typedef struct {
+	uint8_t target[30];
+	uint16_t base;
+} prose_cons_block;
+PROSE_DS_ASSERT(prose_cons_block, sizeof(prose_cons_block) == 32);
+
 /* affix record: string (suffixes reversed), context pattern, 1 = look the stem up, word class, stress or AFFIX_CODE, 0-terminated list of records to try next (affix_match E5152) */
 typedef struct {
 	uint16_t string;
@@ -186,8 +218,70 @@ extern const uint8_t prose_ds_av_by_f0[16];
 extern const uint8_t prose_ds_demo_text[70];
 #define PROSE_DS_DEMO_TEXT_PTR 0x626Au
 extern const uint16_t prose_ds_demo_text_ptr[1];
-#define PROSE_DS_RAW_626C 0x626Cu
-extern const uint8_t prose_ds_raw_626c[14716];
+#define PROSE_DS_PG_CONDITIONS 0x626Cu
+extern const uint8_t prose_ds_pg_conditions[266];
+#define PROSE_DS_PG_ACTIONS 0x6376u
+extern const prose_pg_action prose_ds_pg_actions[632];
+#define PROSE_DS_DS_7246 0x7246u
+extern const uint8_t prose_ds_ds_7246[24];
+#define PROSE_DS_PG_ACTION_LISTS 0x725Eu
+extern const uint16_t prose_ds_pg_action_lists[752];
+#define PROSE_DS_PG_ROUTINES 0x783Eu
+extern const prose_far_ptr prose_ds_pg_routines[86];
+#define PROSE_DS_PG_RULES 0x7996u
+extern const prose_pg_rule prose_ds_pg_rules[621];
+#define PROSE_DS_PG_GROUPS 0x8CFEu
+extern const uint16_t prose_ds_pg_groups[88];
+#define PROSE_DS_PG_GROUP_COUNTS 0x8DAEu
+extern const uint8_t prose_ds_pg_group_counts[88];
+#define PROSE_DS_PG_PAIR_ROWS 0x8E06u
+extern const uint8_t prose_ds_pg_pair_rows[24][58];
+#define PROSE_DS_PG_PAIR_ROW_PTRS 0x9376u
+extern const uint16_t prose_ds_pg_pair_row_ptrs[58];
+#define PROSE_DS_PHONEME_MAP 0x93EAu
+extern const uint8_t prose_ds_phoneme_map[96];
+#define PROSE_DS_PHONEME_MAP_PTR 0x944Au
+extern const uint16_t prose_ds_phoneme_map_ptr[1];
+#define PROSE_DS_TARGETS 0x944Cu
+extern const uint8_t prose_ds_targets[8][58];
+#define PROSE_DS_DS_961C 0x961Cu
+extern const uint16_t prose_ds_ds_961c[58];
+#define PROSE_DS_OFFGLIDES 0x9690u
+extern const uint8_t prose_ds_offglides[6][18];
+#define PROSE_DS_DS_96FC 0x96FCu
+extern const uint16_t prose_ds_ds_96fc[18];
+#define PROSE_DS_ONGLIDE_HOLD 0x9720u
+extern const uint16_t prose_ds_onglide_hold[18];
+#define PROSE_DS_DS_9744 0x9744u
+extern const uint8_t prose_ds_ds_9744[18];
+#define PROSE_DS_CONS_TARGETS 0x9756u
+extern const prose_cons_block prose_ds_cons_targets[8];
+#define PROSE_DS_FORMANT_DUR 0x9856u
+extern const uint8_t prose_ds_formant_dur[8];
+#define PROSE_DS_NEUTRAL_F1 0x985Eu
+extern const uint16_t prose_ds_neutral_f1[3];
+#define PROSE_DS_LOCUS_WEIGHTS 0x9864u
+extern const uint16_t prose_ds_locus_weights[4][4];
+#define PROSE_DS_REDUCTION 0x9884u
+extern const uint16_t prose_ds_reduction[16];
+#define PROSE_DS_DEFAULT_DUR 0x98A4u
+extern const uint8_t prose_ds_default_dur[22];
+#define PROSE_DS_NASAL_FN 0x98BAu
+extern const uint8_t prose_ds_nasal_fn[6];
+#define PROSE_DS_NASAL_FN_PTR 0x98C0u
+extern const uint16_t prose_ds_nasal_fn_ptr[1];
+#define PROSE_DS_NEXT_CLASS 0x98C2u
+extern const uint8_t prose_ds_next_class[58];
+#define PROSE_DS_STOP_LOCUS_ROWS 0x98FCu
+extern const uint8_t prose_ds_stop_locus_rows[9];
+#define PROSE_DS_STOP_LOCI 0x9905u
+extern const uint8_t prose_ds_stop_loci[6][72];
+#define PROSE_DS_RAMPS 0x9AB5u
+extern const uint8_t prose_ds_ramps[233];
+#define PROSE_DS_RAMP_PTRS 0x9B9Eu
+extern const uint16_t prose_ds_ramp_ptrs[21];
+#define PROSE_DS_BIT_MASKS 0x9BC8u
+extern const uint16_t prose_ds_bit_masks[16];
 #define PROSE_DS_SUFFIX_POOL 0x9BE8u
 extern const uint8_t prose_ds_suffix_pool[1572];
 #define PROSE_DS_SUFFIX_RECORDS 0xA20Cu
