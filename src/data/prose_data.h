@@ -13,8 +13,6 @@
 
 #define PROSE_LEXICON_BASE 0xE9000u /* linear address of prose_lexicon[0] */
 extern const uint8_t prose_lexicon[0x968E];
-#define PROSE_DS_DATA_BASE 0xF4100u /* linear address of prose_ds_data[0] */
-extern const uint8_t prose_ds_data[0xAEAA];
 /* the byte sums of the 32 KB lanes 2-7 of D0000-FFFFF (D000 even, D000 odd, E000 even, ... F000 odd), as
    the boot ROM check (rom_checksum D33B3) computes them */
 extern const uint16_t prose_rom_lane_sums[6];

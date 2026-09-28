@@ -9,8 +9,9 @@ typedef struct {
 	uint16_t lane_sum[6];   /* byte sums of the 32 KB lanes 2-7 of D0000-FFFFF, for the boot ROM check */
 } prose_rom;
 
-/* The image from the data extracted into src/data (tools/rom_extract.py): the lexicon segment and the data
-   segment, with the lane sums of the full ROM. The code areas read as FF; the C never reads them. */
+/* The image from the data extracted into src/data (tools/rom_extract.py): the lexicon segment, the data-segment
+   tables (prose_ds_tables.h, placed by the layout list) and the lane sums of the full ROM. The code areas read as
+   FF; the C never reads them. */
 void prose_rom_builtin(prose_rom *rom);
 
 /* The firmware's data segment is F410, so DS:x is linear F4100 + x. Tables are read from the ROM image. */
