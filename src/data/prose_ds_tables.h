@@ -28,6 +28,35 @@ typedef struct {
 extern const prose_ds_span prose_ds_layout[];
 extern const unsigned prose_ds_layout_count;
 
+/* LTS condition / pass-on pair: a rule's +6 tests LTS_STATE and LTS_CLASS (bit 15 of a word: none / any present); +8 gives the flags and the class passed on (lts_class_match, lts_rules) */
+typedef struct {
+	uint16_t state;
+	uint16_t cls;
+} prose_lts_pair;
+PROSE_DS_ASSERT(prose_lts_pair, sizeof(prose_lts_pair) == 4);
+
+/* letter-to-sound rule: letters (reversed), phoneme output, right context pattern, condition pair, pass-on pair (lts_rules D78AE, REFERENCE §15.3) */
+typedef struct {
+	uint16_t letters;
+	uint16_t output;
+	uint16_t pattern;
+	uint16_t cond;
+	uint16_t pass_on;
+} prose_lts_rule;
+PROSE_DS_ASSERT(prose_lts_rule, sizeof(prose_lts_rule) == 10);
+
+/* affix record: string (suffixes reversed), context pattern, 1 = look the stem up, word class, stress or AFFIX_CODE, 0-terminated list of records to try next (affix_match E5152) */
+typedef struct {
+	uint16_t string;
+	uint16_t pattern;
+	uint8_t lookup;
+	uint8_t word_class;
+	uint8_t code;
+	uint8_t pad;
+	uint16_t next;
+} prose_affix;
+PROSE_DS_ASSERT(prose_affix, sizeof(prose_affix) == 10);
+
 /* the tables, in DS order: offset, then the array (src/data/ds_<file>.c) */
 #define PROSE_DS_RAM_PTRS 0x0000u
 extern const uint16_t prose_ds_ram_ptrs[6];
@@ -67,8 +96,28 @@ extern const uint8_t prose_ds_tr_word_chars[16];
 extern const uint8_t prose_ds_tr_program[3045];
 #define PROSE_DS_TR_STRINGS 0x2053u
 extern const uint8_t prose_ds_tr_strings[219];
-#define PROSE_DS_RAW_212E 0x212Eu
-extern const uint8_t prose_ds_raw_212e[12746];
+#define PROSE_DS_LETTER_STATES 0x212Eu
+extern const uint8_t prose_ds_letter_states[3][12];
+#define PROSE_DS_PHONEME_STATES 0x2152u
+extern const uint8_t prose_ds_phoneme_states[4][8];
+#define PROSE_DS_ENTRY_ADJUST 0x2172u
+extern const uint8_t prose_ds_entry_adjust[3][17];
+#define PROSE_DS_DS_21A5 0x21A5u
+extern const uint8_t prose_ds_ds_21a5[1];
+#define PROSE_DS_LTS_HEAD 0x21A6u
+extern const uint8_t prose_ds_lts_head[6];
+#define PROSE_DS_LTS_OUTPUTS 0x21ACu
+extern const uint8_t prose_ds_lts_outputs[1908];
+#define PROSE_DS_LTS_LETTERS 0x2920u
+extern const uint8_t prose_ds_lts_letters[1297];
+#define PROSE_DS_LTS_PATTERNS 0x2E31u
+extern const uint8_t prose_ds_lts_patterns[1457];
+#define PROSE_DS_LTS_PAIRS 0x33E2u
+extern const prose_lts_pair prose_ds_lts_pairs[263];
+#define PROSE_DS_LTS_RULES 0x37FEu
+extern const prose_lts_rule prose_ds_lts_rules[685];
+#define PROSE_DS_LTS_LETTER_RULES 0x52C0u
+extern const uint16_t prose_ds_lts_letter_rules[28];
 #define PROSE_DS_VOICE_SCALE 0x52F8u
 extern const uint16_t prose_ds_voice_scale[8];
 #define PROSE_DS_VOICE_SRC 0x5308u
@@ -139,7 +188,33 @@ extern const uint8_t prose_ds_demo_text[70];
 extern const uint16_t prose_ds_demo_text_ptr[1];
 #define PROSE_DS_RAW_626C 0x626Cu
 extern const uint8_t prose_ds_raw_626c[14716];
-#define PROSE_DS_RAW_9BE8 0x9BE8u
-extern const uint8_t prose_ds_raw_9be8[4802];
+#define PROSE_DS_SUFFIX_POOL 0x9BE8u
+extern const uint8_t prose_ds_suffix_pool[1572];
+#define PROSE_DS_SUFFIX_RECORDS 0xA20Cu
+extern const prose_affix prose_ds_suffix_records[94];
+#define PROSE_DS_SUFFIX_LISTS 0xA5B8u
+extern const uint16_t prose_ds_suffix_lists[111];
+#define PROSE_DS_SUFFIXES 0xA696u
+extern const uint16_t prose_ds_suffixes[26];
+#define PROSE_DS_PREFIX_POOL 0xA6CAu
+extern const uint8_t prose_ds_prefix_pool[916];
+#define PROSE_DS_PREFIX_RECORDS 0xAA5Eu
+extern const prose_affix prose_ds_prefix_records[60];
+#define PROSE_DS_PREFIX_LISTS 0xACB6u
+extern const uint16_t prose_ds_prefix_lists[77];
+#define PROSE_DS_PREFIXES 0xAD50u
+extern const uint16_t prose_ds_prefixes[26];
+#define PROSE_DS_INH 0xAD84u
+extern const uint8_t prose_ds_inh[96];
+#define PROSE_DS_INH_PTR 0xADE4u
+extern const uint16_t prose_ds_inh_ptr[1];
+#define PROSE_DS_MIN 0xADE6u
+extern const uint8_t prose_ds_min[96];
+#define PROSE_DS_MIN_PTR 0xAE46u
+extern const uint16_t prose_ds_min_ptr[1];
+#define PROSE_DS_PLACE 0xAE48u
+extern const uint8_t prose_ds_place[96];
+#define PROSE_DS_PLACE_PTR 0xAEA8u
+extern const uint16_t prose_ds_place_ptr[1];
 
 #endif
