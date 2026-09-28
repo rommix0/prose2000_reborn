@@ -1,6 +1,10 @@
 # Structured tables for the v3.4.1 data segment
 
-Date: 2026-09-28. Status: approved design, not yet implemented.
+Date: 2026-09-28. Status: approved design, not yet implemented. Plan: `docs/superpowers/plans/2026-09-28-ds-structured-tables.md`.
+
+Found while planning (verified from the dump): text-rule lists are arrays of pattern pointers, each replacement
+following its pattern; LTS rule fields +6/+8 point to word pairs (33E2-37FD); `LTS_RULES` has 28 entries (52C0-52F7);
+the affix area is suffix pool / 94 records / lists / `SUFFIXES`, then the same for 60 prefixes.
 
 ## Goal
 
@@ -33,10 +37,12 @@ Each table is its own `const` array with a real C type:
 - flat tables: `uint8_t` / `int16_t` / `uint16_t` arrays, e.g. `prose_ds_t_cos[512]`;
 - record tables: arrays of structs made only of `uint8_t` / `uint16_t` fields, e.g.
   `struct prose_lts_rule { uint16_t left, output, pattern, cond, pass_on; }`;
-- string pools (text-rule patterns 03D0, LTS strings 21A5, affix strings, demo text): `uint8_t` arrays, one
-  string per line, printable bytes as character literals, each line commented with its DS offset;
-- byte code (text-rule program 146E, paramgen conditions 626C): `uint8_t` arrays, one line per rule or
-  condition where the boundaries are known;
+- pools (text-rule patterns 03D0, LTS strings 21AC-33E1, the affix pools 9BE8 and A6CA, ramps, demo text):
+  `uint8_t` arrays with one item per line (split at every pointer target), printable bytes as character literals,
+  each line commented with its DS offset. Word lists inside a pool (the affix next-lists) are written with
+  `PROSE_W(expr)`, which gives the two bytes of a 16-bit value;
+- byte code: the paramgen conditions 626C form a pool with one condition per line; the text-rule program 146E
+  is a plain `uint8_t` array, 16 bytes per line, because rule boundaries need a disassembler;
 - undocumented ranges (0000-000B, 001C-001F, 0030-0047, 03CF, 52F6-52F7, 5338-5347, 7246-725D, F-fill or
   unexplained bytes inside 9BE8-AD4F, ...): small `uint8_t` arrays named `prose_ds_XXXX` with an *opaque* comment.
 
@@ -56,8 +62,9 @@ copying `prose_ds_data`. `prose_ds_data` is removed from `prose_data.c` / `.h`.
 
 | File | Tables |
 |---|---|
-| `prose_ds_tables.h` | struct types, `extern`s, `PROSE_DS_<NAME>` offset macros, the layout list declaration, the SHA-1 of the original DS bytes |
-| `ds_boot.c` | header words 0000, lane sums 000C, stage accept masks 0020, curve 0030, `TR_ATTR_PTR`, INT 8 stub, speed caps, identity byte, the layout list |
+| `prose_ds_tables.h` | struct types, `extern`s, `PROSE_DS_<NAME>` offset macros, the layout list declaration, the FNV-1a (64-bit) hash of the original DS bytes |
+| `ds_layout.c` | the layout list |
+| `ds_boot.c` | header words 0000, lane sums 000C, stage accept masks 0020, curve 0030, `TR_ATTR_PTR`, INT 8 stub, speed caps, identity byte |
 | `ds_textrules.c` | pattern pool, list pairs, `TR_LISTS`, word chars, program, strings |
 | `ds_lexical.c` | class masks, feature planes, letter / phoneme states, entry adjust, LTS pool, LTS rules and lists, affix area, INH / MIN / PLACE |
 | `ds_frame.c` | voice tables 52F8-5367, per-voice frame words, jitter / shimmer, voicing gain, AV scaling, DSP boot block, frame template, nasal-zero gain, exp / cos / dB, parallel corrections |
@@ -80,7 +87,8 @@ copying `prose_ds_data`. `prose_ds_data` is removed from `prose_data.c` / `.h`.
 
 ### Source of truth
 
-`rom_extract.py` generates these files once. From then on the C files are the source: their header comment says
+`rom_extract.py` generates these files once, through `tools/ds_gen.py` (machinery) and `tools/ds_spec.py` (the table
+list), both local like the extractor. From then on the C files are the source: their header comment says
 they may be edited (renaming fields, splitting a table as its structure is understood) and that `ds_image_check`
 guards the bytes. The extractor can still regenerate them from the dumps.
 
@@ -90,7 +98,8 @@ guards the bytes. The extractor can still regenerate them from the dumps.
    with the dump's DS:0000-AEA9; it also checks full coverage, no overlap, and each record size. On any failure it
    writes nothing.
 2. **`ds_image_check`** (new test program, built in both `PROSE_VERSION` configurations): builds the image with
-   `prose_rom_builtin`, checks the SHA-1 of DS:0000-AEA9 against the embedded value, and checks that the layout
+   `prose_rom_builtin`, checks the FNV-1a hash of DS:0000-AEA9 against the embedded value (a SHA-1 in C would cost more code for no gain
+   here: the check guards against edits, not attacks), and checks that the layout
    list is sorted, contiguous and covers 0000-AEA9.
 3. **Changeover:** before `prose_ds_data` is deleted, a one-off comparison of the old array with the assembled
    image, byte for byte.
