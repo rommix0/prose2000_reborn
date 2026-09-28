@@ -3,7 +3,7 @@
  * DS:0000-AEA9 byte for byte. Design: docs/superpowers/specs/2026-09-28-ds-structured-tables-design.md */
 #include "prose_ds_tables.h"
 
-/* DS:0048-00A7 CLASS_MASKS: low byte = feature bit, high byte = plane << 1 (REFERENCE ง9.4, ง12.5) [full] */
+/* DS:0048-00A7 CLASS_MASKS: low byte = feature bit, high byte = plane << 1 (REFERENCE ยง9.4, ยง12.5) [full] */
 const uint16_t prose_ds_class_masks[48] = {
 	0x0001, 0x0002, 0x0004, 0x0008, 0x0010, 0x0020, 0x0040, 0x0080, /* DS:0048 */
 	0x0101, 0x0102, 0x0104, 0x0108, 0x0110, 0x0120, 0x0140, 0x0180, /* DS:0058 */
@@ -14,7 +14,7 @@ const uint16_t prose_ds_class_masks[48] = {
 };
 PROSE_DS_ASSERT(prose_ds_class_masks, sizeof prose_ds_class_masks == 96);
 
-/* DS:00A8-03A7 FEATURES: 6 planes of 128 bytes indexed by character (REFERENCE ง9.3/9.5 F41A8-F44A8 spans all 6; bit use verified for planes 0/0x80/0x100/0x200, bit names inferred; planes at +0x180 and +0x280 unverified) [partial] */
+/* DS:00A8-03A7 FEATURES: 6 planes of 128 bytes indexed by character (REFERENCE ยง9.3 F41A8-F44A8 spans all 6; bit use verified for planes +0/+0x80/+0x100/+0x180/+0x200 (pg.h, pg_context.c, pg_loci.c), bit names inferred (ยง12.6); plane +0x280 unverified, used nowhere in v3 code) [partial] */
 const uint8_t prose_ds_features[6][128] = {
 	{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 	 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,

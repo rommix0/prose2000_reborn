@@ -3,7 +3,7 @@
  * DS:0000-AEA9 byte for byte. Design: docs/superpowers/specs/2026-09-28-ds-structured-tables-design.md */
 #include "prose_ds_tables.h"
 
-/* DS:6052-6085 PAUSE_SCALE: per speed 0-25 (REFERENCE ง15.2) [full] */
+/* DS:6052-6085 PAUSE_SCALE: per speed 0-25 (REFERENCE ยง15.2) [full] */
 const uint16_t prose_ds_pause_scale[26] = {
 	2200, 1700, 1300, 1000, 755, 500, 416, 350, /* DS:6052 */
 	280, 270, 220, 162, 143, 134, 122, 90, /* DS:6062 */
@@ -34,7 +34,7 @@ const uint16_t prose_ds_cluster_pct[4] = {
 };
 PROSE_DS_ASSERT(prose_ds_cluster_pct, sizeof prose_ds_cluster_pct == 8);
 
-/* DS:60E0-610B LOW_MAX: ESC[l maxima per parameter (REFERENCE ง8.2) [full] */
+/* DS:60E0-610B LOW_MAX: ESC[l maxima per parameter (REFERENCE ยง8.2) [full] */
 const uint16_t prose_ds_low_max[22] = {
 	80, 80, 80, 80, 80, 80, 80, 80, /* DS:60E0 */
 	80, 255, 255, 255, 255, 204, 204, 204, /* DS:60F0 */
@@ -42,14 +42,14 @@ const uint16_t prose_ds_low_max[22] = {
 };
 PROSE_DS_ASSERT(prose_ds_low_max, sizeof prose_ds_low_max == 44);
 
-/* DS:610C-6121 TRACK_DEFAULT: rest value of each of the 22 tracks (REFERENCE ง12.1) [full] */
+/* DS:610C-6121 TRACK_DEFAULT: rest value of each of the 22 tracks (REFERENCE ยง12.1) [full] */
 const uint8_t prose_ds_track_default[22] = {
 	0x00, 0x00, 0x00, 0x3C, 0x3C, 0x3C, 0x3C, 0x3C, 0x00, 0x64, 0x70, 0x96, 0xCE, 0x46, 0x2D, 0x37, /* DS:610C */
 	0x0E, 0x64, 0x10, 0x08, 0x00, 0x00, /* DS:611C */
 };
 PROSE_DS_ASSERT(prose_ds_track_default, sizeof prose_ds_track_default == 22);
 
-/* DS:6122-61FD ESC[t test-mode rows of 22 track bytes, FF = computed (REFERENCE ง8.2); p2/p3 inferred [partial] */
+/* DS:6122-61FD ESC[t test-mode rows of 22 track bytes, FF = computed (REFERENCE ยง8.2); p2/p3 inferred [partial] */
 const uint8_t prose_ds_test_rows[10][22] = {
 	{0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xE1, 0x0F, 0x0F, 0x0F,
 	 0x0E, 0xFF, 0x10, 0x08, 0x00, 0x00}, /* 0 DS:6122 */

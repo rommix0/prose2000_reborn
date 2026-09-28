@@ -35,7 +35,7 @@ typedef struct {
 } prose_lts_pair;
 PROSE_DS_ASSERT(prose_lts_pair, sizeof(prose_lts_pair) == 4);
 
-/* letter-to-sound rule: letters (reversed), phoneme output, right context pattern, condition pair, pass-on pair (lts_rules D78AE, REFERENCE ง15.3) */
+/* letter-to-sound rule: letters (reversed), phoneme output, right context pattern, condition pair, pass-on pair (lts_rules D78AE, REFERENCE ยง15.3) */
 typedef struct {
 	uint16_t letters;
 	uint16_t output;
@@ -45,7 +45,7 @@ typedef struct {
 } prose_lts_rule;
 PROSE_DS_ASSERT(prose_lts_rule, sizeof(prose_lts_rule) == 10);
 
-/* generator action: op, voice mask, value, RAM address (DS:DE2E-EBCA) it acts on (paramgen_rule_action, REFERENCE ง12.5) */
+/* generator action: op, voice mask, value, RAM address (DS:DE2E-EBCA) it acts on (paramgen_rule_action, REFERENCE ยง12.5) */
 typedef struct {
 	uint8_t op;
 	uint8_t voices;
@@ -61,7 +61,7 @@ typedef struct {
 } prose_far_ptr;
 PROSE_DS_ASSERT(prose_far_ptr, sizeof(prose_far_ptr) == 4);
 
-/* generator rule: condition, action list, routine list, second action list (paramgen_apply_rules, REFERENCE ง12.5) */
+/* generator rule: condition, action list, routine list, second action list (paramgen_apply_rules, REFERENCE ยง12.5) */
 typedef struct {
 	uint16_t cond;
 	uint16_t actions;

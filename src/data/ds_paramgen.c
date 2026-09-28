@@ -2452,7 +2452,7 @@ const uint16_t prose_ds_pg_pair_row_ptrs[58] = {
 };
 PROSE_DS_ASSERT(prose_ds_pg_pair_row_ptrs, sizeof prose_ds_pg_pair_row_ptrs == 116);
 
-/* DS:93EA-9449 phoneme character 0x20-0x7F -> phoneme index 0-57 (REFERENCE ง12.3) [full] */
+/* DS:93EA-9449 phoneme character 0x20-0x7F -> phoneme index 0-57 (REFERENCE ยง12.3) [full] */
 const uint8_t prose_ds_phoneme_map[96] = {
 	57, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, /* DS:93EA */
 	255, 255, 255, 18, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, /* DS:93FA */
@@ -2469,7 +2469,7 @@ const uint16_t prose_ds_phoneme_map_ptr[1] = {
 };
 PROSE_DS_ASSERT(prose_ds_phoneme_map_ptr, sizeof prose_ds_phoneme_map_ptr == 2);
 
-/* DS:944C-961B T_F1 ... T_AV: rows F1 F2 F3 F4 B1 B2 B3 AV of 58 phoneme targets (REFERENCE ง12.3) [full] */
+/* DS:944C-961B T_F1 ... T_AV: rows F1 F2 F3 F4 B1 B2 B3 AV of 58 phoneme targets (REFERENCE ยง12.3) [full] */
 const uint8_t prose_ds_targets[8][58] = {
 	{69, 117, 68, 172, 124, 70, 181, 93, 74, 141, 185, 103, 95, 111, 148, 100,
 	 139, 104, 110, 133, 170, 149, 95, 112, 101, 85, 75, 60, 90, 107, 112, 82,
@@ -2544,7 +2544,7 @@ const uint16_t prose_ds_ds_96fc[18] = {
 };
 PROSE_DS_ASSERT(prose_ds_ds_96fc, sizeof prose_ds_ds_96fc == 36);
 
-/* DS:9720-9743 onglide hold fraction per diphthong (REFERENCE ง12.6) [full] */
+/* DS:9720-9743 onglide hold fraction per diphthong (REFERENCE ยง12.6) [full] */
 const uint16_t prose_ds_onglide_hold[18] = {
 	0x39A8, 0x4678, 0x39A8, 0x4E28, 0x3C38, 0x3C38, 0x6018, 0x4678, /* DS:9720 */
 	0x4678, 0x59B0, 0x3EC8, 0x3D80, 0x5348, 0x3860, 0x3488, 0x5348, /* DS:9730 */
@@ -2584,7 +2584,7 @@ const uint16_t prose_ds_neutral_f1[3] = {
 };
 PROSE_DS_ASSERT(prose_ds_neutral_f1, sizeof prose_ds_neutral_f1 == 6);
 
-/* DS:9864-9883 locus weight matrix 4 x 4 (REFERENCE ง12.5a) [full] */
+/* DS:9864-9883 locus weight matrix 4 x 4 (REFERENCE ยง12.5a) [full] */
 const uint16_t prose_ds_locus_weights[4][4] = {
 	{0x4010, 0x6018, 0x4010, 0x2CD8}, /* 0 DS:9864 */
 	{0x2008, 0x4010, 0x2008, 0x2CD8}, /* 1 DS:986C */
@@ -2600,7 +2600,7 @@ const uint16_t prose_ds_reduction[16] = {
 };
 PROSE_DS_ASSERT(prose_ds_reduction, sizeof prose_ds_reduction == 32);
 
-/* DS:98A4-98B9 default transition duration per parameter (REFERENCE ง12.2) [full] */
+/* DS:98A4-98B9 default transition duration per parameter (REFERENCE ยง12.2) [full] */
 const uint8_t prose_ds_default_dur[22] = {
 	2, 4, 2, 3, 3, 3, 3, 3, 3, 6, 6, 6, 5, 5, 5, 6, /* DS:98A4 */
 	12, 12, 2, 2, 2, 2, /* DS:98B4 */
@@ -2619,7 +2619,7 @@ const uint16_t prose_ds_nasal_fn_ptr[1] = {
 };
 PROSE_DS_ASSERT(prose_ds_nasal_fn_ptr, sizeof prose_ds_nasal_fn_ptr == 2);
 
-/* DS:98C2-98FB class of each phoneme as a following sound (REFERENCE ง12.5) [full] */
+/* DS:98C2-98FB class of each phoneme as a following sound (REFERENCE ยง12.5) [full] */
 const uint8_t prose_ds_next_class[58] = {
 	0, 1, 0, 3, 2, 0, 1, 2, 2, 1, 3, 2, 1, 1, 3, 2, /* DS:98C2 */
 	2, 2, 3, 3, 3, 3, 1, 4, 4, 4, 4, 4, 4, 5, 7, 7, /* DS:98D2 */

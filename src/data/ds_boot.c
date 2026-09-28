@@ -9,7 +9,7 @@ const uint16_t prose_ds_ram_ptrs[6] = {
 };
 PROSE_DS_ASSERT(prose_ds_ram_ptrs, sizeof prose_ds_ram_ptrs == 12);
 
-/* DS:000C-001B rom_checksum: byte sums of ROM lanes 0-7, lanes 0-1 unused (REFERENCE ง14) [full] */
+/* DS:000C-001B rom_checksum: byte sums of ROM lanes 0-7, lanes 0-1 unused (REFERENCE ยง14) [full] */
 const uint16_t prose_ds_lane_sums[8] = {
 	0x0000, 0x0000, 0xCEEF, 0x88A8, 0x68DB, 0x1EA4, 0xE00B, 0xAA75, /* DS:000C */
 };
@@ -21,7 +21,7 @@ const uint8_t prose_ds_ds_001c[4] = {
 };
 PROSE_DS_ASSERT(prose_ds_ds_001c, sizeof prose_ds_ds_001c == 4);
 
-/* DS:0020-002F the bit each node kind sets in a stage window (REFERENCE ง15.1) [full] */
+/* DS:0020-002F the bit each node kind sets in a stage window (REFERENCE ยง15.1) [full] */
 const uint16_t prose_ds_stage_accept[8] = {
 	0x0010, 0x0001, 0x0002, 0x0004, 0x0008, 0x0020, 0x0000, 0x0000, /* DS:0020 */
 };
@@ -40,7 +40,7 @@ const uint16_t prose_ds_tr_attr_ptr[1] = {
 };
 PROSE_DS_ASSERT(prose_ds_tr_attr_ptr, sizeof prose_ds_tr_attr_ptr == 2);
 
-/* DS:03AA-03B8 INT8_STUB: 8086 code copied to 0000:0024 for ESC[nL (REFERENCE ง2, ง8.2) [full] */
+/* DS:03AA-03B8 INT8_STUB: 8086 code copied to 0000:0024 for ESC[nL (REFERENCE ยง2, ยง8.2) [full] */
 const uint8_t prose_ds_int8_stub[15] = {
 	0xFA, 0xBB, 0x00, 0x03, 0x8E, 0xC3, 0x26, 0xA2, 0x02, 0x04, 0xEA, 0x00, 0x00, 0xFF, 0xFF, /* DS:03AA */
 };
@@ -52,7 +52,7 @@ const uint8_t prose_ds_ds_03b9[1] = {
 };
 PROSE_DS_ASSERT(prose_ds_ds_03b9, sizeof prose_ds_ds_03b9 == 1);
 
-/* DS:03BA-03CD SPEED_CAP: the highest speed for each fast-read level (REFERENCE ง8.2) [full] */
+/* DS:03BA-03CD SPEED_CAP: the highest speed for each fast-read level (REFERENCE ยง8.2) [full] */
 const uint16_t prose_ds_speed_cap[10] = {
 	25, 20, 16, 13, 13, 13, 13, 13, /* DS:03BA */
 	13, 13, /* DS:03CA */

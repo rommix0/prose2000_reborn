@@ -16,7 +16,7 @@ const uint8_t prose_ds_voice_src[32] = {
 };
 PROSE_DS_ASSERT(prose_ds_voice_src, sizeof prose_ds_voice_src == 32);
 
-/* DS:5328-5337 default pitch per voice (85, 75, 110; ESC[V, REFERENCE ง8.2) [full] */
+/* DS:5328-5337 default pitch per voice (85, 75, 110; ESC[V, REFERENCE ยง8.2) [full] */
 const uint16_t prose_ds_voice_pitch[8] = {
 	85, 75, 110, 85, 85, 110, 75, 85, /* DS:5328 */
 };
@@ -34,7 +34,7 @@ const uint16_t prose_ds_voice_f4[8] = {
 };
 PROSE_DS_ASSERT(prose_ds_voice_f4, sizeof prose_ds_voice_f4 == 16);
 
-/* DS:5358-5367 VOICE_F4_MAX: F4 cap per voice (REFERENCE ง12.5a) [full] */
+/* DS:5358-5367 VOICE_F4_MAX: F4 cap per voice (REFERENCE ยง12.5a) [full] */
 const uint16_t prose_ds_voice_f4_max[8] = {
 	0x0EBA, 0x0DAC, 0x0FFA, 0x0DAC, 0x0FFA, 0x0DAC, 0x0FFA, 0x0E10, /* DS:5358 */
 };
@@ -126,7 +126,7 @@ const uint16_t prose_ds_t_av_by_p19[16] = {
 };
 PROSE_DS_ASSERT(prose_ds_t_av_by_p19, sizeof prose_ds_t_av_by_p19 == 32);
 
-/* DS:5644-5655 the DSP boot block: 1, then 8 set-up words (dsp_boot, REFERENCE ง11.4) [full] */
+/* DS:5644-5655 the DSP boot block: 1, then 8 set-up words (dsp_boot, REFERENCE ยง11.4) [full] */
 const uint16_t prose_ds_dsp_boot[9] = {
 	0x0001, 0x184D, 0x4000, 0xAAAA, 0x0063, 0x0000, 0x2710, 0x0000, /* DS:5644 */
 	0x0000, /* DS:5654 */
